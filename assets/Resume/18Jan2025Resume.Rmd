@@ -101,7 +101,7 @@ Statistician with 6+ years of experience in predictive modeling, advanced statis
 \subsubsection{Statistical Expertise}
 \vspace{-0.5em}
 \begin{flushleft}
-\cvtag{Predictive Modeling}\cvtag{Regression Modeling}\cvtag{Bayesian Statistics}\cvtag{Multilevel Modeling}\cvtag{Multivariate Modeling}\cvtag{Time Series Analysis}\cvtag{Machine Learning}\cvtag{Design of Experiments (DOE)}\cvtag{Data Visualization}
+\cvtag{Predictive Modeling}\cvtag{Regression Modeling}\cvtag{Bayesian Statistics}\cvtag{Multilevel Modeling}\cvtag{Multivariate Modeling}\cvtag{Data Visualization}\cvtag{Time Series Analysis}\cvtag{Design of Experiments (DOE)}\cvtag{Data Visualization}
 \end{flushleft}
 \vspace{0.5em}
 \begin{flushleft}
@@ -116,22 +116,21 @@ Statistician with 6+ years of experience in predictive modeling, advanced statis
 \titlerule
 \begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
 \textbf{Operations Research Analyst} & {Apr 2024 - Current} \\
-\multicolumn{2}{@{}l}{\textit{U.S. Special Operations Command} | \textit{Tampa, FL}} \\
+\multicolumn{2}{@{}l}{\textit{U.S. Special Operations Command} \bullet \ \textit{Tampa, FL}} \\
 \end{tabularx}
 
 \vspace{-0.35em}
 \begin{itemize}[leftmargin=*]\setlength\itemsep{-0.35em}\raggedright
   \item{Developed Bayesian multilevel ordinal regression models to analyze Likert survey data, enabling iterative updates to improve model accuracy. Delivered actionable insights that informed strategic decision-making and enhanced the evaluation of behavior change.}
-  \item{Designed and implemented a stance detection framework combining large language models with Bayesian hierarchical modeling. Scaled analysis from 43 text items to tens of thousands, achieving a 32\% improvement in prediction accuracy while quantifying uncertainty for more informed decision-making.}
+  \item{Designed and implemented a stance detection framework combining large language models (LLMs) with Bayesian hierarchical modeling. Scaled analysis from 43 text items to tens of thousands, achieving a 32\% improvement in prediction accuracy while quantifying uncertainty for more informed decision-making.}
   \item{Conducted survival analysis on social media time-to-event data using semi-parametric joint models with time-varying predictors. Identified critical time thresholds that shaped strategic adjustments in planning and execution.}
   \item{Programmed and deployed R Shiny applications on the Posit Connect cloud platform, enabling over 50 assessment team members to perform standardized statistical analyses. Improved workflows for data visualization and reporting.}
   \item{Promoted to lead a 6-person assessments team, overseeing the development of standardized evaluation frameworks and innovative solutions to assess Military Information Support Operations across 11 combatant commands.}
 \end{itemize}
 
-\vspace{0.5em}
 \begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
 \textbf{Mathematical Statistician} & {Sep 2018 - Apr 2024} \\
-\multicolumn{2}{@{}l}{\textit{U.S. Army Evaluation Center} | \textit{Aberdeen Proving Ground, MD}} \\
+\multicolumn{2}{@{}l}{\textit{U.S. Army Evaluation Center} \bullet \ \textit{Aberdeen Proving Ground, MD}} \\
 \end{tabularx}
 
 \vspace{-0.35em}
@@ -149,13 +148,11 @@ Statistician with 6+ years of experience in predictive modeling, advanced statis
 \titlerule
 \begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
 \textbf{Master of Statistics} & {Jul 2024} \\
-\textit{North Carolina State University | Raleigh, NC} & \textit{GPA: 4.00} \\
+North Carolina State University \bullet \ Raleigh, NC & GPA: 4.00/4.00 \\
 \end{tabularx}
-
-\vspace{-0.55em}
 \begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
 \textbf{B.S. in Mechanical Engineering} & {May 2018} \\
-\textit{Clemson University | Clemson, SC} & \textit{GPA: 3.53} \\
+Clemson University \bullet \ Clemson, SC & GPA: 3.53/4.00 \\
 \end{tabularx}
 \end{rightcolumn}
 \end{paracol}
