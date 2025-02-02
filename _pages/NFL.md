@@ -1,7 +1,7 @@
 ---
 title: NFL
 layout: collection
-permalink: /NFL/
-collection: NFL
+permalink: /nfl/
+collection: nfl
 classes: wide
 ---

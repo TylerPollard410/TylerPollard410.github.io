@@ -1,7 +1,6 @@
 ---
 title: "Hurricane Analysis"
 excerpt: "A Bayesian analysis related to 24-hour ahead forecasts of hurricane intensity"
-collection: projects
 link: "https://tylerpollard410.github.io/Hurricane-Analysis/"
 ---
 
