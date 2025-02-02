@@ -314,7 +314,7 @@ compress_html:
     envs: development
     
 collections:
-  projects:
+  school:
     output: true
     permalink: /:collection/:path/
     label: "School Projects"
@@ -347,15 +347,15 @@ defaults:
     values:
       layout: single
       author_profile: true
-  # _projects
+  # _school
   - scope:
       path: ""
-      type: projects
+      type: school
     values:
       layout: single
       author_profile: false
       share: true
-  # _NFL
+  # _nfl
   - scope:
       path: ""
       type: nfl
