@@ -1,7 +1,7 @@
 ---
 title: "School Projects"
 layout: collection
-permalink: /projects/school/
+permalink: /school/
 collection: school
 classes: wide
 ---
