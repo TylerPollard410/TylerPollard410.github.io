@@ -101,6 +101,41 @@ search: false
   }
 }
 
+/* Widen the wrapper for the intro feature row */
+#intro .feature__wrapper {
+  max-width: 80%; /* Widen the overall feature row wrapper */
+  margin: 0 auto; /* Center the feature row on the page */
+}
+
+/* Widen the body content inside the intro feature row */
+#intro .archive__item-body {
+  max-width: 800px; /* Allow the content to take up more width */
+  margin: 0 auto; /* Center the content */
+  text-align: justify; /* Optional: Justify the text for better readability */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #intro .feature__wrapper {
+    max-width: 100%; /* Allow full width on smaller screens */
+    padding: 0 1em; /* Add some padding for spacing */
+  }
+
+  #intro .archive__item-body {
+    max-width: 90%; /* Slightly narrow content for smaller screens */
+    padding: 0 1em; /* Add horizontal padding for readability */
+    text-align: left; /* Align text to the left for better readability on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  #intro .archive__item-body {
+    max-width: 95%; /* Further narrow content for very small screens */
+    font-size: 0.9rem; /* Adjust font size for better legibility */
+  }
+}
+
+
 .archive__item--horizontal {
   display: flex;
   align-items: baseline; /* Ensures teaser image and content align vertically */
