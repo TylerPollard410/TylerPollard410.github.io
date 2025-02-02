@@ -8,35 +8,6 @@ search: false
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
-/* Keep original styling for page hero with overlay */
-.layout-splash .page__hero--overlay {
-  position: relative;
-  color: #fff;
-  text-align: center; /* Default is center */
-  background-size: cover;
-  background-position: center top; /* Default */
-  background-repeat: no-repeat;
-  padding: 3rem 1.5rem; /* Default padding */
-
-  /* Change: Ensure the image is tall enough to show full face */
-  /* height: 100vh; /* New - Set full viewport height */
-  /* background-position: center top; /* New - Adjust image position */
-}
-
-/* Keep original styling for hero content */
-.layout-splash .page__hero--overlay .wrapper {
-  position: relative;
-  z-index: 2;
-  
-  /* Change: Align text to the right instead of center */
-  /* text-align: right; /* New - Align text to the right */
-  /* display: flex;
-  /* flex-direction: column;
-  /* align-items: flex-end; /* New - Move text to the right */
-  /* justify-content: center; /* New - Center text vertically */
-  /* padding: 2rem; /* New - Ensure spacing for readability */
-}
-
 .archive__item--horizontal {
   display: flex;
   align-items: baseline; /* Ensures teaser image and content align vertically */
