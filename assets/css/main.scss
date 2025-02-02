@@ -20,7 +20,7 @@ search: false
   &--overlay {
     position: relative;
     margin-bottom: 2em;
-    padding: 3em 0;
+    padding: 6em 0;
     @include clearfix;
     background-size: cover;
     background-repeat: no-repeat;
@@ -42,7 +42,7 @@ search: false
       padding-inline: 1em;
 
       @include breakpoint($x-large) {
-      max-width: $x-large;
+        max-width: $x-large;
       }
     }
 
