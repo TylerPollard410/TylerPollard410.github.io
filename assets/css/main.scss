@@ -101,6 +101,9 @@ search: false
   }
 }
 
+
+
+
 /* Widen the wrapper for the intro feature row */
 #intro .feature__wrapper {
   max-width: 80%; /* Widen the overall feature row wrapper */
@@ -109,7 +112,7 @@ search: false
 
 /* Widen the body content inside the intro feature row */
 #intro .archive__item-body {
-  max-width: 800px; /* Allow the content to take up more width */
+  max-width: 1000px; /* Allow the content to take up more width */
   margin: 0 auto; /* Center the content */
   text-align: justify; /* Optional: Justify the text for better readability */
 }
@@ -134,6 +137,10 @@ search: false
     font-size: 0.9rem; /* Adjust font size for better legibility */
   }
 }
+
+
+
+
 
 
 .archive__item--horizontal {
