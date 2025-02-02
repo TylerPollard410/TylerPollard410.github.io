@@ -317,6 +317,9 @@ collections:
   projects:
     output: true
     permalink: /:collection/:path/
+  NFL:
+    output: true
+    permalink: /:collection/:path/
 
 # Defaults
 defaults:
@@ -338,10 +341,18 @@ defaults:
     values:
       layout: single
       author_profile: true
-  # _portfolio
+  # _projects
   - scope:
       path: ""
       type: projects
+    values:
+      layout: single
+      author_profile: false
+      share: true
+  # _NFL
+  - scope:
+      path: ""
+      type: NFL
     values:
       layout: single
       author_profile: false
