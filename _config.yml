@@ -320,11 +320,11 @@ collections:
   nfl:
     output: true
     permalink: /:collection/:path/
-    label: NFL
+    label: "NFL"
   apps:
     output: true
     permalink: /:collection/:path/
-    label: Shiny
+    label: "Shiny Apps"
 
 # Defaults
 defaults:
