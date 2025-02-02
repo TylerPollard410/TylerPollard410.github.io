@@ -2,6 +2,8 @@
 title: "Property Analysis Dashboard"
 excerpt: "Shiny dashboard for analyzing the profitability of short-term rental investments"
 link: "https://tylerpollard410.shinyapps.io/Property_Analysis_Dashboard/"
+header:
+  teaser: "assets/images/PropertyDashboardPic.png"
 ---
 
 This is a R Shiny app built using the `bs4Dash` package. The purpose of this app is to 
