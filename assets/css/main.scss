@@ -10,13 +10,13 @@ search: false
 
 .archive__item--horizontal {
   display: flex;
-  align-items: center; /* Ensures teaser image and content align vertically */
+  align-items: baseline; /* Ensures teaser image and content align vertically */
   justify-content: flex-start; /* Aligns items horizontally to the left */
   margin-bottom: 1.5rem; /* Adds spacing between each project item */
 }
 
 .archive__item-teaser {
-  flex: 0 0 120px; /* Fixed width for teaser image container */
+  flex: 0 0 150px; /* Fixed width for teaser image container */
   margin-right: 1rem; /* Adds space between teaser and content */
   display: flex; /* Centers image within container */
   align-items: center;
