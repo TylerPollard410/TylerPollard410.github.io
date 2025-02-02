@@ -2,6 +2,8 @@
 title: "NFL Analysis App [developing]"
 excerpt: "Shiny dashboard for exploring NFL data, creating team rankings, and future betting"
 link: "https://tylerpollard410.shinyapps.io/NFL_Analysis/"
+header:
+  teaser: "assets/images/NFLAnalysisAppPic.png"
 ---
 
 This dashboard analyzes NFL data spanning the 2006-2024 seasons derived from the `nflverse`. The user 
