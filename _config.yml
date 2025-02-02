@@ -317,6 +317,7 @@ collections:
   projects:
     output: true
     permalink: /:collection/:path/
+    label: "School Projects"
   nfl:
     output: true
     permalink: /:collection/:path/
