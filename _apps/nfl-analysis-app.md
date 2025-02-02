@@ -1,5 +1,5 @@
 ---
-title: "NFL Analysis App"
+title: "NFL Analysis App [developing]"
 excerpt: "Shiny dashboard for exploring NFL data, creating team rankings, and future betting"
 link: "https://tylerpollard410.shinyapps.io/NFL_Analysis/"
 ---
