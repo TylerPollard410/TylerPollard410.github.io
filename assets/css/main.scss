@@ -10,7 +10,7 @@ search: false
 
 
 
-.layout-splash .page__hero {
+.layout--splash .page__hero {
   position: relative;
   margin-bottom: 2em;
   @include clearfix;
@@ -72,7 +72,7 @@ search: false
   }
 }
 
-.layout-splash .page__hero-image {
+.layout--splash .page__hero-image {
   width: 100%;
   height: auto;
   -ms-interpolation-mode: bicubic;
@@ -107,14 +107,14 @@ search: false
 
 
 /* Widen the wrapper for the intro feature row */
-#intro .feature__wrapper {
+.feature__wrapper {
   max-width: 80%; /* Allow the intro to take up 80% of the page width */
   margin: 0 auto; /* Center the wrapper horizontally */
   padding: 0 1em; /* Add padding for spacing */
 }
 
 /* Specific styling for center-aligned intro content */
-#intro .feature__item--center {
+.feature__item--center {
   margin: 0 auto;
   text-align: center; /* Center-align the content */
 
@@ -131,18 +131,18 @@ search: false
 }
 
 /* Button styling inside the intro feature row */
-#intro .feature__item--center .btn {
+.feature__item--center .btn {
   margin-top: 1em; /* Add spacing above the button */
 }
 
 /* Responsive adjustments for tablets and smaller screens */
 @media (max-width: 768px) {
-  #intro .feature__wrapper {
+  .feature__wrapper {
     max-width: 100%; /* Use full width on smaller screens */
     padding: 0 1em; /* Add horizontal padding for spacing */
   }
 
-  #intro .feature__item--center .archive__item-body {
+  .feature__item--center .archive__item-body {
     max-width: 90%; /* Slightly narrower content on tablets */
     text-align: left; /* Align text to the left for better readability */
   }
