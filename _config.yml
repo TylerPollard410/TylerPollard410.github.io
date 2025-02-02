@@ -316,15 +316,15 @@ compress_html:
 collections:
   school:
     output: true
-    permalink: /:collection/:path/
+    permalink: /projects/:collection/:path/
     label: "School Projects"
   nfl:
     output: true
-    permalink: /:collection/:path/
+    permalink: /projects/:collection/:path/
     label: "NFL"
   apps:
     output: true
-    permalink: /:collection/:path/
+    permalink: /projects/:collection/:path/
     label: "Shiny Apps"
 
 # Defaults
