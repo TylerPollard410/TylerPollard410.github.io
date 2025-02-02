@@ -20,7 +20,7 @@ search: false
   &--overlay {
     position: relative;
     margin-bottom: 2em;
-    padding: 5em 0;
+    padding: 3em 0;
     @include clearfix;
     background-size: cover;
     background-repeat: no-repeat;
@@ -48,6 +48,8 @@ search: false
     .btn {
       color: #fff;
       text-shadow: 1px 1px 4px rgba(#000, 0.5);
+      text-align: right; /* Align text content to the right */
+      align-self: flex-end; /* Move block elements (like buttons) to the right */
     }
 
     .page__lead {
@@ -70,7 +72,7 @@ search: false
   -ms-interpolation-mode: bicubic;
 }
 
-.layout-splash .page__hero-caption {
+.page__hero-caption {
   position: absolute;
   bottom: 0;
   inset-inline-end: 0;
