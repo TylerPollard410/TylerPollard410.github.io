@@ -314,7 +314,7 @@ compress_html:
     envs: development
     
 collections:
-  portfolio:
+  projects:
     output: true
     permalink: /:collection/:path/
 
@@ -341,7 +341,7 @@ defaults:
   # _portfolio
   - scope:
       path: ""
-      type: portfolio
+      type: projects
     values:
       layout: single
       author_profile: false

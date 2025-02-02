@@ -1,7 +1,7 @@
 ---
 title: Projects
 layout: collection
-permalink: /portfolio/
-collection: portfolio
+permalink: /projects/
+collection: projects
 classes: wide
 ---
