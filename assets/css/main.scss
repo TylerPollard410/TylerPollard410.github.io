@@ -8,6 +8,8 @@ search: false
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
+
+
 .layout-splash .page__hero {
   position: relative;
   margin-bottom: 2em;
@@ -106,37 +108,65 @@ search: false
 
 /* Widen the wrapper for the intro feature row */
 #intro .feature__wrapper {
-  max-width: 80%; /* Widen the overall feature row wrapper */
-  margin: 0 auto; /* Center the feature row on the page */
+  max-width: 80%; /* Allow the intro to take up 80% of the page width */
+  margin: 0 auto; /* Center the wrapper horizontally */
+  padding: 0 1em; /* Add padding for spacing */
 }
 
-/* Widen the body content inside the intro feature row */
-#intro .archive__item-body {
-  max-width: 1000px; /* Allow the content to take up more width */
-  margin: 0 auto; /* Center the content */
-  text-align: justify; /* Optional: Justify the text for better readability */
+/* Specific styling for center-aligned intro content */
+#intro .feature__item--center {
+  margin: 0 auto;
+  text-align: center; /* Center-align the content */
+
+  .archive__item-body {
+    max-width: 800px; /* Widen the content body specifically for intro */
+    margin: 0 auto; /* Center the content horizontally */
+    text-align: justify; /* Optional: Justify text for better readability */
+  }
+
+  .archive__item-excerpt {
+    font-size: 1rem; /* Adjust font size for readability */
+    line-height: 1.5; /* Improve line spacing */
+  }
 }
 
-/* Responsive adjustments */
+/* Button styling inside the intro feature row */
+#intro .feature__item--center .btn {
+  margin-top: 1em; /* Add spacing above the button */
+}
+
+/* Responsive adjustments for tablets and smaller screens */
 @media (max-width: 768px) {
   #intro .feature__wrapper {
-    max-width: 100%; /* Allow full width on smaller screens */
-    padding: 0 1em; /* Add some padding for spacing */
+    max-width: 100%; /* Use full width on smaller screens */
+    padding: 0 1em; /* Add horizontal padding for spacing */
   }
 
-  #intro .archive__item-body {
-    max-width: 90%; /* Slightly narrow content for smaller screens */
-    padding: 0 1em; /* Add horizontal padding for readability */
-    text-align: left; /* Align text to the left for better readability on mobile */
+  #intro .feature__item--center .archive__item-body {
+    max-width: 90%; /* Slightly narrower content on tablets */
+    text-align: left; /* Align text to the left for better readability */
+  }
+
+  #intro .feature__item--center .archive__item-excerpt {
+    font-size: 0.95rem; /* Slightly smaller font size for tablets */
+    line-height: 1.4; /* Adjust line height */
   }
 }
 
+/* Responsive adjustments for very small screens (mobile) */
 @media (max-width: 480px) {
-  #intro .archive__item-body {
-    max-width: 95%; /* Further narrow content for very small screens */
-    font-size: 0.9rem; /* Adjust font size for better legibility */
+  #intro .feature__item--center .archive__item-body {
+    max-width: 95%; /* Further narrow content for small screens */
+    font-size: 0.9rem; /* Reduce font size for better legibility */
+    line-height: 1.3; /* Adjust line height */
+  }
+
+  #intro .feature__item--center .archive__item-excerpt {
+    font-size: 0.85rem; /* Slightly smaller font size for mobile */
+    line-height: 1.3;
   }
 }
+
 
 
 
