@@ -1,6 +1,6 @@
 ---
 title: "Shiny Apps"
 layout: collection
-permalink: /project/apps/
+permalink: /projects/apps/
 collection: apps
 ---

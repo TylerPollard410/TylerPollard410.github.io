@@ -8,24 +8,53 @@ search: false
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
+/* Horizontal Layout for Archive Items */
 .archive__item--horizontal {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
+  align-items: center; /* Vertically aligns teaser image and content */
+  margin-bottom: 1.5rem; /* Adds space between items */
 }
 
+/* Teaser Image Container */
 .archive__item-teaser {
-  flex: 0 0 150px; /* Adjust width as needed */
-  margin-right: 1rem;
+  flex: 0 0 150px; /* Fixed width for teaser container */
+  margin-right: 1rem; /* Adds spacing between image and content */
+  display: flex; /* Ensures the image is centered */
+  align-items: center;
+  justify-content: center;
 }
 
+/* Teaser Image Styling */
 .archive__item-teaser img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px; /* Optional: Rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
+  max-width: 100%; /* Scales image to fit within the container */
+  height: auto; /* Maintains aspect ratio */
+  border-radius: 8px; /* Optional: Adds rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Adds subtle shadow */
 }
 
+/* Content Styling */
 .archive__item-content {
-  flex: 1;
+  flex: 1; /* Ensures content takes remaining space */
+  display: flex; /* Makes content vertically flexible */
+  flex-direction: column; /* Aligns text elements in a column */
+  justify-content: center; /* Vertically centers text */
+}
+
+/* Clean Up Links */
+.archive__item-content a {
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .archive__item--horizontal {
+    flex-direction: column; /* Stacks image and content vertically */
+    align-items: flex-start; /* Aligns content to the left */
+  }
+
+  .archive__item-teaser {
+    margin-right: 0; /* Removes horizontal spacing */
+    margin-bottom: 1rem; /* Adds vertical spacing for stacked layout */
+  }
 }
