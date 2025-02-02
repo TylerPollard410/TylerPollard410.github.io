@@ -9,10 +9,10 @@ classes: wide
 
 {% for collection in site.collections %}
   {% unless collection.output == false or collection.label == "posts" %}
-    {% assign label = collection.label | default: collection.label %}
+    {% assign label = collection.label %}
     {% if label != written_label %}
       <h2 id="{{ label | slugify }}" class="archive__subtitle">
-        {{ site.collections[collection.label].label | default: label }}
+        {{ collection.label | default: label | default: collection.label | capitalize }}
       </h2>
       {% capture written_label %}{{ label }}{% endcapture %}
     {% endif %}
