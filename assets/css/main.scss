@@ -9,7 +9,7 @@ search: false
 @import "minimal-mistakes"; // main partials
 
 header.overlay-image {
-  height: 300px; /* Set the desired height */
+  height: 100%; /* Set the desired height */
   background-size: contain; /* Ensure the entire image is visible */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   background-position: center; /* Center the image */
