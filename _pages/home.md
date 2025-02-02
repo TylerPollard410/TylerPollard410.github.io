@@ -10,7 +10,7 @@ header:
   actions:
     - label: "More Info"
       url: "/projects/"
-excerpt: "Statistician | Bayesian Statistics | Predictive Modeling"
+excerpt: "Statistician, Bayesian Statistics, Predictive Modeling, Dashboard Developer"
 ---
 
 <section class="intro">
