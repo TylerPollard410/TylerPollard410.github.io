@@ -35,10 +35,14 @@ search: false
     }
 
     .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; /* Moves everything (title, excerpt, button) to the right */
+      text-align: right; /* Ensures text is right-aligned */
       padding-inline: 1em;
 
       @include breakpoint($x-large) {
-        max-width: $x-large;
+      max-width: $x-large;
       }
     }
 
@@ -48,8 +52,8 @@ search: false
     .btn {
       color: #fff;
       text-shadow: 1px 1px 4px rgba(#000, 0.5);
-      text-align: right; /* Align text content to the right */
-      align-self: flex-end; /* Move block elements (like buttons) to the right */
+      /* text-align: right; /* Align text content to the right */
+      /* align-self: flex-end; /* Move block elements (like buttons) to the right */
     }
 
     .page__lead {
