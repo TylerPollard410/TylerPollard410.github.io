@@ -3,6 +3,7 @@ layout: splash
 permalink: "/"
 author_profile: true
 title: "Welcome to the personal portfolio of Tyler Pollard"
+excerpt: "Statistician | Bayesian Statistics | Predictive Modeling"
 header:
   overlay_image: /assets/images/HomePic3.png
   overlay_filter: 0.5
@@ -10,7 +11,6 @@ header:
   actions:
     - label: "More Info"
       url: "/projects/"
-excerpt: "Statistician | Bayesian Statistics | Predictive Modeling"
 ---
 
 <section class="intro">
