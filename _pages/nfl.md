@@ -1,7 +1,7 @@
 ---
 title: "NFL"
 layout: collection
-permalink: /nfl/
+permalink: /project/nfl/
 collection: nfl
 ---
 
