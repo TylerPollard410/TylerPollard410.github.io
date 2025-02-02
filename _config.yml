@@ -320,6 +320,7 @@ collections:
   nfl:
     output: true
     permalink: /:collection/:path/
+    label: NFL
 
 # Defaults
 defaults:
