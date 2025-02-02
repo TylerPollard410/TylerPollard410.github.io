@@ -4,7 +4,7 @@ permalink: "/"
 author_profile: true
 excerpt: "This is my portfolio"
 header:
-  overlay_image: /assets/images/HomePic.png
+  overlay_image: /assets/images/HomePic3.png
   overlay_filter: 0.5
   caption: "Image generated using DALL-E"
   actions:
