@@ -62,8 +62,7 @@ search: false
       max-width: $small;
       
       @include breakpoint($small) {
-          width: 100%; /* Set width to 9 out of 12 columns (75% of the container) */
-          margin: 0 auto; /* Center the content horizontally */
+          width: span(8 of 12); /* Set width to 9 out of 12 columns (75% of the container) */
       }
     }
 
