@@ -8,7 +8,7 @@ header:
   overlay_filter: 0.5
   actions:
     - label: "More Info"
-      url: "/projects/"
+      url: "/about/"
 excerpt: "Statistician, Bayesian Analysis, Predictive Modeling, Interactive Dashboards"
 intro:
   - excerpt: "Welcome to my portfolio! I’m a statistician who thrives on exploring the intersection of data and decision-making. Whether I’m diving into sports analytics, creating interactive dashboards, or learning new techniques to refine my craft, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey, from the skills I’ve mastered to the projects I’ve built along the way. Take a look around—I hope you find something that inspires collaboration or sparks a new idea!"
