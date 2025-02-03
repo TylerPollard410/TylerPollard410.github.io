@@ -60,10 +60,6 @@ search: false
 
     .page__lead {
       max-width: $small;
-      
-      @include breakpoint($small) {
-          width: span(8 of 12); /* Set width to 9 out of 12 columns (75% of the container) */
-      }
     }
 
     .page__title {
