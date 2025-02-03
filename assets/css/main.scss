@@ -84,10 +84,10 @@ search: false
 /*   Features
    ========================================================================== */
 
-.feature__item--center .archive__item-body .archive__item-excerpt{
+.feature__item--center .archive__item-body{
   width: span(9 of 12); /* Set width to 9 out of 12 columns (75% of the container) */
   margin: 0 auto; /* Center the content horizontally */
-  text-align: justify; /* Optional: Justify text for better readability */
+  /* text-align: justify; /* Optional: Justify text for better readability */
 }
 
 /* .feature__wrapper {
