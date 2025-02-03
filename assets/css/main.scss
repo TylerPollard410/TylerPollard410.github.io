@@ -37,10 +37,10 @@ search: false
     }
 
     .wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end; /* Moves everything (title, excerpt, button) to the right */
-      text-align: right; /* Ensures text is right-aligned */
+      /* display: flex;
+      /* flex-direction: column;
+      /* align-items: flex-end; /* Moves everything (title, excerpt, button) to the right */
+      /* text-align: right; /* Ensures text is right-aligned */
       padding-inline: 1em;
 
       @include breakpoint($x-large) {
@@ -107,14 +107,14 @@ search: false
 
 
 /* Widen the wrapper for the intro feature row */
-.feature__wrapper {
+#intro .feature__wrapper {
   max-width: 80%; /* Allow the intro to take up 80% of the page width */
   margin: 0 auto; /* Center the wrapper horizontally */
   padding: 0 1em; /* Add padding for spacing */
 }
 
 /* Specific styling for center-aligned intro content */
-.feature__item--center {
+#intro .feature__item--center {
   margin: 0 auto;
   text-align: center; /* Center-align the content */
 
@@ -131,18 +131,18 @@ search: false
 }
 
 /* Button styling inside the intro feature row */
-.feature__item--center .btn {
+#intro .feature__item--center .btn {
   margin-top: 1em; /* Add spacing above the button */
 }
 
 /* Responsive adjustments for tablets and smaller screens */
 @media (max-width: 768px) {
-  .feature__wrapper {
+  #intro .feature__wrapper {
     max-width: 100%; /* Use full width on smaller screens */
     padding: 0 1em; /* Add horizontal padding for spacing */
   }
 
-  .feature__item--center .archive__item-body {
+  #intro .feature__item--center .archive__item-body {
     max-width: 90%; /* Slightly narrower content on tablets */
     text-align: left; /* Align text to the left for better readability */
   }
