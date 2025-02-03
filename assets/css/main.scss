@@ -63,6 +63,7 @@ search: false
     }
 
     .page__title {
+      max-width: $medium;
       font-size: $type-size-2;
 
       @include breakpoint($small) {
