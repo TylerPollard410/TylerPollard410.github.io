@@ -45,7 +45,7 @@ feature_row:
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" ><i class="fas fa-desktop fa-5x"></i></a>
+            <a href="/projects" ><i class="fas fa-desktop fa-4x"></i></a>
             <h2 class="archive__item-title">Interactive Dashboards</h2>
             <div class="archive__item-excerpt">
               <p>Check out interactive visualizations built with R Shiny.</p>
