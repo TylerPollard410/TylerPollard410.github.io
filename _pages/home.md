@@ -40,7 +40,7 @@ feature_row2:
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" style="text-align: center"><i class="fas fa-chart-line fa-3x"></i></a>
+            <a href="/projects" style="margin: 0 auto"><i class="fas fa-chart-line fa-3x"></i></a>
             <h2 class="archive__item-title">Sports Analytics</h2>
             <div class="archive__item-excerpt">
               <p>Explore my models and insights on NFL and MLB statistics.</p>
