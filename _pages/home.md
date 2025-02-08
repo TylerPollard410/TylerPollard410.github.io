@@ -40,7 +40,7 @@ feature_row2:
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" ><i class="fas fa-chart-line fa-3x"></i></a>
+            <a href="/projects" style="align: center"><i class="fas fa-chart-line fa-3x"></i></a>
             <h2 class="archive__item-title">Sports Analytics</h2>
             <div class="archive__item-excerpt">
               <p>Explore my models and insights on NFL and MLB statistics.</p>
@@ -52,7 +52,7 @@ feature_row2:
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" ><i class="fas fa-desktop fa-3x"></i></a>
+            <a href="/projects" ><i class="fas fa-desktop home-logo"></i></a>
             <h2 class="archive__item-title">Interactive Dashboards</h2>
             <div class="archive__item-excerpt">
               <p>Check out interactive visualizations built with R Shiny.</p>
