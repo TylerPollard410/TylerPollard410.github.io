@@ -25,13 +25,6 @@ feature_row:
     excerpt: "Learn more about my journey from engineering to statistics."
     url: "/about"
     icon: "fas fa-user-graduate"
-feature_row2:
-  - title: "Placeholder 1"
-    excerpt: "This is some sample content that goes here with **Markdown** formatting."
-  - title: "Placeholder 2"
-    excerpt: "This is some sample content that goes here with **Markdown** formatting."
-  - title: "Placeholder 3"
-    excerpt: "This is some sample content that goes here with **Markdown** formatting."
 ---
 
 {% include feature_row id="intro" type="center" %}
@@ -40,41 +33,39 @@ feature_row2:
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" style="margin: 0 auto"><i class="fas fa-chart-line fa-3x"></i></a>
+            <a href="/projects" ><i class="fas fa-chart-line fa-4x"></i></a>
             <h2 class="archive__item-title">Sports Analytics</h2>
             <div class="archive__item-excerpt">
               <p>Explore my models and insights on NFL and MLB statistics.</p>
             </div>
-            <p><a href="/projects" class="btn ">Learn more</a></p>
+            <p><a href="/projects" class="btn btn--info">Learn more</a></p>
         </div>
       </div>
     </div>
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" ><i class="fas fa-desktop home-logo"></i></a>
+            <a href="/projects" ><i class="fas fa-desktop fa-5x"></i></a>
             <h2 class="archive__item-title">Interactive Dashboards</h2>
             <div class="archive__item-excerpt">
               <p>Check out interactive visualizations built with R Shiny.</p>
             </div>
-            <p><a href="/projects" class="btn ">Learn more</a></p>
+            <p><a href="/projects" class="btn btn--info">Learn more</a></p>
         </div>
       </div>
     </div>
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/about" ><i class="fas fa-user-graduate fa-3x"></i></a>
+            <a href="/about" ><i class="fas fa-user-graduate fa-4x"></i></a>
             <h2 class="archive__item-title">Education &amp; Career</h2>
             <div class="archive__item-excerpt">
               <p>Learn more about my journey from engineering to statistics.</p>
             </div>
-            <p><a href="/about" class="btn ">Learn more</a></p>
+            <p><a href="/about" class="btn btn--info">Learn more</a></p>
         </div>
       </div>
     </div>
 </div>
 
-{% include feature_row %}
-
-{% include feature_row id="feature_row2"%}
+<!-- {% include feature_row %} -->
