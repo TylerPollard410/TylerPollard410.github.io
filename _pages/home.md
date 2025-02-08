@@ -36,28 +36,43 @@ feature_row2:
 
 {% include feature_row id="intro" type="center" %}
 
-<div class="featured-section">
-  <div class="featured-item">
-    <a href="/projects/data-visualization">
-      <i class="fas fa-chart-line fa-3x"></i>
-      <h3>Sports Analytics</h3>
-      <p>Explore my models and insights on NFL and MLB statistics.</p>
-    </a>
-  </div>
-  <div class="featured-item">
-    <a href="/projects/dashboards">
-      <i class="fas fa-desktop fa-3x"></i>
-      <h3>Interactive Dashboards</h3>
-      <p>Check out interactive visualizations built with R Shiny.</p>
-    </a>
-  </div>
-  <div class="featured-item">
-    <a href="/about">
-      <i class="fas fa-user-graduate fa-3x"></i>
-      <h3>Education & Career</h3>
-      <p>Learn more about my journey from engineering to statistics.</p>
-    </a>
-  </div>
+<div class="feature__wrapper">
+    <div class="feature__item">
+      <div class="archive__item">
+        <div class="archive__item-body">
+            <a href="/projects" <i class="fas fa-chart-line fa-3x"></i></a>
+            <h2 class="archive__item-title">Sports Analytics</h2>
+            <div class="archive__item-excerpt">
+              <p>Explore my models and insights on NFL and MLB statistics.</p>
+            </div>
+            <p><a href="/projects" class="btn ">Learn more</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="feature__item">
+      <div class="archive__item">
+        <div class="archive__item-body">
+            <a href="/projects" <i class="fas fa-desktop fa-3x"></i></a>
+            <h2 class="archive__item-title">Interactive Dashboards</h2>
+            <div class="archive__item-excerpt">
+              <p>Check out interactive visualizations built with R Shiny.</p>
+            </div>
+            <p><a href="/projects" class="btn ">Learn more</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="feature__item">
+      <div class="archive__item">
+        <div class="archive__item-body">
+            <a href="/about" <i class="fas fa-user-graduate fa-3x"></i></a>
+            <h2 class="archive__item-title">Education &amp; Career</h2>
+            <div class="archive__item-excerpt">
+              <p>Learn more about my journey from engineering to statistics.</p>
+            </div>
+            <p><a href="/about" class="btn ">Learn more</a></p>
+        </div>
+      </div>
+    </div>
 </div>
 
 {% include feature_row %}
