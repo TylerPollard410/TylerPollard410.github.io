@@ -13,6 +13,19 @@ excerpt: "Statistician, Bayesian Analysis, Predictive Modeling, Interactive Dash
 intro:
   - excerpt: "Welcome to my portfolio! I’m a statistician who thrives on exploring the intersection of data and decision-making. Whether I’m diving into sports analytics, creating interactive dashboards, or learning new techniques to refine my craft, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey, from the skills I’ve mastered to the projects I’ve built along the way. Take a look around—I hope you find something that inspires collaboration or sparks a new idea!"
 feature_row:
+  - title: "Sports Analytics"
+    excerpt: "Explore my models and insights on NFL and MLB statistics."
+    url: "/projects"
+    icon: "fas fa-chart-line"
+  - title: "Interactive Dashboards"
+    excerpt: "Check out interactive visualizations built with R Shiny."
+    url: "/projects"
+    icon: "fas fa-desktop"
+  - title: "Education & Career"
+    excerpt: "Learn more about my journey from engineering to statistics."
+    url: "/about"
+    icon: "fas fa-user-graduate"
+feature_row2:
   - title: "Placeholder 1"
     excerpt: "This is some sample content that goes here with **Markdown** formatting."
   - title: "Placeholder 2"
@@ -22,5 +35,7 @@ feature_row:
 ---
 
 {% include feature_row id="intro" type="center" %}
+
+{% include feature_row %}
 
 {% include feature_row %}
