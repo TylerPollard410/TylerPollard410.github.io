@@ -36,6 +36,30 @@ feature_row2:
 
 {% include feature_row id="intro" type="center" %}
 
-{% include feature_row %}
+<div class="featured-section">
+  <div class="featured-item">
+    <a href="/projects/data-visualization">
+      <i class="fas fa-chart-line fa-3x"></i>
+      <h3>Sports Analytics</h3>
+      <p>Explore my models and insights on NFL and MLB statistics.</p>
+    </a>
+  </div>
+  <div class="featured-item">
+    <a href="/projects/dashboards">
+      <i class="fas fa-desktop fa-3x"></i>
+      <h3>Interactive Dashboards</h3>
+      <p>Check out interactive visualizations built with R Shiny.</p>
+    </a>
+  </div>
+  <div class="featured-item">
+    <a href="/about">
+      <i class="fas fa-user-graduate fa-3x"></i>
+      <h3>Education & Career</h3>
+      <p>Learn more about my journey from engineering to statistics.</p>
+    </a>
+  </div>
+</div>
 
 {% include feature_row %}
+
+{% include feature_row2 %}
