@@ -12,7 +12,7 @@ classes: wide
     {% assign label = collection.label %}
     {% if label != written_label %}
       <h2 id="{{ label | slugify }}" class="archive__subtitle">
-        {{ collection.label | default: label | default: collection.label }}
+        {{ collection.label | upcase | default: label | default: collection.label }}
       </h2>
       {% capture written_label %}{{ label }}{% endcapture %}
     {% endif %}
