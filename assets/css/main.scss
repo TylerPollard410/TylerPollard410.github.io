@@ -245,6 +245,23 @@ search: false
 }
 */
 
+/* Home Logos =========== */
+.home-logo {
+  margin: 15px;
+  color: #69b3a2;
+  font-size: 45px;
+  padding: 30px;
+  border-radius: 50%;
+  border-color: black;
+  border-width: 5px;
+  border: solid;
+}
+
+.home-logo:hover {
+  color: white;
+  background-color: #69b3a2;
+}
+
 
 /* About ============================================== */
 .layout--single .page__hero {
