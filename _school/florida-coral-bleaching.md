@@ -1,8 +1,9 @@
 ---
 title: "Unveiling the Mysteries of Coral Bleaching"
 excerpt: "A Bayesian Approach to Understanding Causality"
+link: "https://tylerpollard410.github.io/Florida-Coral-Bleaching/"
 header:
   teaser: "assets/images/coral-reef-bleaching.png"
 ---
 
-The analysis for Florida Coral Bleaching is [available here](https://tylerpollard410.github.io)
+The analysis for Florida Coral Bleaching is [available here](https://tylerpollard410.github.io/Florida-Coral-Bleaching/)
