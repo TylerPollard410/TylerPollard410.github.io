@@ -5,15 +5,15 @@ permalink: /projects/
 classes: wide
 ---
 
-{% capture written_label %}'None'{% endcapture %}
+<!-- {% capture written_label %}'None'{% endcapture %} -->
 
 {% for collection in site.collections %}
   {% unless collection.output == false or collection.label == "posts" %}
     {% assign label = collection.label %}
     {% if label != written_label %}
-      <h2 id="{{ label | slugify }}" class="archive__subtitle">
+      <h1 id="{{ label | slugify }}" class="archive__subtitle">
         {{ collection.label | upcase | default: label | default: collection.label }}
-      </h2>
+      </h1>
       {% capture written_label %}{{ label }}{% endcapture %}
     {% endif %}
   {% endunless %}

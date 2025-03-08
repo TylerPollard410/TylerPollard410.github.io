@@ -13,18 +13,18 @@ excerpt: "Statistician, Bayesian Analysis, Predictive Modeling, Interactive Dash
 intro:
   - excerpt: "Welcome to my portfolio! I’m a statistician who thrives at the intersection of data and decision-making. Whether I’m developing statistical models, creating interactive dashboards, or exploring new analytical techniques, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey—from mastering statistical methods to building impactful projects. Take a look around, and I hope you find something that sparks collaboration or inspires a new idea!"
 feature_row:
-  - title: "Sports Analytics"
-    excerpt: "Explore my models and insights on NFL and MLB statistics."
-    url: "/projects"
+  - title: "Bayesian Analysis"
+    excerpt: "Check out my full Bayesian workflow in the coral bleaching project."
+    url: "/projects/school/florida-coral-bleaching/"
+    icon: "fas fa-chart-area"
+  - title: "Predictive Modeling"
+    excerpt: "See how my predictive modeling enhances hurricane analysis and forecasting."
+    url: "/projects/school/hurricanes/"
     icon: "fas fa-chart-line"
   - title: "Interactive Dashboards"
     excerpt: "Check out interactive visualizations built with R Shiny."
-    url: "/projects"
+    url: "/apps/"
     icon: "fas fa-desktop"
-  - title: "Education & Career"
-    excerpt: "Learn more about my journey from engineering to statistics."
-    url: "/about"
-    icon: "fas fa-user-graduate"
 ---
 
 {% include feature_row id="intro" type="center" %}
@@ -33,36 +33,36 @@ feature_row:
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" ><i class="fas fa-chart-line fa-4x"></i></a>
-            <h2 class="archive__item-title">Sports Analytics</h2>
+            <a href="/projects/school/florida-coral-bleaching/" ><i class="fas fa-chart-area fa-4x"></i></a>
+            <h2 class="archive__item-title">Bayesian Analysis</h2>
             <div class="archive__item-excerpt">
-              <p>Explore my models and insights on NFL and MLB statistics.</p>
+              <p>Check out my full Bayesian workflow in the coral bleaching project.</p>
             </div>
-            <p><a href="/projects" class="btn btn--info">Learn more</a></p>
+            <p><a href="/projects/school/florida-coral-bleaching/" class="btn btn--info">Learn more</a></p>
         </div>
       </div>
     </div>
     <div class="feature__item">
       <div class="archive__item">
         <div class="archive__item-body">
-            <a href="/projects" ><i class="fas fa-desktop fa-4x"></i></a>
+            <a href="/projects/school/hurricanes/" ><i class="fas fa-chart-line fa-4x"></i></a>
+            <h2 class="archive__item-title">Predictive Modeling</h2>
+            <div class="archive__item-excerpt">
+              <p>See how my predictive modeling enhances hurricane analysis and forecasting.</p>
+            </div>
+            <p><a href="/projects/school/hurricanes/" class="btn btn--info">Learn more</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="feature__item">
+      <div class="archive__item">
+        <div class="archive__item-body">
+            <a href="/apps" ><i class="fas fa-desktop fa-4x"></i></a>
             <h2 class="archive__item-title">Interactive Dashboards</h2>
             <div class="archive__item-excerpt">
-              <p>Check out interactive visualizations built with R Shiny.</p>
+              <p>Explore interactive data visualizations built with R Shiny.</p>
             </div>
-            <p><a href="/projects" class="btn btn--info">Learn more</a></p>
-        </div>
-      </div>
-    </div>
-    <div class="feature__item">
-      <div class="archive__item">
-        <div class="archive__item-body">
-            <a href="/about" ><i class="fas fa-user-graduate fa-4x"></i></a>
-            <h2 class="archive__item-title">Education &amp; Career</h2>
-            <div class="archive__item-excerpt">
-              <p>Learn more about my journey from engineering to statistics.</p>
-            </div>
-            <p><a href="/about" class="btn btn--info">Learn more</a></p>
+            <p><a href="/apps" class="btn btn--info">Learn more</a></p>
         </div>
       </div>
     </div>
