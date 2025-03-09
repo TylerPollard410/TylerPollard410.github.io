@@ -6,7 +6,7 @@ header:
   teaser: "assets/images/HurricaneAnalysisPic.png"
 ---
 
-<p><a href="https://tylerpollard410.github.io/Hurricane-Analysis/" class="btn btn--info btn--default">
+<p><a href="https://tylerpollard410.github.io/Hurricane-Analysis/" target="_blank" class="btn btn--info btn--default">
   Jump to Full Project <i class = "fas fa-share"></i>
 </a></p>
 
@@ -18,4 +18,4 @@ additional **state variables** improve predictions beyond the **HWRF model** alo
 - Feature importance analysis of **key hurricane predictors**  
 - Improved accuracy over existing forecasts  
 
-📊 **[Explore the Analysis](https://tylerpollard410.github.io/Hurricane-Analysis/)**
+📊 <a href="https://tylerpollard410.github.io/Hurricane-Analysis/" target="_blank"><b> View the Full Analysis</b></a>

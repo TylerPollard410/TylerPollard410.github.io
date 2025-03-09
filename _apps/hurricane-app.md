@@ -6,7 +6,7 @@ header:
   teaser: "assets/images/HurricaneAnalysisAppPic.png"
 ---
 
-<p><a href="https://tylerpollard410.shinyapps.io/Hurricane_EDA/" class="btn btn--info btn--default">
+<p><a href="https://tylerpollard410.shinyapps.io/Hurricane_EDA/" target="_blank" class="btn btn--info btn--default">
   Launch App <i class = "fas fa-rocket"></i>
 </a></p>
 
@@ -23,4 +23,4 @@ forecasted intensity.
 
 The app is based on data from the [Hurricane Intensity Prediction](https://tylerpollard410.github.io/projects/hurricanes/) project.  
 
-▶ **[Launch the App](https://tylerpollard410.shinyapps.io/Hurricane_EDA/)**  
+▶ <a href="https://tylerpollard410.shinyapps.io/Hurricane_EDA/" target="_blank"><b> Launch the App</b></a>

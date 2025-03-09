@@ -8,7 +8,7 @@ header:
 
 *This dashboard is still in early development—some features are incomplete, but team rankings are available.* 
 
-<p><a href="https://tylerpollard410.shinyapps.io/NFL_Analysis/" class="btn btn--info btn--default">
+<p><a href="https://tylerpollard410.shinyapps.io/NFL_Analysis/" target="_blank" class="btn btn--info btn--default">
   Launch App <i class = "fas fa-rocket"></i>
 </a></p>
 
@@ -21,4 +21,4 @@ It provides tools to analyze team performance, rankings, and betting insights.
 - View Bayesian model predictions for spreads, totals, and game outcomes *(coming soon)*  
 - Adjust parameters to see probabilities for different betting scenarios *(coming soon)*  
 
-▶ [Launch the App](https://tylerpollard410.shinyapps.io/NFL_Analysis/)
+▶ <a href="https://tylerpollard410.shinyapps.io/NFL_Analysis/" target="_blank"><b> Launch the App</b></a>

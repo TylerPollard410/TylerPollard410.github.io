@@ -6,7 +6,7 @@ header:
   teaser: "assets/images/coral-reef-bleaching.png"
 ---
 
-<p><a href="https://tylerpollard410.github.io/Florida-Coral-Bleaching/" class="btn btn--info btn--default">
+<p><a href="https://tylerpollard410.github.io/Florida-Coral-Bleaching/" target="_blank" class="btn btn--info btn--default">
   Jump to Full Project <i class = "fas fa-share"></i>
 </a></p>
 
@@ -20,4 +20,4 @@ bleaching severity over time.
 - Captures spatial and temporal patterns in bleaching events  
 - Identifies key predictors of severe bleaching years  
 
-🔗 **[View Full Analysis](https://tylerpollard410.github.io/Florida-Coral-Bleaching/)**
+🔗 <a href="https://tylerpollard410.github.io/Florida-Coral-Bleaching/" target="_blank"><b> View the Full Analysis</b></a>

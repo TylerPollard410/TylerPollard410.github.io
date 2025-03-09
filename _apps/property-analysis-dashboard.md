@@ -6,8 +6,8 @@ header:
   teaser: "assets/images/PropertyDashboardPic.png"
 ---
 
-<p><a href="https://tylerpollard410.shinyapps.io/Property_Analysis_Dashboard/" class="btn btn--info btn--default">
-  Launch App <i class = "fas fa-rocket"></i>
+<p><a href="https://tylerpollard410.shinyapps.io/Property_Analysis_Dashboard/" target="_blank" class="btn btn--info btn--default">
+  Explore Dashboard <i class = "fas fa-rocket"></i>
 </a></p>
 
 This interactive dashboard helps users evaluate potential short-term rental investments 
@@ -20,4 +20,4 @@ overall return on investment.
 - View detailed breakdowns of expected expenses and revenue.
 - Compare different investment scenarios in real-time.
 
-▶ [Explore the Dashboard](https://tylerpollard410.shinyapps.io/Property_Analysis_Dashboard/)
+▶ <a href="https://tylerpollard410.shinyapps.io/Property_Analysis_Dashboard/" target="_blank"><b> Explore the Dashboard</b></a>

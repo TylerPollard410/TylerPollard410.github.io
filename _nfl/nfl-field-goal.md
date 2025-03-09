@@ -16,6 +16,6 @@ This study applies **Bayesian analysis** to NFL field goal data since 1999, expl
 the analysis models **field goal performance** and assesses the reliability of kickers 
 in various game scenarios.
 
-📊 **[View the Full Analysis](https://tylerpollard410.github.io/NFL-Kicker-Analysis/)**
+📊 <a href="https://tylerpollard410.github.io/NFL-Kicker-Analysis/" target="_blank"><b> View the Full Analysis</b></a>
 
 
