@@ -21,6 +21,6 @@ forecasted intensity.
 - Examining relationships between variables and storm intensity  
 - Exploring spatial and temporal trends in the data  
 
-The app is based on data from the [Hurricane Intensity Prediction](https://tylerpollard410.github.io/projects/hurricanes/) project.  
+The app is based on data from the [Hurricane Intensity Prediction](https://tylerpollard410.github.io/projects/school/hurricanes/) project.  
 
 ▶ <a href="https://tylerpollard410.shinyapps.io/Hurricane_EDA/" target="_blank"><b> Launch the App</b></a>
