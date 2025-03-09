@@ -7,7 +7,7 @@ header:
   teaser: "assets/images/NFLFieldGoalPic.png"
 ---
 
-<p><a href="https://tylerpollard410.github.io/NFL-Kicker-Analysis/" class="btn btn--info btn--default">
+<p><a href="https://tylerpollard410.github.io/NFL-Kicker-Analysis/" target="_blank" class="btn btn--info btn--default">
   Jump to Full Project <i class = "fas fa-share"></i>
 </a></p>
 
