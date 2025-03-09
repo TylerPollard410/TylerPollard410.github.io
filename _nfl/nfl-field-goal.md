@@ -1,10 +1,21 @@
 ---
 title: "NFL Field Goal Analysis"
-excerpt: "The following study will outline a Bayesian analysis of NFL field goal data since 1999."
+excerpt: "A Bayesian analysis of NFL field goal data since 1999."
 collection: nfl
-link: "https://tylerpollard410.github.io/NFL-Kicker-Analysis/"
+# link: "https://tylerpollard410.github.io/NFL-Kicker-Analysis/"
 header:
   teaser: "assets/images/NFLFieldGoalPic.png"
 ---
 
-The analysis for NFL Field Goals is [available here](https://tylerpollard410.github.io/NFL-Kicker-Analysis/)
+<p><a href="https://tylerpollard410.github.io/NFL-Kicker-Analysis/" class="btn btn--info btn--default">
+  Jump to Full Project <i class = "fas fa-share"></i>
+</a></p>
+
+This study applies **Bayesian analysis** to NFL field goal data since 1999, exploring how 
+**distance** and **clutch situations** affect success rates. Using data from `nflreadr`, 
+the analysis models **field goal performance** and assesses the reliability of kickers 
+in various game scenarios.
+
+📊 **[View the Full Analysis](https://tylerpollard410.github.io/NFL-Kicker-Analysis/)**
+
+
