@@ -1,0 +1,166 @@
+---
+format:
+  pdf:
+    documentclass: article
+    geometry:
+      - left=0.5in
+      - right=0.5in
+      - top=0.5in
+      - bottom=0.5in
+    fontsize: 11pt
+    mainfont: Arial
+    linestretch: 1.0
+    pagestyle: empty
+    indent: false
+    pdf-engine: xelatex
+    include-in-header:
+      text: |
+        \usepackage{tabularx}
+        \usepackage{multirow}
+        \usepackage{multicol}
+        \usepackage{paracol}
+        \usepackage{ragged2e}
+        \usepackage{fontawesome5}
+        \usepackage{enumitem}
+        \PassOptionsToPackage{svgnames}{xcolor}
+        \usepackage{tcolorbox}
+        \usepackage{tikz}
+        \usepackage{titlesec}
+---
+
+<!-- Font Sizes List -->
+<!-- \tiny -->
+<!-- \scriptsize -->
+<!-- \footnotesize -->
+<!-- \small -->
+<!-- \normalsize -->
+<!-- \large -->
+<!-- \Large -->
+<!-- \LARGE -->
+<!-- \huge -->
+<!-- \Huge -->
+
+\titlespacing*{\subsection}{0pt}{\baselineskip}{0\baselineskip}
+
+<!-- \definecolor{SlateGrey}{HTML}{2E2E2E} -->
+<!-- \definecolor{LightGrey}{HTML}{666666} -->
+<!-- \definecolor{DarkPastelRed}{HTML}{450808} -->
+<!-- \definecolor{PastelRed}{HTML}{8F0D0D} -->
+<!-- \definecolor{GoldenEarth}{HTML}{E7D192} -->
+<!-- \colorlet{name}{black} -->
+<!-- \colorlet{tagline}{PastelRed} -->
+<!-- \colorlet{heading}{DarkPastelRed} -->
+<!-- \colorlet{headingrule}{GoldenEarth} -->
+<!-- \colorlet{subheading}{PastelRed} -->
+<!-- \colorlet{accent}{PastelRed} -->
+<!-- \colorlet{emphasis}{SlateGrey} -->
+<!-- \colorlet{body}{LightGrey} -->
+\colorlet{body}{black!40!white}
+
+<!-- \setcolumnwidth{.35\textwidth} -->
+<!-- \setlength{\columnsep}{0.02\textwidth} -->
+
+<!-- \tcbset{on line, boxsep=1pt, left=0pt,right=3pt, height = \lineheight} -->
+
+\newcommand{\cvtag}[1]{%
+  \tikz[baseline]\node[anchor=base,draw=body,fill=body!10,rounded corners,inner xsep=1ex,inner ysep =0.75ex,text height=1.5ex,text depth=.25ex]{#1};
+}
+
+\setcolumnwidth{2.3in}
+\setlength{\columnsep}{0.06\textwidth}
+
+<!-- \setlength{\columnseprule}{0.4pt} -->
+<!-- \faUser \hspace{0.75em} {https://tylerpollard410.github.io} \\ -->
+
+\backgroundcolor{c[0](4cm,4cm)(0.5\columnsep,4cm)}{cyan!10}
+
+\begin{paracol}{2}
+\begin{leftcolumn}
+\begin{RaggedRight}
+\begin{fontsize}{24}{28}\selectfont \textbf{Tyler Pollard}
+  \end{fontsize}
+\end{RaggedRight} \\
+\begin{fontsize}{16}{1}\selectfont Statistician
+  \end{fontsize} \\
+
+\vspace{-1em}
+\faEnvelope \hspace{0.75em} tylerpollard410@gmail.com \\
+\faPhone \hspace{0.75em} (443) 974-4559 \\
+\faMapMarker \hspace{1em} Parrish, FL, 34219 \\
+\hrule
+
+\subsection{PROFESSIONAL SUMMARY}
+\begin{flushleft}
+Statistician with 7+ years of experience in predictive modeling, advanced statistical analysis, and delivering actionable insights. Passionate about sports analytics, with personal projects modeling NFL data to predict scores, spreads, and outcomes using R and Stan. Skilled in developing dynamic R Shiny applications and scalable workflows, combining technical excellence with a commitment to innovation and data-driven decision-making.
+\end{flushleft}
+
+\subsection{SKILLS}
+\vspace{0.5em}
+\titlerule
+\subsubsection{Programming \& Tools}
+\vspace{-0.5em}
+\begin{flushleft}
+\cvtag{R}\cvtag{R Shiny}\cvtag{ggplot2}\cvtag{plotly}\cvtag{Stan}\cvtag{JAGS}\cvtag{SQL}\cvtag{JMP}\cvtag{SAS}\cvtag{GitHub}\cvtag{GitLab}\cvtag{Tableau}
+\end{flushleft}
+\vspace{-0.5em}
+\subsubsection{Statistical Expertise}
+\vspace{-0.5em}
+\begin{flushleft}
+\cvtag{Predictive Modeling}\cvtag{Regression Modeling}\cvtag{Bayesian Statistics}\cvtag{Multilevel Modeling}\cvtag{Multivariate Modeling}\cvtag{Time Series Analysis}\cvtag{Machine Learning}\cvtag{Design of Experiments (DOE)}\cvtag{Data Visualization}
+\end{flushleft}
+\vspace{0.5em}
+\begin{flushleft}
+\textbf{Security Clearance} \\
+\textit{Active} Top Secret / Sensitive Compartmented Information
+\end{flushleft}
+\end{leftcolumn}
+
+\begin{rightcolumn}
+\subsection{WORK EXPERIENCE}
+\vspace{0.5em}
+\titlerule
+\begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
+\textbf{Operations Research Analyst} & {Apr 2024 - Current} \\
+\multicolumn{2}{@{}l}{\textit{U.S. Special Operations Command} | \textit{Tampa, FL}} \\
+\end{tabularx}
+
+\vspace{-0.35em}
+\begin{itemize}[leftmargin=*]\setlength\itemsep{-0.35em}\raggedright
+  \item{Developed Bayesian multilevel ordinal regression models to analyze Likert survey data, enabling iterative updates to improve model accuracy. Delivered actionable insights that informed strategic decision-making and enhanced the evaluation of behavior change.}
+  \item{Designed and implemented a stance detection framework combining large language models with Bayesian hierarchical modeling. Scaled analysis from 43 text items to tens of thousands, achieving a 32\% improvement in prediction accuracy while quantifying uncertainty for more informed decision-making.}
+  \item{Conducted survival analysis on social media time-to-event data using semi-parametric joint models with time-varying predictors. Identified critical time thresholds that shaped strategic adjustments in planning and execution.}
+  \item{Programmed and deployed R Shiny applications on the Posit Connect cloud platform, enabling over 50 assessment team members to perform standardized statistical analyses. Improved workflows for data visualization and reporting.}
+  \item{Promoted to lead a 6-person assessments team, overseeing the development of standardized evaluation frameworks and innovative solutions to assess Military Information Support Operations across 11 combatant commands.}
+\end{itemize}
+
+\vspace{0.5em}
+\begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
+\textbf{Mathematical Statistician} & {Sep 2018 - Apr 2024} \\
+\multicolumn{2}{@{}l}{\textit{U.S. Army Evaluation Center} | \textit{Aberdeen Proving Ground, MD}} \\
+\end{tabularx}
+
+\vspace{-0.35em}
+\begin{itemize}[leftmargin=*]\setlength\itemsep{-0.35em}\raggedright
+  \item{Collaborated with 24 multi-disciplinary teams to develop statistical models, applying DOE, simulations, and advanced techniques. Delivered test designs that addressed critical evaluation metrics and reduced resource requirements by up to 67\%.}
+  \item{Designed and automated modular workflows for analyzing multilevel probability response variables. Used R and JMP scripts to integrate Monte Carlo simulations, Beta-Binomial regression, and kernel density estimation, enabling scalable and iterative analyses.}
+  \item{Performed extensive analyses on continuous, discrete, and survey datasets using regression, mixed models, and Bayesian methods. Delivered actionable reports and visualizations that supported data-driven decision-making by senior leadership.}
+  \item{Applied advanced statistical techniques to ensure the success of a top-priority operational test and transform test infrastructure, earning the "Department of the Army Civilian Service Commendation Medal."}
+  \item{Enhanced probabilistic modeling tools, improving the accuracy and efficiency of test design processes. Recognized as the "AEC Employee of the Quarter" for these contributions.}
+\end{itemize}
+
+\vspace{-0.5em}
+\subsection{EDUCATION}
+\vspace{0.5em}
+\titlerule
+\begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
+\textbf{Master of Statistics} & {Jul 2024} \\
+\textit{North Carolina State University | Raleigh, NC} & \textit{GPA: 4.00} \\
+\end{tabularx}
+
+\vspace{-0.55em}
+\begin{tabularx}{\columnwidth}{@{}l >{\raggedleft\arraybackslash}X}
+\textbf{B.S. in Mechanical Engineering} & {May 2018} \\
+\textit{Clemson University | Clemson, SC} & \textit{GPA: 3.53} \\
+\end{tabularx}
+\end{rightcolumn}
+\end{paracol}

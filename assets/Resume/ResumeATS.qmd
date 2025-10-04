@@ -1,0 +1,59 @@
+---
+format:
+  pdf:
+    documentclass: article
+    geometry:
+      - left=0.75in
+      - right=0.75in
+      - top=0.75in
+      - bottom=0.75in
+    fontsize: 11pt
+    linestretch: 1.15
+    pagestyle: empty
+    indent: false
+    pdf-engine: pdflatex
+---
+
+# TYLER POLLARD
+
+**Email:** tylerpollard410@gmail.com | **Phone:** (443) 974-4559 | **Location:** Parrish, FL, 34219
+
+## PROFESSIONAL SUMMARY
+
+Statistician with 7+ years of experience in predictive modeling, advanced statistical analysis, and delivering actionable insights. Passionate about sports analytics, with personal projects modeling NFL data to predict scores, spreads, and outcomes using R and Stan. Skilled in developing dynamic R Shiny applications and scalable workflows, combining technical excellence with a commitment to innovation and data-driven decision-making.
+
+## SKILLS
+
+**Programming & Tools:** R, R Shiny, ggplot2, plotly, Stan, JAGS, SQL, JMP, SAS, GitHub, GitLab, Tableau
+
+**Statistical Expertise:** Predictive Modeling, Regression Modeling, Bayesian Statistics, Multilevel Modeling, Multivariate Modeling, Time Series Analysis, Machine Learning, Design of Experiments (DOE), Data Visualization
+
+**Security Clearance:** Active Top Secret / Sensitive Compartmented Information
+
+## WORK EXPERIENCE
+
+**Operations Research Analyst** | April 2024 - Current
+*U.S. Special Operations Command* | *Tampa, FL*
+
+- Developed Bayesian multilevel ordinal regression models to analyze Likert survey data, enabling iterative updates to improve model accuracy. Delivered actionable insights that informed strategic decision-making and enhanced the evaluation of behavior change.
+- Designed and implemented a stance detection framework combining large language models with Bayesian hierarchical modeling. Scaled analysis from 43 text items to tens of thousands, achieving a 32% improvement in prediction accuracy while quantifying uncertainty for more informed decision-making.
+- Conducted survival analysis on social media time-to-event data using semi-parametric joint models with time-varying predictors. Identified critical time thresholds that shaped strategic adjustments in planning and execution.
+- Programmed and deployed R Shiny applications on the Posit Connect cloud platform, enabling over 50 assessment team members to perform standardized statistical analyses. Improved workflows for data visualization and reporting.
+- Promoted to lead a 6-person assessments team, overseeing the development of standardized evaluation frameworks and innovative solutions to assess Military Information Support Operations across 11 combatant commands.
+
+**Mathematical Statistician** | September 2018 - April 2024
+*U.S. Army Evaluation Center* | *Aberdeen Proving Ground, MD*
+
+- Collaborated with 24 multi-disciplinary teams to develop statistical models, applying DOE, simulations, and advanced techniques. Delivered test designs that addressed critical evaluation metrics and reduced resource requirements by up to 67%.
+- Designed and automated modular workflows for analyzing multilevel probability response variables. Used R and JMP scripts to integrate Monte Carlo simulations, Beta-Binomial regression, and kernel density estimation, enabling scalable and iterative analyses.
+- Performed extensive analyses on continuous, discrete, and survey datasets using regression, mixed models, and Bayesian methods. Delivered actionable reports and visualizations that supported data-driven decision-making by senior leadership.
+- Applied advanced statistical techniques to ensure the success of a top-priority operational test and transform test infrastructure, earning the "Department of the Army Civilian Service Commendation Medal."
+- Enhanced probabilistic modeling tools, improving the accuracy and efficiency of test design processes. Recognized as the "AEC Employee of the Quarter" for these contributions.
+
+## EDUCATION
+
+**Master of Statistics** | July 2024
+*North Carolina State University* | *Raleigh, NC* | *GPA: 4.00*
+
+**B.S. in Mechanical Engineering** | May 2018
+*Clemson University* | *Clemson, SC* | *GPA: 3.53*
