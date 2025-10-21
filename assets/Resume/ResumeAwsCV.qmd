@@ -35,7 +35,7 @@ Statistician with 7+ years of experience in predictive modeling, advanced statis
 
 ## Programming & Tools
 
-R, R Shiny, Stan, JAGS, SQL, JMP, SAS, GitHub, GitLab, Tableau
+R, R Shiny, Stan, CmdStan, GitHub, GitLab, Python, JAGS, SQL, JMP, SAS, Tableau
 
 ## Machine Learning
 
@@ -43,7 +43,7 @@ Regression, Classification, XGBoost, Random Forests, Time Series, State Space, C
 
 ## Statistical Expertise
 
-Bayesian Statistics, Predictive Modeling, Multilevel Modeling, Multivariate Modeling, Design of Experiments (DOE), Data Visualization
+Bayesian Statistics, Predictive Modeling, Multilevel Modeling, Multivariate Analysis, Design of Experiments (DOE), Data Visualization, Forecasting
 
 ## Other
 Workflow Automation, ETL, Cloud Deployment, CI/CD, Decision Support Systems, Report Generation
