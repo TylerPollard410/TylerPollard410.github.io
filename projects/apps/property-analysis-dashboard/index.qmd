@@ -1,0 +1,27 @@
+---
+title: "Property Analysis Dashboard"
+description: "Shiny dashboard for analyzing the profitability of short-term rental investments"
+date: 2025-02-01
+
+image: img/property-analysis-dashboard-cover.png
+categories:
+  - shiny
+  - bs4Dash
+  - prediction
+  - real estate
+
+external-url: "https://tylerpollard410.shinyapps.io/Property_Analysis_Dashboard/"
+---
+
+[Launch dashboard   {{< bi rocket-takeoff >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+
+This interactive dashboard helps users evaluate potential short-term rental investments 
+by estimating profitability based on customizable inputs. Built with R Shiny and `bs4Dash`, the app provides a structured framework to assess expected income, expenses, and overall return on investment.
+
+📌 **Key highlights:**
+
+- Adjust key property and financial variables to estimate profitability.
+- View detailed breakdowns of expected expenses and revenue.
+- Compare different investment scenarios in real-time.
+
+🏠 [Launch the app]({{< meta external-url >}}){target="_blank"}

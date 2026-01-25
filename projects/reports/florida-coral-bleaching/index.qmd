@@ -1,0 +1,24 @@
+---
+title: "Florida Coral Bleaching"
+description: "Exploring environmental drivers of coral bleaching using Bayesian modeling"
+date: 2024-05-06
+
+image: img/florida-coral-bleaching-cover.png
+categories: 
+  - bayesian
+  - weather
+
+external-url: "https://tylerpollard410.github.io/Florida-Coral-Bleaching/"
+---
+
+[Jump to full report   {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+
+This study examines coral bleaching patterns across Florida’s reefs using a **Bayesian modeling approach**. By analyzing environmental factors like **ocean temperature, storms, and water quality**, it explores trends in bleaching severity over time.
+
+📌 **Key highlights:**
+
+- Investigates how environmental conditions influence bleaching risk
+- Captures spatial and temporal patterns in bleaching events
+- Identifies key predictors of severe bleaching years
+
+📊 [View full analysis]({{< meta external-url >}}){target="_blank"}

@@ -1,0 +1,26 @@
+---
+title: "Hurricane Intensity Prediction"
+description: "Evaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling."
+date: 2024-08-25
+
+image: img/hurricane-intensity-cover.png
+categories:
+  - bayesian
+  - prediction
+  - weather
+
+external-url: "https://tylerpollard410.github.io/Hurricane-Analysis/"
+---
+
+[Jump to full report   {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+
+This study evaluates **24-hour ahead hurricane intensity forecasts**, assessing whether 
+additional **state variables** improve predictions beyond the **HWRF model** alone.
+
+📌 **Key highlights:**
+
+- Bayesian modeling of **maximum wind speed (VMAX)**  
+- Feature importance analysis of **key hurricane predictors**  
+- Improved accuracy over existing forecasts  
+
+📊 [View full analysis]({{< meta external-url >}}){target="_blank"}

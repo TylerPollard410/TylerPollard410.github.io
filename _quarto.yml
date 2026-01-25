@@ -1,0 +1,62 @@
+project:
+  type: website
+  # output-dir: _site
+  preview:
+    port: 5555
+    browser: false
+    watch-inputs: true
+    navigate: true
+
+website:
+  title: "Tyler Pollard"
+  description: "Portfolio website of Tyler Pollard, Statistician"
+  navbar:
+    background: primary
+    left:
+      - href: index.qmd
+        text: Home
+      - href: about/index.qmd
+        text: About
+      - href: projects/index.qmd
+        text: Projects
+      - href: resume/index.qmd
+        text: Resume
+    right: 
+      - icon: github
+        href: https://github.com/TylerPollard410
+        target: _blank
+      - icon: linkedin
+        href: https://www.linkedin.com/in/tyler-pollard-763b8315b/
+        target: _blank
+      - icon: envelope
+        href: "mailto:tylerpollard410@gmail.com"
+        target: _blank
+  # sidebar:
+  #   style: docked
+  #   position: left
+  #   contents: auto
+  #   links:
+  #     - icon: github
+  #       text: GitHub
+  #       href: https://github.com/TylerPollard410
+  #   tools:
+  #     - icon: github
+  #       text: GitHub
+  #       href: https://github.com/TylerPollard410
+  #     - icon: linkedin
+  #       text: LinkedIn
+  #       href: https://www.linkedin.com/in/tyler-pollard-763b8315b/
+  bread-crumbs: true
+  page-navigation: true
+  back-to-top-navigation: true
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+

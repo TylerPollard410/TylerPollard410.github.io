@@ -1,0 +1,18 @@
+---
+title: Resume
+resume:
+  pdf: 2026-01-24_resume.pdf
+  date: '2026-01-24'
+format:
+  html:
+    toc: false
+date: '2026-01-24'
+---
+
+[Download PDF]({{< meta resume.pdf >}}){.btn .btn-info}
+
+```{=html}
+<object data="{{< meta resume.pdf >}}?#scrollbar=0&toolbar=0&navpanes=0" type="application/pdf" width="100%" height="900">
+  <p>Your browser does not support embedded PDFs. <a href="{{< meta resume.pdf >}}">Download the PDF</a>.</p>
+</object>
+```

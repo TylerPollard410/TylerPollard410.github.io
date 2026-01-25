@@ -1,0 +1,34 @@
+---
+title: "Projects"
+author: ""
+description: "Tyler Pollard's projects"
+listing: 
+  - id: reports
+    contents: "reports/*/index.qmd"
+    type: default
+    sort-ui: false
+    filter-ui: false
+    categories: true
+  - id: apps
+    contents: "apps/*/index.qmd"
+    type: default
+    sort-ui: false
+    filter-ui: false
+page-layout: full
+toc-title: Content
+toc-location: right
+include-back-link: true
+date-format: "MMMM D, YYYY"
+code-tools: false
+comments: false
+---
+
+## Reports
+
+:::{#reports}
+:::
+
+## Apps
+
+:::{#apps}
+:::

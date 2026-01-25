@@ -1,0 +1,30 @@
+---
+title: "NFL Analysis Dashboard [Development]"
+description: "Interactive dashboard for exploring NFL data, ranking teams, and analyzing betting probabilities"
+date: 2025-04-26
+
+image: img/nfl-analysis-app-cover.png
+categories:
+  - shiny
+  - bs4Dash
+  - nfl
+  - nflverse
+  - R
+
+external-url: "https://tylerpollard410.shinyapps.io/NFL_Analysis/"
+---
+
+*This dashboard is still in early development—some features are incomplete, but team rankings are available.* 
+
+[Launch dashboard   {{< bi rocket-takeoff >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+
+This interactive dashboard explores NFL data from the 2006-2024 seasons, sourced from **`nflverse`**. It provides tools to analyze team performance, rankings, and betting insights.  
+
+📌 **Key Features:**  
+
+- **Team rankings** based on historical performance  
+- Access near real-time data updates, refreshed daily at 2:00 AM  
+- View Bayesian model predictions for spreads, totals, and game outcomes *(coming soon)*  
+- Adjust parameters to see probabilities for different betting scenarios *(coming soon)*  
+
+📟 [Launch the app]({{< meta external-url >}}){target="_blank"}

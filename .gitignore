@@ -1,0 +1,19 @@
+/.quarto/
+**/*.quarto_ipynb
+_site/
+**/*_cache/*
+
+/.luarc.json
+
+.DS_Store
+
+# R / Quarto local artifacts
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Python / notebooks
+.ipynb_checkpoints/
+.venv/
+__pycache__/

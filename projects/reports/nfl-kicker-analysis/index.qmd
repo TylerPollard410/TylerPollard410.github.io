@@ -1,0 +1,40 @@
+---
+title: "NFL Kicker Analysis"
+description: "A Bayesian analysis of NFL field goal data since 1999."
+date: 2024-08-22
+
+image: img/nfl-kicker-analysis-cover.png
+categories: 
+  - bayesian
+  - nfl
+  
+external-url: "https://tylerpollard410.github.io/NFL-Kicker-Analysis/"
+---
+
+<!-- ```{r}
+#| label: setup
+#| include: false
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.height = 6 * 0.618,
+  fig.retina = 3,
+  dev = "ragg_png",
+  fig.align = "center",
+  out.width = "90%",
+  collapse = TRUE,
+  cache.extra = 1234 # Change number to invalidate cache
+)
+
+options(
+  digits = 4,
+  width = 300,
+  dplyr.summarise.inform = FALSE
+)
+``` -->
+
+[Jump to full report &nbsp; {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+
+This study applies **Bayesian analysis** to NFL field goal data since 1999, exploring how **distance** and **clutch situations** affect success rates. Using data from `nflreadr`, the analysis models **field goal performance** and assesses the reliability of kickers in various game scenarios.
+
+📊 [View full analysis]({{< meta external-url >}}){target="_blank"}

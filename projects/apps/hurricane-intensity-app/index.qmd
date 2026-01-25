@@ -1,0 +1,31 @@
+---
+title: "Hurricane Intensity App"
+description: "Interactive dashboard for exploring hurricane intensity data."
+date: 2024-08-25
+
+image: img/hurricane-intensity-app-cover.png
+categories:
+  - shiny
+  - bs4Dash
+  - prediction
+  - weather
+
+external-url: "https://tylerpollard410.shinyapps.io/Hurricane_EDA/"
+---
+
+[Launch app   {{< bi rocket-takeoff >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+
+This interactive app allows users to explore key variables and trends in 
+hurricane intensity data. Featuring dynamic visualizations, it helps uncover 
+relationships between storm characteristics, environmental factors, and 
+forecasted intensity.
+
+📌 **Key highlights:**
+
+- Visualizing hurricane tracks and key predictors  
+- Examining relationships between variables and storm intensity  
+- Exploring spatial and temporal trends in the data  
+
+The app is based on data from the [Hurricane Intensity Prediction](projects/reports/hurricane-intensity/index.qmd) project. 
+
+🌀 [Launch the app]({{< meta external-url >}}){target="_blank"}
