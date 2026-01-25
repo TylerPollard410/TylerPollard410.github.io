@@ -1,0 +1,6 @@
+project:
+  title: "Tyler Pollard"
+  output-dir: "docs"
+
+execute:
+  freeze: false
