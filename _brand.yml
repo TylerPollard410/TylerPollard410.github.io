@@ -1,0 +1,155 @@
+meta:
+  name: Tyler Pollard
+  description: "Statistician and operations research analyst focused on Bayesian modeling, predictive analytics, and data visualization."
+  link:
+    # home: https://your-domain.com # TODO: add your main site URL
+    github: https://github.com/TylerPollard410
+    linkedin: https://www.linkedin.com/in/tyler-pollard-763b8315b/
+    email: mailto:tylerpollard410@gmail.com
+
+logo:
+  # Logo files live in logos/ next to _brand.yml. Replace with final assets.
+  images:
+    mark:
+      path: logos/tyler-pollard-mark.png
+      alt: "TP monogram mark"
+    wordmark-on-dark:
+      path: logos/tyler-pollard-wordmark-on-dark.png
+      alt: "Tyler Pollard wordmark for dark backgrounds"
+    wordmark-on-light:
+      path: logos/tyler-pollard-wordmark-on-light.png
+      alt: "Tyler Pollard wordmark for light backgrounds"
+    lockup:
+      path: logos/tyler-pollard-lockup.png
+      alt: "Tyler Pollard logo lockup"
+  small: mark
+  medium:
+    dark: wordmark-on-dark
+    light: wordmark-on-light
+  large: lockup
+
+color:
+  palette:
+    # Core neutrals
+    ink: "#0E0225"          # deep indigo / near-black (dark backgrounds)
+    paper: "#FBF8FF"        # soft off-white (light backgrounds)
+
+    # Miami Vice / retro core
+    vice-purple: "#6B2EFF"  # saturated but printable purple
+    vice-pink: "#FF5BC8"    # neon pink accent
+    vice-teal: "#00E5D4"    # cyan-teal accent
+
+    # Sports + analytics warmth
+    sunset-orange: "#FF7A1A"
+    gold: "#FFC857"
+
+    # Utility
+    muted-gray: "#7A728C"
+
+  # Theme roles
+  foreground: ink
+  background: paper
+
+  primary: vice-purple
+  secondary: vice-teal
+  tertiary: vice-pink
+
+  success: vice-teal
+  info: vice-purple
+  warning: sunset-orange
+  danger: vice-pink
+
+  light: paper
+  dark: ink
+
+# color:
+#   palette:
+#     black: "#000000"
+#     white: "#ffffff"
+
+#     night-purple: "#1b0f2a"
+#     deep-indigo: "#2a1f44"
+
+#     neon-purple: "#7b2cff"
+#     neon-pink: "#ff4fa3"
+#     neon-cyan: "#21e6d6"
+#     neon-gold: "#ffcc33"
+
+#   # global defaults (safe for PDF & Typst)
+#   foreground: black
+#   background: white
+
+#   # semantic usage
+#   primary: neon-cyan
+#   secondary: neon-purple
+#   accent: neon-pink
+#   success: neon-gold
+#   info: neon-cyan
+
+#   dark: night-purple
+#   light: white
+
+typography:
+  fonts:
+    # Primary brand font (retro-modern, excellent numerals)
+    - family: Space Grotesk
+      source: google
+      weight: [400, 500, 600, 700]
+      style: [normal]
+
+    # Monospace for code, stats, tables
+    - family: JetBrains Mono
+      source: google
+      weight: [400, 600]
+      style: [normal, italic]
+
+  base:
+    family: Space Grotesk
+    weight: 400
+    size: 16px
+    line-height: 1.55
+    # color intentionally inherited from color.foreground
+
+  headings:
+    family: Space Grotesk
+    weight: 600
+    line-height: 1.2
+    color: vice-purple
+
+  monospace:
+    family: JetBrains Mono
+    weight: 400
+    size: 0.9em
+
+  monospace-inline:
+    color: vice-pink
+    background-color: "#F2ECFF"
+
+  monospace-block:
+    color: foreground
+    background-color: "#F4F0FF"
+    line-height: 1.45
+
+  link:
+    weight: 600
+    color: vice-teal
+    decoration: underline
+
+defaults:
+  quarto:
+    format:
+      pdf:
+        documentclass: scrartcl
+      typst:
+        papersize: us-letter
+
+  shiny:
+    theme:
+      defaults:
+        navbar-bg: $brand-ink
+        navbar-fg: $brand-paper
+        primary: $brand-vice-purple
+      rules: |
+        .navbar-brand img {
+          max-height: 48px;
+        }

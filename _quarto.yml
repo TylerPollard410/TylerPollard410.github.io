@@ -12,8 +12,7 @@ profile:
   default: development
 
 execute: 
-  cache: true
-  freeze: true
+  freeze: false
 
 website:
   description: "Portfolio website of Tyler Pollard, Statistician"
@@ -60,8 +59,8 @@ website:
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      light: cosmo
+      dark: darkly
     css: styles.css
     toc: true
 
