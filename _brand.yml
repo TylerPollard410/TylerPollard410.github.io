@@ -10,9 +10,9 @@ meta:
 logo:
   # Logo files live in logos/ next to _brand.yml. Replace with final assets.
   images:
-    mark:
-      path: logos/tyler-pollard-mark.png
-      alt: "TP monogram mark"
+    icon:
+      path: logos/tyler-pollard-icon.png
+      alt: "TP icon"
     wordmark-on-dark:
       path: logos/tyler-pollard-wordmark-on-dark.png
       alt: "Tyler Pollard wordmark for dark backgrounds"
@@ -22,7 +22,7 @@ logo:
     lockup:
       path: logos/tyler-pollard-lockup.png
       alt: "Tyler Pollard logo lockup"
-  small: mark
+  small: icon
   medium:
     dark: wordmark-on-dark
     light: wordmark-on-light
@@ -47,8 +47,7 @@ color:
     muted-gray: "#7A728C"
 
   # Theme roles
-  foreground: ink
-  background: paper
+  # Leave foreground/background unset so flatly/darkly keep distinct light/dark body colors.
 
   primary: vice-purple
   secondary: vice-teal
@@ -106,9 +105,9 @@ typography:
   base:
     family: Space Grotesk
     weight: 400
-    size: 16px
+    size: 1rem
     line-height: 1.55
-    # color intentionally inherited from color.foreground
+    # color intentionally inherited from the active Bootstrap theme
 
   headings:
     family: Space Grotesk
@@ -126,7 +125,7 @@ typography:
     background-color: "#F2ECFF"
 
   monospace-block:
-    color: foreground
+    color: ink
     background-color: "#F4F0FF"
     line-height: 1.45
 

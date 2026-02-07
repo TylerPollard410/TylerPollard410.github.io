@@ -59,8 +59,8 @@ website:
 format:
   html:
     theme:
-      light: cosmo
-      dark: darkly
+      dark: [darkly, brand]
+      light: [flatly, brand]
     css: styles.css
     toc: true
 
