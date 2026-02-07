@@ -13,6 +13,9 @@ logo:
     icon:
       path: logos/tyler-pollard-icon.png
       alt: "TP icon"
+    wordmark:
+      path: logos/tyler-pollard-wordmark.png
+      alt: "Tyler Pollard wordmark"
     wordmark-on-dark:
       path: logos/tyler-pollard-wordmark-on-dark.png
       alt: "Tyler Pollard wordmark for dark backgrounds"
@@ -23,9 +26,9 @@ logo:
       path: logos/tyler-pollard-lockup.png
       alt: "Tyler Pollard logo lockup"
   small: icon
-  medium:
-    dark: wordmark-on-dark
-    light: wordmark-on-light
+  medium: wordmark
+    # dark: wordmark-on-dark
+    # light: wordmark-on-light
   large: lockup
 
 color:
