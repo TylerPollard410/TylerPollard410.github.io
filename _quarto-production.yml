@@ -3,7 +3,7 @@ project:
 
 execute:
   # Production: keep previous execution results unless source changes.
-  freeze: auto
+  freeze: false
 
 website:
   title: "Tyler Pollard"
