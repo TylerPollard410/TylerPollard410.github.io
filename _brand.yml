@@ -8,28 +8,28 @@ meta:
     email: mailto:tylerpollard410@gmail.com
 
 logo:
-  # Logo files live in logos/ next to _brand.yml. Replace with final assets.
+  # Shared assets for Quarto + Bootstrap/Shiny projects.
   images:
     icon:
       path: logos/tyler-pollard-icon.png
-      alt: "TP icon"
-    wordmark:
-      path: logos/tyler-pollard-wordmark.png
-      alt: "Tyler Pollard wordmark"
-    wordmark-on-dark:
-      path: logos/tyler-pollard-wordmark-on-dark.png
-      alt: "Tyler Pollard wordmark for dark backgrounds"
-    wordmark-on-light:
-      path: logos/tyler-pollard-wordmark-on-light.png
-      alt: "Tyler Pollard wordmark for light backgrounds"
-    lockup:
-      path: logos/tyler-pollard-lockup.png
-      alt: "Tyler Pollard logo lockup"
+      alt: "Tyler Pollard icon"
+    header-logo:
+      path: logos/tyler-pollard-header-logo.png
+      alt: "Tyler Pollard"
+    header-logo-dark:
+      path: logos/tyler-pollard-header-logo-dark.png
+      alt: "Tyler Pollard dark"
+    header-logo-light:
+      path: logos/tyler-pollard-header-logo-light.png
+      alt: "Tyler Pollard light"
   small: icon
-  medium: wordmark
-    # dark: wordmark-on-dark
-    # light: wordmark-on-light
-  large: lockup
+  medium: header-logo
+    # light: header-logo-on-light
+    # dark: header-logo-on-dark
+  large: header-logo
+    # If you add dedicated variants later:
+    # dark: header-logo-on-dark
+    # light: header-logo-on-light
 
 color:
   palette:
@@ -51,6 +51,8 @@ color:
 
   # Theme roles
   # Leave foreground/background unset so flatly/darkly keep distinct light/dark body colors.
+  # foreground:
+  # background:
 
   primary: vice-purple
   secondary: vice-teal
@@ -63,33 +65,6 @@ color:
 
   light: paper
   dark: ink
-
-# color:
-#   palette:
-#     black: "#000000"
-#     white: "#ffffff"
-
-#     night-purple: "#1b0f2a"
-#     deep-indigo: "#2a1f44"
-
-#     neon-purple: "#7b2cff"
-#     neon-pink: "#ff4fa3"
-#     neon-cyan: "#21e6d6"
-#     neon-gold: "#ffcc33"
-
-#   # global defaults (safe for PDF & Typst)
-#   foreground: black
-#   background: white
-
-#   # semantic usage
-#   primary: neon-cyan
-#   secondary: neon-purple
-#   accent: neon-pink
-#   success: neon-gold
-#   info: neon-cyan
-
-#   dark: night-purple
-#   light: white
 
 typography:
   fonts:
@@ -125,11 +100,11 @@ typography:
 
   monospace-inline:
     color: vice-pink
-    background-color: "#F2ECFF"
+    background-color: paper #"#F2ECFF"
 
   monospace-block:
     color: ink
-    background-color: "#F4F0FF"
+    background-color: paper #"#F4F0FF"
     line-height: 1.45
 
   link:
@@ -138,20 +113,35 @@ typography:
     decoration: underline
 
 defaults:
+  bootstrap:
+    # Bootstrap 5 placeholders (safe to keep empty until needed)
+    defaults: {}
+    rules: |
+      /* Global navbar logo sizing (applies to Quarto + bslib Bootstrap navbars) */
+      .navbar-brand .navbar-logo,
+      .navbar-brand img {
+        max-height: 40px;
+        width: auto;
+      }
+    # functions: ""
+    # mixins: ""
   quarto:
     format:
-      pdf:
-        documentclass: scrartcl
+      # Quarto format placeholders (keep allowed formats only)
+      html:
+        theme:
+          light:
+            - flatly
+            - brand
+          dark:
+            - darkly
+            - brand
+      dashboard: {}
+      revealjs: {}
       typst:
         papersize: us-letter
-
   shiny:
+    # Shiny/bslib placeholders
     theme:
-      defaults:
-        navbar-bg: $brand-ink
-        navbar-fg: $brand-paper
-        primary: $brand-vice-purple
-      rules: |
-        .navbar-brand img {
-          max-height: 48px;
-        }
+      defaults: {}
+      rules: ""

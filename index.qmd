@@ -1,5 +1,5 @@
 ---
-title: "![Tyler Pollard](logos/tyler-pollard-wordmark.png)"
+# title: "![Tyler Pollard](logos/tyler-pollard-header-logo.png)"
 pagetitle: "Tyler Pollard"
 about: 
   template: jolla

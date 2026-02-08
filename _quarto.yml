@@ -1,6 +1,5 @@
 project:
   type: website
-  title: "Tyler Pollard (DEV)"
   output-dir: _site
   preview:
     port: 5555
@@ -12,12 +11,28 @@ profile:
   default: development
 
 execute: 
+  # Development: always re-execute changed content while iterating.
   freeze: false
 
 website:
+  title: "Tyler Pollard (DEV)"
   description: "Portfolio website of Tyler Pollard, Statistician"
+  favicon: "logos/tyler-pollard-icon.png"
+  site-url: "https://tylerpollard410.github.io/"
+  repo-url: "https://github.com/TylerPollard410/TylerPollard410.github.io"
+  google-analytics: "G-LG5XRX930Y"
+
+  twitter-card: 
+    image: "/files/profiles/twitter-card-large.png"
+    card-style: summary_large_image
+    creator: "@tylerpollard410"
+    site: "@tylerpollard410"
+
   navbar:
-    background: primary
+    # background: primary
+    # Hide text title and use the brand logo (logo.small) instead.
+    title: Tyler Pollard
+    logo: small
     left:
       - href: index.qmd
         text: Home
@@ -37,34 +52,18 @@ website:
       - icon: envelope
         href: "mailto:tylerpollard410@gmail.com"
         target: _blank
-  # sidebar:
-  #   style: docked
-  #   position: left
-  #   contents: auto
-  #   links:
-  #     - icon: github
-  #       text: GitHub
-  #       href: https://github.com/TylerPollard410
-  #   tools:
-  #     - icon: github
-  #       text: GitHub
-  #       href: https://github.com/TylerPollard410
-  #     - icon: linkedin
-  #       text: LinkedIn
-  #       href: https://www.linkedin.com/in/tyler-pollard-763b8315b/
+    search: false
+  page-footer: 
+    left: |
+      &copy; 2024 &mdash; 2026 Tyler Pollard.<br>
+      All rights reserved.
+    right: |
+      Website built with [![](/logos/quarto.png){height=1em}](https://quarto.org)
   bread-crumbs: true
   page-navigation: true
   back-to-top-navigation: true
 
 format:
   html:
-    theme:
-      dark: [darkly, brand]
-      light: [flatly, brand]
-    css: styles.css
+    css: styles.scss
     toc: true
-
-
-
-
-

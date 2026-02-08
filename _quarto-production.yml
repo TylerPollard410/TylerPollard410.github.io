@@ -1,6 +1,9 @@
 project:
-  title: "Tyler Pollard"
   output-dir: "docs"
 
 execute:
-  freeze: false
+  # Production: keep previous execution results unless source changes.
+  freeze: auto
+
+website:
+  title: "Tyler Pollard"
