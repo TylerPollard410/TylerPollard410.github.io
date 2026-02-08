@@ -1,3 +1,7 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
 /* Navbar behavior on small screens:
  * - main nav links stay stacked
  * - social icons stay inline in one row
@@ -34,7 +38,7 @@ body.quarto-dark .quarto-color-scheme-toggle i::before {
     flex-wrap: wrap;
     border: 0 !important;
     min-height: 3em;
-    font-family: $footer-font-family;
+    // font-family: $footer-font-family;
 
     // In the default Quarto template, .nav-footer-center has position: absolute 
     // turned on, which makes the div not be a flex item

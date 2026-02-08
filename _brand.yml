@@ -128,14 +128,7 @@ defaults:
   quarto:
     format:
       # Quarto format placeholders (keep allowed formats only)
-      html:
-        theme:
-          light:
-            - flatly
-            - brand
-          dark:
-            - darkly
-            - brand
+      html: {}
       dashboard: {}
       revealjs: {}
       typst:

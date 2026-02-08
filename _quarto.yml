@@ -20,6 +20,7 @@ website:
   favicon: "logos/tyler-pollard-icon.png"
   site-url: "https://tylerpollard410.github.io/"
   repo-url: "https://github.com/TylerPollard410/TylerPollard410.github.io"
+
   google-analytics: "G-LG5XRX930Y"
 
   twitter-card: 
@@ -64,6 +65,16 @@ website:
   back-to-top-navigation: true
 
 format:
+  # Quarto format placeholders (keep allowed formats only)
   html:
-    css: styles.scss
+    theme:
+      light:
+        - flatly
+        - brand
+        - styles.scss
+      dark:
+        - darkly
+        - brand
+        - styles.scss
+    # css: styles.scss
     toc: true
