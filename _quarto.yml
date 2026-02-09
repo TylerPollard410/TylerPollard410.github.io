@@ -68,12 +68,12 @@ format:
   # Quarto format placeholders (keep allowed formats only)
   html:
     theme:
-      light:
-        - flatly
-        - brand
-        - styles.scss
       dark:
         - darkly
+        - brand
+        - styles.scss
+      light:
+        - flatly
         - brand
         - styles.scss
     # css: styles.scss
