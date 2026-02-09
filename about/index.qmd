@@ -24,7 +24,7 @@ Now living in **Florida**, I work as an **Operations Research Analyst (ORSA) at 
 
 Beyond my professional work, I continuously seek opportunities to expand my expertise through independent research and projects. While I've begun deeply exploring **NFL analytics**, most of the work showcased on my [Projects](/projects/) page originated as graduate research that I've significantly enhanced - incorporating advanced methodologies and refining insights well beyond their original scope. These projects reflect my ongoing commitment to leveraging data science in innovative and meaningful ways.
 
-[View Projects](/projects/){.btn .btn-info}
+[View Projects](/projects/){.btn .btn-secondary}
 
 ## Beyond the Numbers
 

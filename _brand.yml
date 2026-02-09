@@ -55,11 +55,11 @@ color:
   # background:
 
   primary: vice-purple
-  secondary: vice-teal
-  tertiary: vice-pink
+  secondary: gold
+  tertiary: vice-teal
 
   success: vice-teal
-  info: vice-purple
+  info: gold
   warning: sunset-orange
   danger: vice-pink
 
@@ -91,7 +91,7 @@ typography:
     family: Space Grotesk
     weight: 600
     line-height: 1.2
-    color: vice-purple
+    color: vice-pink
 
   monospace:
     family: JetBrains Mono
@@ -99,23 +99,24 @@ typography:
     size: 0.9em
 
   monospace-inline:
-    color: vice-pink
+    # color: vice-teal
     background-color: paper #"#F2ECFF"
 
   monospace-block:
-    color: ink
+    # color: ink
     background-color: paper #"#F4F0FF"
     line-height: 1.45
 
   link:
     weight: 600
-    color: vice-teal
+    color: gold
     decoration: underline
 
 defaults:
   bootstrap:
     # Bootstrap 5 placeholders (safe to keep empty until needed)
-    defaults: {}
+    # defaults: 
+      # title-block-banner: $tertiary
     rules: |
       /* Global navbar logo sizing (applies to Quarto + bslib Bootstrap navbars) */
       .navbar-brand .navbar-logo,
@@ -128,13 +129,13 @@ defaults:
   quarto:
     format:
       # Quarto format placeholders (keep allowed formats only)
-      html: {}
-      dashboard: {}
-      revealjs: {}
+      # html: {}
+      # dashboard: {}
+      # revealjs: {}
       typst:
         papersize: us-letter
   shiny:
     # Shiny/bslib placeholders
     theme:
-      defaults: {}
+      # defaults: {}
       rules: ""

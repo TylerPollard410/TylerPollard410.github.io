@@ -11,7 +11,7 @@ categories:
 external-url: "https://tylerpollard410.github.io/Florida-Coral-Bleaching/"
 ---
 
-[Jump to full report   {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+[Jump to full report   {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-secondary target="_blank"}
 
 This study examines coral bleaching patterns across Florida’s reefs using a **Bayesian modeling approach**. By analyzing environmental factors like **ocean temperature, storms, and water quality**, it explores trends in bleaching severity over time.
 

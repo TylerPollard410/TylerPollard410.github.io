@@ -12,7 +12,7 @@ categories:
 external-url: "https://tylerpollard410.github.io/Hurricane-Analysis/"
 ---
 
-[Jump to full report   {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+[Jump to full report   {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-secondary target="_blank"}
 
 This study evaluates **24-hour ahead hurricane intensity forecasts**, assessing whether 
 additional **state variables** improve predictions beyond the **HWRF model** alone.

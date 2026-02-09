@@ -9,7 +9,7 @@ format:
 date: '2026-01-24'
 ---
 
-[Download PDF]({{< meta resume.pdf >}}){.btn .btn-info}
+[Download PDF]({{< meta resume.pdf >}}){.btn .btn-warning}
 
 ```{=html}
 <object data="{{< meta resume.pdf >}}?#scrollbar=0&toolbar=0&navpanes=0" type="application/pdf" width="100%" height="900">

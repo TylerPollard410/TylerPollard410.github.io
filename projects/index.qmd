@@ -1,7 +1,7 @@
 ---
 title: "Projects"
-author: ""
-description: "Tyler Pollard's projects"
+author: "Tyler Pollard"
+# Tyler Pollarddescription: "Tyler Pollard's projects"
 listing: 
   - id: reports
     contents: "reports/*/index.qmd"
