@@ -12,7 +12,7 @@ profile:
 
 execute: 
   # Development: always re-execute changed content while iterating.
-  freeze: false
+  freeze: true
 
 website:
   title: "Tyler Pollard (DEV)"
@@ -67,6 +67,7 @@ website:
 format:
   # Quarto format placeholders (keep allowed formats only)
   html:
+    axe: true
     theme:
       dark:
         - darkly
@@ -78,4 +79,5 @@ format:
         - styles.scss
     # css: styles.scss
     toc: true
-    title-block-banner: true
+    # title-block-banner: true
+    anchor-sections: true

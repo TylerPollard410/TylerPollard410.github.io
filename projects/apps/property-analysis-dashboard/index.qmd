@@ -2,6 +2,7 @@
 title: "Property Analysis Dashboard"
 description: "Shiny dashboard for analyzing the profitability of short-term rental investments"
 date: 2025-02-01
+date-modified: 2025-02-01
 
 image: img/property-analysis-dashboard-cover.png
 categories:

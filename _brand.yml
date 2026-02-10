@@ -38,13 +38,13 @@ color:
     paper: "#FBF8FF"        # soft off-white (light backgrounds)
 
     # Miami Vice / retro core
-    vice-purple: "#6B2EFF"  # saturated but printable purple
-    vice-pink: "#FF5BC8"    # neon pink accent
-    vice-teal: "#00E5D4"    # cyan-teal accent
+    tp-purple: "#6B2EFF"  # saturated but printable purple
+    tp-pink: "#FF5BC8"    # neon pink accent
+    tp-teal: "#00E5D4"    # cyan-teal accent
 
     # Sports + analytics warmth
-    sunset-orange: "#FF7A1A"
-    gold: "#FFC857"
+    tp-orange: "#FF7A1A"
+    tp-gold: "#FFC857"
 
     # Utility
     muted-gray: "#7A728C"
@@ -52,16 +52,20 @@ color:
   # Theme roles
   # Leave foreground/background unset so flatly/darkly keep distinct light/dark body colors.
   # foreground:
+  #   light: paper
+  #   dark: ink
   # background:
+  #   light: paper
+  #   dark: ink
 
-  primary: vice-purple
-  secondary: gold
-  tertiary: vice-teal
+  primary: tp-purple
+  secondary: tp-gold
+  tertiary: tp-teal
 
-  success: vice-teal
-  info: gold
-  warning: sunset-orange
-  danger: vice-pink
+  success: tp-teal
+  info: tp-gold
+  warning: tp-orange
+  danger: tp-pink
 
   light: paper
   dark: ink
@@ -91,7 +95,7 @@ typography:
     family: Space Grotesk
     weight: 600
     line-height: 1.2
-    color: vice-pink
+    color: tp-pink
 
   monospace:
     family: JetBrains Mono
@@ -99,29 +103,28 @@ typography:
     size: 0.9em
 
   monospace-inline:
-    # color: vice-teal
-    background-color: paper #"#F2ECFF"
+    color: tp-orange
+    background-color: ink
 
   monospace-block:
-    # color: ink
-    background-color: paper #"#F4F0FF"
+    color: tp-orange
+    background-color: ink
     line-height: 1.45
 
   link:
     weight: 600
-    color: gold
+    color: tp-gold
     decoration: underline
 
 defaults:
   bootstrap:
     # Bootstrap 5 placeholders (safe to keep empty until needed)
-    # defaults: 
-      # title-block-banner: $tertiary
+    # defaults:
     rules: |
       /* Global navbar logo sizing (applies to Quarto + bslib Bootstrap navbars) */
       .navbar-brand .navbar-logo,
       .navbar-brand img {
-        max-height: 40px;
+        max-height: 48px;
         width: auto;
       }
     # functions: ""
@@ -129,11 +132,13 @@ defaults:
   quarto:
     format:
       # Quarto format placeholders (keep allowed formats only)
-      # html: {}
+      html:
+        title-block-banner: "var(--brand-tp-teal)"
+        title-block-banner-color: "var(--bs-body-color)"
       # dashboard: {}
       # revealjs: {}
-      typst:
-        papersize: us-letter
+      # typst:
+        # papersize: us-letter
   shiny:
     # Shiny/bslib placeholders
     theme:

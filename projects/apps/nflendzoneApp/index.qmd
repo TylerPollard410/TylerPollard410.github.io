@@ -1,0 +1,64 @@
+---
+title: "NFL EndZone Analytics App"
+description: "Rhino/Shiny dashboard for NFL standings, playoff seeding, and Bayesian game probability analysis"
+author: Tyler Pollard
+date: 2025-12-27
+date-modified: 2026-02-07
+
+# Used by project listing cards.
+image: img/nflendzoneApp-cover-light.png
+
+# Used by this page's light/dark preview switch.
+cover-image-light: img/nflendzoneApp-cover-light.png
+cover-image-dark: img/nflendzoneApp-cover-dark.png
+categories:
+  - shiny
+  - bslib
+  - rhino
+  - nfl
+  - nflverse
+  - nflendzone
+  - R
+  - bayesian
+
+repo-url: "https://github.com/TylerPollard410/nflendzoneApp"
+external-url: "https://tylerpollard410-nflendzoneapp.share.connect.posit.cloud/"
+---
+
+::: {.app-identity}
+
+![](img/favicon.png){.app-identity-icon fig-alt="NFL EndZone Analytics App icon"}
+
+::: {.app-identity-body}
+
+This app is the next generation of my NFL analytics work and **replaces** the earlier [NFL Analysis Dashboard](/projects/apps/nfl-analysis-app/index.qmd).
+
+::: {.app-actions}
+
+[Launch dashboard   {{< bi rocket-takeoff >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
+[View source code   {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-outline-secondary target="_blank"}
+
+:::
+
+:::
+
+:::
+
+::: {.app-cover-switch}
+
+![]({{< meta cover-image-light >}}){.app-cover-light fig-alt="NFL EndZone Analytics App preview (light mode)"}
+![]({{< meta cover-image-dark >}}){.app-cover-dark fig-alt="NFL EndZone Analytics App preview (dark mode)"}
+
+:::
+
+*Actively in development: standings and game prediction modules are live, with additional features planned.*
+
+Built with `Rhino`, `Shiny`, and `bslib`, the app combines NFL schedule/team data from `nflverse` with weekly model outputs from the companion [`nflendzoneData`](https://github.com/TylerPollard410/nflendzoneData) release assets.
+
+📌 **Key highlights:**
+
+- Interactive standings across Division, Conference, and League views, plus playoff seeding workflows powered by `nflseedR`.
+- Game-level prediction workspace with adjustable spread and total sliders for selected matchups.
+- Bayesian probability outputs for cover, total, and combined outcomes, including implied American odds.
+- Multiple visualization modes for expected (`mu`) and simulated (`y`) outcomes in both result/total and home/away score spaces.
+- Modular, production-oriented architecture using `Rhino` + `box`, deployed to Posit Connect Cloud.
