@@ -34,13 +34,16 @@ logo:
 color:
   palette:
     # Core neutrals
-    ink: "#0E0225"          # deep indigo / near-black (dark backgrounds)
-    paper: "#FBF8FF"        # soft off-white (light backgrounds)
+    ink: "#202020"          # deep indigo / near-black (dark backgrounds)
+    paper: "#f8f8f8"        # soft off-white (light backgrounds)
+    white: "#FFFFFF"        # pure white (for accents, highlights, and contrast
+    black: "#000000"        # pure black (for accents, highlights, and contrast)
 
     # Miami Vice / retro core
     tp-purple: "#6B2EFF"  # saturated but printable purple
     tp-pink: "#FF5BC8"    # neon pink accent
     tp-teal: "#00E5D4"    # cyan-teal accent
+    tp-green: #6fff00ff"
 
     # Sports + analytics warmth
     tp-orange: "#FF7A1A"
@@ -48,21 +51,23 @@ color:
 
     # Utility
     muted-gray: "#7A728C"
+    tp-gray: "#303030"
+    tp-second: "#404040"
 
   # Theme roles
   # Leave foreground/background unset so flatly/darkly keep distinct light/dark body colors.
-  # foreground:
-  #   light: paper
-  #   dark: ink
-  # background:
-  #   light: paper
-  #   dark: ink
+  foreground:
+    light: paper
+    dark: ink
+  background:
+    light: paper
+    dark: ink
 
   primary: tp-purple
-  secondary: tp-gold
+  secondary: tp-second
   tertiary: tp-teal
 
-  success: tp-teal
+  success: tp-green
   info: tp-gold
   warning: tp-orange
   danger: tp-pink
@@ -88,7 +93,7 @@ typography:
     family: Space Grotesk
     weight: 400
     size: 1rem
-    line-height: 1.55
+    line-height: 1.5
     # color intentionally inherited from the active Bootstrap theme
 
   headings:
@@ -109,7 +114,7 @@ typography:
   monospace-block:
     color: tp-orange
     background-color: ink
-    line-height: 1.45
+    line-height: 1.4
 
   link:
     weight: 600
@@ -142,5 +147,8 @@ defaults:
   shiny:
     # Shiny/bslib placeholders
     theme:
-      # defaults: {}
-      rules: ""
+      preset: shiny
+      defaults:
+        bslib-dashboard-design: false
+      #rules: |
+      #  .navbar-brand { color: $brand-pink }
