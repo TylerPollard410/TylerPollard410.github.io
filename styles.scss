@@ -35,12 +35,134 @@ body.quarto-dark .quarto-color-scheme-toggle i::before {
 // Title and description
 #title-block-header {
   .quarto-title-banner {
-    background-color: $tertiary;
+    border-bottom: 1px solid var(--bs-border-color);
 
     .description {
       font-size: 1.1em;
-      margin-top: 1em !important;
+      //margin-top: 1em !important;
     }
+  }
+}
+
+/* Category pills in title banner + listing cards */
+#title-block-header .quarto-category,
+.quarto-listing .listing-category {
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background-color: $secondary;
+}
+
+body.quarto-light #title-block-header .quarto-category,
+body.quarto-light .quarto-listing .listing-category {
+  background-color: $secondary;
+  color: $dark;
+  border-color: $dark;
+}
+
+body.quarto-dark #title-block-header .quarto-category,
+body.quarto-dark .quarto-listing .listing-category {
+  background-color: $secondary;
+  color: $dark;
+  border-color: $secondary;
+}
+
+/* Inline code readability across modes */
+:not(pre) > code {
+  font-size: 0.85em;
+  border-radius: 0.12rem;
+  padding: 0.12rem 0.25rem;
+}
+
+body.quarto-light :not(pre) > code {
+  background-color: tint-color($dark, 80%);
+  color: $brand-tp-orange;
+}
+
+body.quarto-dark :not(pre) > code {
+  background-color: tint-color($dark, 80%);
+  color: $brand-tp-orange;
+}
+
+/* App page identity block (pkgdown-inspired) */
+.app-identity {
+  display: grid;
+  grid-template-columns: minmax(80px, 104px) 1fr;
+  align-items: center;
+  gap: 1rem 1.25rem;
+  margin: 0.5rem 0 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--bs-border-color);
+  background: rgba(var(--bs-primary-rgb), 0.08);
+}
+
+body.quarto-dark .app-identity {
+  background: rgba(var(--bs-primary-rgb), 0.2);
+}
+
+.app-identity-icon {
+  width: 92px;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.app-identity > p {
+  margin: 0;
+}
+
+.app-identity-body > :last-child {
+  margin-bottom: 0;
+}
+
+.app-actions {
+  margin-top: 0.8rem;
+}
+
+.app-actions p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.app-cover-switch {
+  margin: 0 0 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.9rem;
+  overflow: hidden;
+}
+
+.app-cover-switch img {
+  width: 100%;
+  display: block;
+}
+
+.app-cover-switch .app-cover-dark {
+  display: none;
+}
+
+body.quarto-dark .app-cover-switch .app-cover-light {
+  display: none;
+}
+
+body.quarto-dark .app-cover-switch .app-cover-dark {
+  display: block;
+}
+
+@media (max-width: map-get($grid-breakpoints, md)) {
+  .app-identity {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .app-actions {
+    justify-content: center;
+  }
+
+  .app-actions p {
+    justify-content: center;
   }
 }
 

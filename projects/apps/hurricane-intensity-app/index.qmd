@@ -2,6 +2,7 @@
 title: "Hurricane Intensity App"
 description: "Interactive dashboard for exploring hurricane intensity data."
 date: 2024-08-25
+date-modified: 2024-08-25
 
 image: img/hurricane-intensity-app-cover.png
 categories:
