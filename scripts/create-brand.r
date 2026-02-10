@@ -5,10 +5,12 @@ library(sass)
 library(quarto)
 
 # get brands
-bs_current_theme()
-bs_get_variables()
-bs_global_theme()
-bs_remove()
+# bs_current_theme()
+# bs_get_variables()
+# bs_global_theme()
+# bs_remove()
+
+# bs_theme_preview(theme = bs_theme(version = 5, brand = FALSE))
 
 # 1. Read the brand file to get the correct color value dynamically
 my_brand <- read_brand_yml("_brand.yml")
@@ -19,13 +21,13 @@ brand_sass_fonts(my_brand)
 # create using bslib replciaitng brand
 bslib_theme <- bs_theme(
   version = 5,
-  preset = "flatly",
+  preset = "shiny",
   brand = FALSE,
   bg = NULL,
   fg = NULL,
   primary = brand_pluck(my_brand, "color", "primary"),
   secondary = brand_pluck(my_brand, "color", "secondary"),
-  success = brand_pluck(my_brand, "color", "success"),
+  success = "#6fff00ff",
   info = brand_pluck(my_brand, "color", "info"),
   warning = brand_pluck(my_brand, "color", "warning"),
   danger = brand_pluck(my_brand, "color", "danger"),

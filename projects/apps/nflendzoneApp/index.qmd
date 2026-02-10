@@ -8,9 +8,6 @@ date-modified: 2026-02-07
 # Used by project listing cards.
 image: img/nflendzoneApp-cover-light.png
 
-# Used by this page's light/dark preview switch.
-cover-image-light: img/nflendzoneApp-cover-light.png
-cover-image-dark: img/nflendzoneApp-cover-dark.png
 categories:
   - shiny
   - bslib
@@ -36,18 +33,11 @@ This app is the next generation of my NFL analytics work and **replaces** the ea
 ::: {.app-actions}
 
 [Launch dashboard   {{< bi rocket-takeoff >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
-[View source code   {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-outline-secondary target="_blank"}
+[View source code   {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
 
 :::
 
 :::
-
-:::
-
-::: {.app-cover-switch}
-
-![]({{< meta cover-image-light >}}){.app-cover-light fig-alt="NFL EndZone Analytics App preview (light mode)"}
-![]({{< meta cover-image-dark >}}){.app-cover-dark fig-alt="NFL EndZone Analytics App preview (dark mode)"}
 
 :::
 

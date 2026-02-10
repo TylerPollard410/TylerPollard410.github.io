@@ -70,11 +70,11 @@ format:
     axe: true
     theme:
       dark:
-        - darkly
+        - default
         - brand
         - styles.scss
       light:
-        - flatly
+        - default
         - brand
         - styles.scss
     # css: styles.scss

@@ -42,8 +42,9 @@ color:
     # Miami Vice / retro core
     tp-purple: "#6B2EFF"  # saturated but printable purple
     tp-pink: "#FF5BC8"    # neon pink accent
-    tp-teal: "#00E5D4"    # cyan-teal accent
-    tp-green: #6fff00ff"
+    tp-teal: "#00E5D4"    # cyan-teal accent 
+    tp-cyan: "#03c7e8"
+    tp-green: "#6fff00ff"
 
     # Sports + analytics warmth
     tp-orange: "#FF7A1A"
@@ -57,8 +58,8 @@ color:
   # Theme roles
   # Leave foreground/background unset so flatly/darkly keep distinct light/dark body colors.
   foreground:
-    light: paper
-    dark: ink
+    light: ink
+    dark: paper
   background:
     light: paper
     dark: ink
@@ -72,8 +73,8 @@ color:
   warning: tp-orange
   danger: tp-pink
 
-  light: paper
-  dark: ink
+  light: ink
+  dark: paper
 
 typography:
   fonts:
@@ -109,11 +110,13 @@ typography:
 
   monospace-inline:
     color: tp-orange
-    background-color: ink
+    background-color: 
+      light: rgba(var(--bs-secondary-rgb), 0.08)
+      dark: rgba(var(--bs-secondary-rgb), 0.5)
 
   monospace-block:
     color: tp-orange
-    background-color: ink
+    #background-color: ink
     line-height: 1.4
 
   link:
@@ -138,7 +141,7 @@ defaults:
     format:
       # Quarto format placeholders (keep allowed formats only)
       html:
-        title-block-banner: "var(--brand-tp-teal)"
+        title-block-banner: "var(--brand-tp-cyan)"
         title-block-banner-color: "var(--bs-body-color)"
       # dashboard: {}
       # revealjs: {}

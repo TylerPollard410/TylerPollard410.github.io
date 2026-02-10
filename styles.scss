@@ -39,17 +39,18 @@ body.quarto-dark .quarto-color-scheme-toggle i::before {
 
     .description {
       font-size: 1.1em;
-      //margin-top: 1em !important;
+      margin-top: 1em !important;
     }
   }
 }
 
 /* Category pills in title banner + listing cards */
+/*
 #title-block-header .quarto-category,
 .quarto-listing .listing-category {
   font-weight: 600;
   border-radius: 999px;
-  border: 1px solid transparent;
+  border: 1px solid; // transparent;
   background-color: $secondary;
 }
 
@@ -66,8 +67,10 @@ body.quarto-dark .quarto-listing .listing-category {
   color: $dark;
   border-color: $secondary;
 }
+*/
 
 /* Inline code readability across modes */
+/*
 :not(pre) > code {
   font-size: 0.85em;
   border-radius: 0.12rem;
@@ -83,6 +86,7 @@ body.quarto-dark :not(pre) > code {
   background-color: tint-color($dark, 80%);
   color: $brand-tp-orange;
 }
+*/
 
 /* App page identity block (pkgdown-inspired) */
 .app-identity {
@@ -94,11 +98,11 @@ body.quarto-dark :not(pre) > code {
   padding: 1rem 1.1rem;
   border-radius: 0.9rem;
   border: 1px solid var(--bs-border-color);
-  background: rgba(var(--bs-primary-rgb), 0.08);
+  background-color: rgba(var(--bs-secondary-rgb), 0.08);
 }
 
 body.quarto-dark .app-identity {
-  background: rgba(var(--bs-primary-rgb), 0.2);
+  background-color: rgba(var(--bs-secondary-rgb), 0.2);
 }
 
 .app-identity-icon {
@@ -125,30 +129,6 @@ body.quarto-dark .app-identity {
   flex-wrap: wrap;
   gap: 0.6rem;
   margin: 0;
-}
-
-.app-cover-switch {
-  margin: 0 0 1rem;
-  border: 1px solid var(--bs-border-color);
-  border-radius: 0.9rem;
-  overflow: hidden;
-}
-
-.app-cover-switch img {
-  width: 100%;
-  display: block;
-}
-
-.app-cover-switch .app-cover-dark {
-  display: none;
-}
-
-body.quarto-dark .app-cover-switch .app-cover-light {
-  display: none;
-}
-
-body.quarto-dark .app-cover-switch .app-cover-dark {
-  display: block;
 }
 
 @media (max-width: map-get($grid-breakpoints, md)) {
