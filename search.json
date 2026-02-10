@@ -1,0 +1,121 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Tyler Pollard (DEV)",
+    "section": "",
+    "text": "Welcome to my portfolio! I’m a statistician who thrives at the intersection of data and decision-making. Whether I’m developing statistical models, creating interactive dashboards, or exploring new analytical techniques, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey—from mastering statistical methods to building impactful projects. Take a look around, and I hope you find something that sparks collaboration or inspires a new idea!\n\n\n Back to top"
+  },
+  {
+    "objectID": "resume/index.html",
+    "href": "resume/index.html",
+    "title": "Resume",
+    "section": "",
+    "text": "Download PDF\n\n  Your browser does not support embedded PDFs. Download the PDF.\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/reports/nfl-kicker-analysis/index.html",
+    "href": "projects/reports/nfl-kicker-analysis/index.html",
+    "title": "NFL Kicker Analysis",
+    "section": "",
+    "text": "Jump to full report   \nThis study applies Bayesian analysis to NFL field goal data since 1999, exploring how distance and clutch situations affect success rates. Using data from nflreadr, the analysis models field goal performance and assesses the reliability of kickers in various game scenarios.\n📊 View full analysis\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/property-analysis-dashboard/index.html",
+    "href": "projects/apps/property-analysis-dashboard/index.html",
+    "title": "Property Analysis Dashboard",
+    "section": "",
+    "text": "Launch dashboard   \nThis interactive dashboard helps users evaluate potential short-term rental investments by estimating profitability based on customizable inputs. Built with R Shiny and bs4Dash, the app provides a structured framework to assess expected income, expenses, and overall return on investment.\n📌 Key highlights:\n\nAdjust key property and financial variables to estimate profitability.\nView detailed breakdowns of expected expenses and revenue.\nCompare different investment scenarios in real-time.\n\n🏠 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/nfl-analysis-app/index.html",
+    "href": "projects/apps/nfl-analysis-app/index.html",
+    "title": "NFL Analysis Dashboard [DEPRECATED]",
+    "section": "",
+    "text": "WarningDeprecated App\n\n\n\nThis app has been deprecated and replaced by the NFL EndZone Analytics App.\n\n\nThis dashboard is no longer being actively developed. Historical functionality remains available.\nLaunch dashboard   \nThis interactive dashboard explores NFL data from the 2006-2024 seasons, sourced from nflverse. It provides tools to analyze team performance, rankings, and betting insights.\n📌 Key Features:\n\nTeam rankings based on historical performance\n\nAccess near real-time data updates, refreshed daily at 2:00 AM\n\nView Bayesian model predictions for spreads, totals, and game outcomes (coming soon)\n\nAdjust parameters to see probabilities for different betting scenarios (coming soon)\n\n📟 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/index.html",
+    "href": "projects/index.html",
+    "title": "Projects",
+    "section": "",
+    "text": "bayesian\n\nprediction\n\nweather\n\n\n\nEvaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nnfl\n\n\n\nA Bayesian analysis of NFL field goal data since 1999.\n\n\n\n\n\nAugust 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nweather\n\n\n\nExploring environmental drivers of coral bleaching using Bayesian modeling\n\n\n\n\n\nMay 6, 2024\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/index.html#reports",
+    "href": "projects/index.html#reports",
+    "title": "Projects",
+    "section": "",
+    "text": "bayesian\n\nprediction\n\nweather\n\n\n\nEvaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nnfl\n\n\n\nA Bayesian analysis of NFL field goal data since 1999.\n\n\n\n\n\nAugust 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nweather\n\n\n\nExploring environmental drivers of coral bleaching using Bayesian modeling\n\n\n\n\n\nMay 6, 2024\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/index.html#apps",
+    "href": "projects/index.html#apps",
+    "title": "Projects",
+    "section": "Apps",
+    "text": "Apps\n\n\n\n\n\n\n\n\n\n\nNFL EndZone Analytics App\n\n\n\nshiny\n\nbslib\n\nrhino\n\nnfl\n\nnflverse\n\nnflendzone\n\nR\n\nbayesian\n\n\n\nRhino/Shiny dashboard for NFL standings, playoff seeding, and Bayesian game probability analysis\n\n\n\n\n\nDecember 27, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nNFL Analysis Dashboard [DEPRECATED]\n\n\n\nshiny\n\nbs4Dash\n\nnfl\n\nnflverse\n\nR\n\n\n\nInteractive dashboard for exploring NFL data, ranking teams, and analyzing betting probabilities\n\n\n\n\n\nApril 26, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nProperty Analysis Dashboard\n\n\n\nshiny\n\nbs4Dash\n\nprediction\n\nreal estate\n\n\n\nShiny dashboard for analyzing the profitability of short-term rental investments\n\n\n\n\n\nFebruary 1, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nHurricane Intensity App\n\n\n\nshiny\n\nbs4Dash\n\nprediction\n\nweather\n\n\n\nInteractive dashboard for exploring hurricane intensity data.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/apps/nflendzoneApp/index.html",
+    "href": "projects/apps/nflendzoneApp/index.html",
+    "title": "NFL EndZone Analytics App",
+    "section": "",
+    "text": "This app is the next generation of my NFL analytics work and replaces the earlier NFL Analysis Dashboard.\n\nLaunch dashboard    View source code   \n\n\n\n\n \n\nActively in development: standings and game prediction modules are live, with additional features planned.\nBuilt with Rhino, Shiny, and bslib, the app combines NFL schedule/team data from nflverse with weekly model outputs from the companion nflendzoneData release assets.\n📌 Key highlights:\n\nInteractive standings across Division, Conference, and League views, plus playoff seeding workflows powered by nflseedR.\nGame-level prediction workspace with adjustable spread and total sliders for selected matchups.\nBayesian probability outputs for cover, total, and combined outcomes, including implied American odds.\nMultiple visualization modes for expected (mu) and simulated (y) outcomes in both result/total and home/away score spaces.\nModular, production-oriented architecture using Rhino + box, deployed to Posit Connect Cloud.\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/hurricane-intensity-app/index.html",
+    "href": "projects/apps/hurricane-intensity-app/index.html",
+    "title": "Hurricane Intensity App",
+    "section": "",
+    "text": "Launch app   \nThis interactive app allows users to explore key variables and trends in hurricane intensity data. Featuring dynamic visualizations, it helps uncover relationships between storm characteristics, environmental factors, and forecasted intensity.\n📌 Key highlights:\n\nVisualizing hurricane tracks and key predictors\n\nExamining relationships between variables and storm intensity\n\nExploring spatial and temporal trends in the data\n\nThe app is based on data from the Hurricane Intensity Prediction project.\n🌀 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/reports/hurricane-intensity/index.html",
+    "href": "projects/reports/hurricane-intensity/index.html",
+    "title": "Hurricane Intensity Prediction",
+    "section": "",
+    "text": "Jump to full report   \nThis study evaluates 24-hour ahead hurricane intensity forecasts, assessing whether additional state variables improve predictions beyond the HWRF model alone.\n📌 Key highlights:\n\nBayesian modeling of maximum wind speed (VMAX)\n\nFeature importance analysis of key hurricane predictors\n\nImproved accuracy over existing forecasts\n\n📊 View full analysis\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html",
+    "href": "projects/reports/florida-coral-bleaching/index.html",
+    "title": "Florida Coral Bleaching",
+    "section": "",
+    "text": "Jump to full report   \nThis study examines coral bleaching patterns across Florida’s reefs using a Bayesian modeling approach. By analyzing environmental factors like ocean temperature, storms, and water quality, it explores trends in bleaching severity over time.\n📌 Key highlights:\n\nInvestigates how environmental conditions influence bleaching risk\nCaptures spatial and temporal patterns in bleaching events\nIdentifies key predictors of severe bleaching years\n\n📊 View full analysis\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "about/index.html",
+    "href": "about/index.html",
+    "title": "About Me",
+    "section": "",
+    "text": "I’m Tyler Pollard, a statistician with over 7 years of experience in statistical design and analysis, Bayesian statistics, predictive modeling, and interactive dashboards. My passion lies in transforming complex data into actionable insights - whether that means developing probabilistic models, optimizing decision-making, or building dynamic data visualization tools."
+  },
+  {
+    "objectID": "about/index.html#professional-background",
+    "href": "about/index.html#professional-background",
+    "title": "About Me",
+    "section": "Professional Background",
+    "text": "Professional Background\nOriginally from Baltimore, MD, I earned my B.S. in Mechanical Engineering from Clemson University, where I developed a strong analytical mindset before transitioning into statistics. I began my career at the U.S. Army Evaluation Center (AEC) as a statistician, where I led 25+ teams across survivability, vulnerability, effectiveness, and reliability assessments. My work included designing experiments, developing advanced statistical models, and building R Shiny dashboards to evaluate critical military defense systems.\n\nFor my contributions, I was honored with:\n🎖️ The Department of the Army Civilian Service Commendation Medal\n🎖️ AEC Employee of the Quarter Award\nWhile at AEC, I pursued my Master of Statistics at North Carolina State University, where I developed as a statistician with a strong foundation in statistical theory and methodology, focusing on Bayesian inference, multilevel modeling, time series forecasting, and data science. My graduate studies provided a solid theoretical framework that I’ve since expanded through hands-on experience - integrating advanced statistical techniques into real-world applications."
+  },
+  {
+    "objectID": "about/index.html#current-role",
+    "href": "about/index.html#current-role",
+    "title": "About Me",
+    "section": "Current Role",
+    "text": "Current Role\nNow living in Florida, I work as an Operations Research Analyst (ORSA) at U.S. Special Operations Command (USSOCOM), where I apply Bayesian modeling, predictive analytics, and data science methodologies to support decision-making in high-stakes environments. My work involves developing statistical models, optimizing operational strategies, and providing data-driven insights to enhance mission effectiveness.\nBeyond my professional work, I continuously seek opportunities to expand my expertise through independent research and projects. While I’ve begun deeply exploring NFL analytics, most of the work showcased on my Projects page originated as graduate research that I’ve significantly enhanced - incorporating advanced methodologies and refining insights well beyond their original scope. These projects reflect my ongoing commitment to leveraging data science in innovative and meaningful ways.\nView Projects"
+  },
+  {
+    "objectID": "about/index.html#beyond-the-numbers",
+    "href": "about/index.html#beyond-the-numbers",
+    "title": "About Me",
+    "section": "Beyond the Numbers",
+    "text": "Beyond the Numbers\nWhen I’m not working with data, you’ll probably find me in the gym, on the pickleball courts, on the golf course, or lying by the beach. I love anything that involves optimizing performance - whether it’s refining a model, dialing in my swing, or testing out the latest nutrition trends.\nI’m also a huge Baltimore Ravens, Orioles, and Clemson Tigers fan, and I’m always looking for ways to blend sports and analytics (even if it’s just to justify why my team should’ve gone for it on 4th down)."
+  },
+  {
+    "objectID": "about/index.html#lets-connect",
+    "href": "about/index.html#lets-connect",
+    "title": "About Me",
+    "section": "Let’s Connect",
+    "text": "Let’s Connect\nI’m always open to discussing data-driven challenges, Bayesian modeling, and collaborative opportunities. Feel free to connect with me on LinkedIn or explore my work on GitHub."
+  }
+]
