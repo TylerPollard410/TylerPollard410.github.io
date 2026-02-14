@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://tylerpollard410.github.io/index.html</loc>
-    <lastmod>2026-02-10T03:17:29.087Z</lastmod>
-  </url>
-  <url>
     <loc>https://tylerpollard410.github.io/resume/index.html</loc>
     <lastmod>2026-02-10T03:17:29.138Z</lastmod>
   </url>
   <url>
-    <loc>https://tylerpollard410.github.io/projects/reports/nfl-kicker-analysis/index.html</loc>
-    <lastmod>2026-02-10T03:17:29.135Z</lastmod>
-  </url>
-  <url>
-    <loc>https://tylerpollard410.github.io/projects/apps/property-analysis-dashboard/index.html</loc>
-    <lastmod>2026-02-10T03:27:08.459Z</lastmod>
-  </url>
-  <url>
-    <loc>https://tylerpollard410.github.io/projects/apps/nfl-analysis-app/index.html</loc>
-    <lastmod>2026-02-10T03:27:08.452Z</lastmod>
+    <loc>https://tylerpollard410.github.io/projects/reports/hurricane-intensity/index.html</loc>
+    <lastmod>2026-02-10T03:17:29.133Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/projects/index.html</loc>
@@ -33,15 +21,27 @@
     <lastmod>2026-02-10T03:27:08.451Z</lastmod>
   </url>
   <url>
-    <loc>https://tylerpollard410.github.io/projects/reports/hurricane-intensity/index.html</loc>
-    <lastmod>2026-02-10T03:17:29.133Z</lastmod>
+    <loc>https://tylerpollard410.github.io/about/index.html</loc>
+    <lastmod>2026-02-10T03:17:28.974Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/index.html</loc>
+    <lastmod>2026-02-10T03:17:29.087Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/projects/apps/nfl-analysis-app/index.html</loc>
+    <lastmod>2026-02-10T03:27:08.452Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/projects/apps/property-analysis-dashboard/index.html</loc>
+    <lastmod>2026-02-10T03:27:08.459Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/projects/reports/florida-coral-bleaching/index.html</loc>
-    <lastmod>2026-02-10T03:17:29.130Z</lastmod>
+    <lastmod>2026-02-14T23:31:19.395Z</lastmod>
   </url>
   <url>
-    <loc>https://tylerpollard410.github.io/about/index.html</loc>
-    <lastmod>2026-02-10T03:17:28.974Z</lastmod>
+    <loc>https://tylerpollard410.github.io/projects/reports/nfl-kicker-analysis/index.html</loc>
+    <lastmod>2026-02-10T03:17:29.135Z</lastmod>
   </url>
 </urlset>

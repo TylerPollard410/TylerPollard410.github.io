@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Tyler Pollard (DEV)",
-    "section": "",
-    "text": "Welcome to my portfolio! I’m a statistician who thrives at the intersection of data and decision-making. Whether I’m developing statistical models, creating interactive dashboards, or exploring new analytical techniques, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey—from mastering statistical methods to building impactful projects. Take a look around, and I hope you find something that sparks collaboration or inspires a new idea!\n\n\n Back to top"
-  },
-  {
     "objectID": "resume/index.html",
     "href": "resume/index.html",
     "title": "Resume",
@@ -14,39 +7,25 @@
     "text": "Download PDF\n\n  Your browser does not support embedded PDFs. Download the PDF.\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "projects/reports/nfl-kicker-analysis/index.html",
-    "href": "projects/reports/nfl-kicker-analysis/index.html",
-    "title": "NFL Kicker Analysis",
+    "objectID": "projects/reports/hurricane-intensity/index.html",
+    "href": "projects/reports/hurricane-intensity/index.html",
+    "title": "Hurricane Intensity Prediction",
     "section": "",
-    "text": "Jump to full report   \nThis study applies Bayesian analysis to NFL field goal data since 1999, exploring how distance and clutch situations affect success rates. Using data from nflreadr, the analysis models field goal performance and assesses the reliability of kickers in various game scenarios.\n📊 View full analysis\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "projects/apps/property-analysis-dashboard/index.html",
-    "href": "projects/apps/property-analysis-dashboard/index.html",
-    "title": "Property Analysis Dashboard",
-    "section": "",
-    "text": "Launch dashboard   \nThis interactive dashboard helps users evaluate potential short-term rental investments by estimating profitability based on customizable inputs. Built with R Shiny and bs4Dash, the app provides a structured framework to assess expected income, expenses, and overall return on investment.\n📌 Key highlights:\n\nAdjust key property and financial variables to estimate profitability.\nView detailed breakdowns of expected expenses and revenue.\nCompare different investment scenarios in real-time.\n\n🏠 Launch the app\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "projects/apps/nfl-analysis-app/index.html",
-    "href": "projects/apps/nfl-analysis-app/index.html",
-    "title": "NFL Analysis Dashboard [DEPRECATED]",
-    "section": "",
-    "text": "WarningDeprecated App\n\n\n\nThis app has been deprecated and replaced by the NFL EndZone Analytics App.\n\n\nThis dashboard is no longer being actively developed. Historical functionality remains available.\nLaunch dashboard   \nThis interactive dashboard explores NFL data from the 2006-2024 seasons, sourced from nflverse. It provides tools to analyze team performance, rankings, and betting insights.\n📌 Key Features:\n\nTeam rankings based on historical performance\n\nAccess near real-time data updates, refreshed daily at 2:00 AM\n\nView Bayesian model predictions for spreads, totals, and game outcomes (coming soon)\n\nAdjust parameters to see probabilities for different betting scenarios (coming soon)\n\n📟 Launch the app\n\n\n\n Back to top"
+    "text": "Jump to full report   \nThis study evaluates 24-hour ahead hurricane intensity forecasts, assessing whether additional state variables improve predictions beyond the HWRF model alone.\n📌 Key highlights:\n\nBayesian modeling of maximum wind speed (VMAX)\n\nFeature importance analysis of key hurricane predictors\n\nImproved accuracy over existing forecasts\n\n📊 View full analysis\n\n\n\n Back to top"
   },
   {
     "objectID": "projects/index.html",
     "href": "projects/index.html",
     "title": "Projects",
     "section": "",
-    "text": "bayesian\n\nprediction\n\nweather\n\n\n\nEvaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nnfl\n\n\n\nA Bayesian analysis of NFL field goal data since 1999.\n\n\n\n\n\nAugust 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nweather\n\n\n\nExploring environmental drivers of coral bleaching using Bayesian modeling\n\n\n\n\n\nMay 6, 2024\n\n\n\n\n\nNo matching items"
+    "text": "bayesian\n\nprediction\n\nweather\n\n\n\nEvaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nnfl\n\n\n\nA Bayesian analysis of NFL field goal data since 1999.\n\n\n\n\n\nAugust 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nweather\n\nspatiotemporal\n\n\n\nExploring environmental drivers of coral bleaching using Bayesian modeling\n\n\n\n\n\nMay 6, 2024\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "projects/index.html#reports",
     "href": "projects/index.html#reports",
     "title": "Projects",
     "section": "",
-    "text": "bayesian\n\nprediction\n\nweather\n\n\n\nEvaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nnfl\n\n\n\nA Bayesian analysis of NFL field goal data since 1999.\n\n\n\n\n\nAugust 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nweather\n\n\n\nExploring environmental drivers of coral bleaching using Bayesian modeling\n\n\n\n\n\nMay 6, 2024\n\n\n\n\n\nNo matching items"
+    "text": "bayesian\n\nprediction\n\nweather\n\n\n\nEvaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nnfl\n\n\n\nA Bayesian analysis of NFL field goal data since 1999.\n\n\n\n\n\nAugust 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbayesian\n\nweather\n\nspatiotemporal\n\n\n\nExploring environmental drivers of coral bleaching using Bayesian modeling\n\n\n\n\n\nMay 6, 2024\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "projects/index.html#apps",
@@ -68,20 +47,6 @@
     "title": "Hurricane Intensity App",
     "section": "",
     "text": "Launch app   \nThis interactive app allows users to explore key variables and trends in hurricane intensity data. Featuring dynamic visualizations, it helps uncover relationships between storm characteristics, environmental factors, and forecasted intensity.\n📌 Key highlights:\n\nVisualizing hurricane tracks and key predictors\n\nExamining relationships between variables and storm intensity\n\nExploring spatial and temporal trends in the data\n\nThe app is based on data from the Hurricane Intensity Prediction project.\n🌀 Launch the app\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "projects/reports/hurricane-intensity/index.html",
-    "href": "projects/reports/hurricane-intensity/index.html",
-    "title": "Hurricane Intensity Prediction",
-    "section": "",
-    "text": "Jump to full report   \nThis study evaluates 24-hour ahead hurricane intensity forecasts, assessing whether additional state variables improve predictions beyond the HWRF model alone.\n📌 Key highlights:\n\nBayesian modeling of maximum wind speed (VMAX)\n\nFeature importance analysis of key hurricane predictors\n\nImproved accuracy over existing forecasts\n\n📊 View full analysis\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "projects/reports/florida-coral-bleaching/index.html",
-    "href": "projects/reports/florida-coral-bleaching/index.html",
-    "title": "Florida Coral Bleaching",
-    "section": "",
-    "text": "Jump to full report   \nThis study examines coral bleaching patterns across Florida’s reefs using a Bayesian modeling approach. By analyzing environmental factors like ocean temperature, storms, and water quality, it explores trends in bleaching severity over time.\n📌 Key highlights:\n\nInvestigates how environmental conditions influence bleaching risk\nCaptures spatial and temporal patterns in bleaching events\nIdentifies key predictors of severe bleaching years\n\n📊 View full analysis\n\n\n\n Back to top"
   },
   {
     "objectID": "about/index.html",
@@ -117,5 +82,138 @@
     "title": "About Me",
     "section": "Let’s Connect",
     "text": "Let’s Connect\nI’m always open to discussing data-driven challenges, Bayesian modeling, and collaborative opportunities. Feel free to connect with me on LinkedIn or explore my work on GitHub."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Tyler Pollard (DEV)",
+    "section": "",
+    "text": "Welcome to my portfolio! I’m a statistician who thrives at the intersection of data and decision-making. Whether I’m developing statistical models, creating interactive dashboards, or exploring new analytical techniques, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey—from mastering statistical methods to building impactful projects. Take a look around, and I hope you find something that sparks collaboration or inspires a new idea!\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/nfl-analysis-app/index.html",
+    "href": "projects/apps/nfl-analysis-app/index.html",
+    "title": "NFL Analysis Dashboard [DEPRECATED]",
+    "section": "",
+    "text": "WarningDeprecated App\n\n\n\nThis app has been deprecated and replaced by the NFL EndZone Analytics App.\n\n\nThis dashboard is no longer being actively developed. Historical functionality remains available.\nLaunch dashboard   \nThis interactive dashboard explores NFL data from the 2006-2024 seasons, sourced from nflverse. It provides tools to analyze team performance, rankings, and betting insights.\n📌 Key Features:\n\nTeam rankings based on historical performance\n\nAccess near real-time data updates, refreshed daily at 2:00 AM\n\nView Bayesian model predictions for spreads, totals, and game outcomes (coming soon)\n\nAdjust parameters to see probabilities for different betting scenarios (coming soon)\n\n📟 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/property-analysis-dashboard/index.html",
+    "href": "projects/apps/property-analysis-dashboard/index.html",
+    "title": "Property Analysis Dashboard",
+    "section": "",
+    "text": "Launch dashboard   \nThis interactive dashboard helps users evaluate potential short-term rental investments by estimating profitability based on customizable inputs. Built with R Shiny and bs4Dash, the app provides a structured framework to assess expected income, expenses, and overall return on investment.\n📌 Key highlights:\n\nAdjust key property and financial variables to estimate profitability.\nView detailed breakdowns of expected expenses and revenue.\nCompare different investment scenarios in real-time.\n\n🏠 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html",
+    "href": "projects/reports/florida-coral-bleaching/index.html",
+    "title": "Florida Coral Bleaching",
+    "section": "",
+    "text": "Jump to full report\nThis study examines coral bleaching patterns across Florida’s reefs using a Bayesian modeling approach. By analyzing environmental factors like ocean temperature, storms, and water quality, it explores trends in bleaching severity over time.\n📌 Key highlights:\n📊 View full analysis"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#percent-bleaching-distribution",
+    "href": "projects/reports/florida-coral-bleaching/index.html#percent-bleaching-distribution",
+    "title": "Florida Coral Bleaching",
+    "section": "Percent Bleaching Distribution",
+    "text": "Percent Bleaching Distribution\nThe Percent Bleaching data exhibits a right-skewed distribution (Figure 1), with a substantial number of observations reporting 0% bleaching.\n\n\n\n\n\n\n\n\nFigure 1: Figure 1: Percent Bleaching Density"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#spatial-structure",
+    "href": "projects/reports/florida-coral-bleaching/index.html#spatial-structure",
+    "title": "Florida Coral Bleaching",
+    "section": "Spatial Structure",
+    "text": "Spatial Structure\nCoral bleaching observations were geographically distributed across Florida’s reef systems (Figure 2). Mapping Percent Bleaching reveals spatial clustering, with certain areas experiencing more severe bleaching than others.\n\n\n\n\n\n\n\n\nFigure 2: Spatial Distribution of Coral Bleaching"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#temporal-structure",
+    "href": "projects/reports/florida-coral-bleaching/index.html#temporal-structure",
+    "title": "Florida Coral Bleaching",
+    "section": "Temporal Structure",
+    "text": "Temporal Structure\nThe dataset spans 2005 to 2016, providing an opportunity to analyze bleaching trends over time (Figure 3). Boxplots of Percent Bleaching over the years, categorized by City_Town_Name, reveal distinct temporal patterns across locations.\n\n\n\n\n\n\n\n\nFigure 3: Temporal Trends in Coral Bleaching (Boxplots)"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#model-specification",
+    "href": "projects/reports/florida-coral-bleaching/index.html#model-specification",
+    "title": "Florida Coral Bleaching",
+    "section": "Model Specification",
+    "text": "Model Specification\nTo model the proportion of coral bleaching \\(Y_i\\) for \\(i = 1, ..., 2394\\), we use a Bayesian Beta regression with a logit link function:\n\\[\nY_i \\sim \\text{Beta}(\\mu_i \\phi, (1-\\mu_i) \\phi)\n\\]\nwhere \\(\\mu_i\\) is the mean bleaching percentage, and \\(\\phi\\) is the precision parameter. Various models for the mean structure were examined and defined as:\n\n\\[\n\\begin{aligned}\n\\textbf{Model 1}: \\text{logit}(\\mu_i) &= \\text{Date\\_Year}_i\\beta_1 + \\text{Lat}_i\\beta_2 + \\text{Lon}_i\\beta_3 + \\sum_{p} X_{ip}\\beta_p \\\\\n\\textbf{Model 2}: \\text{logit}(\\mu_i) &= \\text{Date\\_Year}_i\\beta_1 + g(\\text{Lat}, \\text{Lon}) + \\sum_{p} X_{ip}\\beta_p \\\\\n\\textbf{Model 3}: \\text{logit}(\\mu_i) &= f(\\text{Date\\_Year}) + \\text{Lat}_i\\beta_2 + \\text{Lon}_i\\beta_3 + \\sum_{p} X_{ip}\\beta_p \\\\\n\\textbf{Model 4}: \\text{logit}(\\mu_i) &= f(\\text{Date\\_Year}) + g(\\text{Lat}, \\text{Lon}) + \\sum_{p} X_{ip}\\beta_p \\\\\n\\textbf{Model 5}: \\text{logit}(\\mu_i) &= f_{\\text{City\\_Town\\_Name}}(\\text{Date\\_Year}) + \\text{Lat}_i\\beta_2 + \\text{Lon}_i\\beta_3 + \\sum_{p} X_{ip}\\beta_p \\\\\n\\textbf{Model 6}: \\text{logit}(\\mu_i) &= f_{\\text{City\\_Town\\_Name}}(\\text{Date\\_Year}) + g(\\text{Lat}, \\text{Lon}) + \\sum_{p} X_{ip}\\beta_p \\\\\n\\end{aligned}\n\\] \nwhere:\n\nGaussian Process (GP) for Temporal Trends\n\\[\nf_{\\text{City\\_Town\\_Name}}(\\text{Date\\_Year}) \\sim \\mathcal{GP} (0, (k_c(t_i, t_j))_{i,j = 1}^n)\n\\]\nwhere the covariance function for each city \\(c\\) is:\n\\[\nk_c(t_i, t_j) = \\sigma_c^2 \\exp\\left( -\\frac{||t_i - t_j||^2}{2 \\rho_c^2} \\right)\n\\]\nwith:\n\n\\(t_i, t_j\\) as observed Date_Year values.\n\\(c\\) representing the city (City_Town_Name), where each city has a separate GP.\n\\(k_c(t_i, t_j)\\) as the covariance function, using an exponentiated-quadratic (squared exponential) kernel.\n\\(\\sigma_c^2\\) representing a standard deviation parameter of the GP for city \\(c\\).\n\\(\\rho_c\\) as the characteristic length-scale parameter.\n\n\n\nTensor-Product Spline for Spatial Variation\n\\[\ng(\\text{Lat}, \\text{Lon}) = \\sum_{k_1} \\sum_{k_2} \\beta_{k_1 k_2} B_{k_1}(\\text{Lat}) B_{k_2}(\\text{Lon})\n\\]\nwhere:\n\n\\(B_{k_1}(\\text{Lat})\\) and \\(B_{k_2}(\\text{Lon})\\) are basis functions for latitude and longitude.\n\\(\\beta_{k_1 k_2}\\) are the coefficients to be estimated.\nThe smoothing penalty is controlled by a hyperparameter \\(\\lambda\\), which regularizes the estimated coefficients.\n\n\n\nFixed Effects\n\\[\n\\sum_{p} X_{ip} \\beta_p\n\\]\nwhere:\n\n\\(X_{ip}\\) is the value of the \\(p\\)-th covariate for observation \\(i\\).\n\\(\\beta_p\\) is the corresponding regression coefficient.\n\n\n\nPrior Specification\n\nFixed Effects:\n\n\\(\\beta_p \\sim \\mathcal{N}(0,5)\\) for all covariates \\(p\\).\n\nGaussian Process (Temporal Trends):\n\n\\(\\sigma_c \\sim \\text{half-Cauchy}(0,2)\\)\n\\(\\rho_c \\sim \\text{InvGamma}(4.308447, 0.957567)\\) (explicitly defined by brms)\n\nTensor-Product Spline:\n\n\\(\\beta_{k_1 k_2} \\sim \\mathcal{N}(0,5)\\)\n\\(\\lambda \\sim \\text{half-Cauchy}(0,2)\\) (if explicitly included in smoothing penalty)\n\nPrecision Parameter:\n\n\\(\\phi \\sim \\text{Gamma}(0.1, 0.1)\\)\n\n\nThis model accounts for both spatial and temporal dependencies, allowing for flexible trend estimation."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#data-preprocessing",
+    "href": "projects/reports/florida-coral-bleaching/index.html#data-preprocessing",
+    "title": "Florida Coral Bleaching",
+    "section": "Data Preprocessing",
+    "text": "Data Preprocessing\nBefore fitting the model, we applied several preprocessing steps:\n\nResponse Variable Transformation: Since the Beta regression model requires values strictly in the (0,1) range, we replaced:\n\n0% bleaching values with 0.001\n100% bleaching values with 0.999\n\nCovariate Transformations:\n\nYeo-Johnson transformation was applied to all continuous covariates to reduce skewness.\nCentering and scaling were performed to standardize covariates for better model convergence."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#selected-model",
+    "href": "projects/reports/florida-coral-bleaching/index.html#selected-model",
+    "title": "Florida Coral Bleaching",
+    "section": "Selected Model",
+    "text": "Selected Model\nModel 6 emerged as the best-performing model in the comparison based on Leave-One-Out Information Criterion (LOOIC) and expected log predictive density (ELPD). It achieved the lowest LOOIC and the highest ELPD, indicating superior predictive accuracy while effectively balancing model complexity.\nA key advantage of Model 6 was its flexible structure, incorporating:\n\nCity-Specific GPs for temporal variation, capturing localized trends in bleaching over time.\nA Tensor-Product Smoothed Spline for spatial variation, allowing for smooth, nonlinear geographic effects.\nA broad set of environmental and physical predictors, including Distance to Shore, Exposure, Turbidity, Cyclone Frequency, Depth, Windspeed, ClimSST, SSTA, TSA, and TSA_DHW, hypothesized to drive bleaching dynamics.\n\nCompared to alternative models, Model 6 provided the best trade-off between fit and generalizability, avoiding overfitting while preserving essential temporal and spatial dependencies. However, some covariates exhibited credible intervals overlapping zero, suggesting they might not contribute meaningfully. To enhance interpretability and model efficiency, we performed an iterative variable selection process, systematically removing weak predictors and reassessing model performance."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#model-refinement-and-variable-selection",
+    "href": "projects/reports/florida-coral-bleaching/index.html#model-refinement-and-variable-selection",
+    "title": "Florida Coral Bleaching",
+    "section": "Model Refinement and Variable Selection",
+    "text": "Model Refinement and Variable Selection\nTo improve model parsimony and predictive performance, an iterative refinement process was conducted to remove covariates that did not contribute significantly to the model. The refinement process followed these steps:\n\nIdentify Non-Significant Covariates\n\nVariables whose 95% credible intervals contained zero were considered weak contributors.\n\nIterative Variable Removal & Refitting\n\nThe least significant covariate was removed from the model.\nThe model was then refit without that covariate to assess its impact.\n\nEvaluate Model Fit via Bayes Factor & MAE\n\nBayes Factor (BF) Comparison: The refined model was compared to the previous iteration using bayes_factor(). If BF &gt; 10, the new model was preferred.\nLOOIC: The reliability of how the refined model generalizes to new data was estimated. If LOOIC was lower, the new model was retained.\nMean Absolute Error (MAE): The predictive performance was evaluated using the PPD from refined model compared to observed Percent Bleaching to check model improvement/degradation. If MAE improved or remained stable, the new model was retained.\n\nRepeat Until No Further Improvement\n\nThis process continued until all remaining covariates contributed meaningfully, ensuring the final model was both interpretable and robust.\n\n\nThrough this process, unnecessary covariates were systematically removed, leading to a final optimized model that retained only the most relevant predictors while maintaining strong predictive accuracy.\n\n\n\n\nTable 3: Model Refinement Results (BF, LOOIC, and MAE)\n\n\n\n\n  \n  \n\n\n\nPrior Model\nRefined Model\nCovariate Removed\nBF\nLOOIC\nMAE\n\n\n\n\n—\nModel 6\n—\n—\n−5714.0\n0.0758\n\n\nModel 6\nModel 7\nClimSST\n92.0\n−5714.2\n0.0759\n\n\nModel 7\nModel 8\nExposure\n89.4\n−5714.3\n0.0759\n\n\nModel 8\nModel 9\nDepth_m\n5439.5\n−5716.0\n0.0758\n\n\nModel 9\nModel 10\nCyclone_Frequency\n14.1\n−5714.1\n0.0760"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#final-model",
+    "href": "projects/reports/florida-coral-bleaching/index.html#final-model",
+    "title": "Florida Coral Bleaching",
+    "section": "Final Model",
+    "text": "Final Model\nThrough iterative model comparison, Model 9 was selected as the best-performing model, showing improvements over Model 6 in terms of fit and interpretability. This selection process involved removing non-significant covariates one at a time while assessing model performance metrics. Importantly, the smoothing parameters remained unchanged throughout this refinement process, ensuring consistency in spatial and temporal trends. The final model captures essential environmental and climatic predictors, balancing complexity and generalizability.\nModel 9 includes key predictors such as Distance to Shore, Turbidity, Cyclone Frequency, Windspeed, Sea Surface Temperature Anomalies (SSTA), Thermal Stress Anomaly (TSA), and Degree Heating Weeks derived from TSA (TSA_DHW). These covariates were retained based on their statistical significance and their ecological relevance to coral bleaching dynamics. The refined model structure provides a robust framework for understanding and predicting bleaching patterns, facilitating targeted conservation efforts."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#posterior-predictive-checks",
+    "href": "projects/reports/florida-coral-bleaching/index.html#posterior-predictive-checks",
+    "title": "Florida Coral Bleaching",
+    "section": "Posterior Predictive Checks",
+    "text": "Posterior Predictive Checks\nTo evaluate the model’s fit, we conducted posterior predictive checks (PPCs), which compare the observed data to simulated draws from the posterior predictive distribution. The following visualizations assess whether the model-generated data resemble the observed coral bleaching percentages.\n\nDistribution Overlay\nFigure 4 presents an overlay of the posterior predictive distribution (PPD) against the observed bleaching percentages. The solid black line represents the observed data (\\(y\\)), while the blue-shaded posterior simulations (\\(y_{rep}\\)) provide an indication of model uncertainty. The strong alignment between the observed and predicted densities suggests that the model successfully captures the overall distribution of coral bleaching percentages.\n\n\n\n\n\n\n\n\nFigure 4: Posterior Predictive Distribution vs Observed Data\n\n\n\n\n\n\n\nDistributional Statistics\nThe set of plots in Figure 5 evaluates how well the model reproduces key summary statistics of the observed data, including:\n\nMean\nStandard deviation (SD)\n2.5% Lower credible bound (LCB)\nMedian\n97.5% Upper credible bound (UCB)\n\nEach histogram represents the distribution of these statistics across 8000 posterior simulations, with the vertical black line indicating the observed statistic. The Bayesian p-values assess whether the observed value is typical less than the posterior predictive distribution values. Values close to 0.5 suggest a good fit, while values near 0 or 1 may indicate potential discrepancies.\nOverall, these diagnostics confirm that the final model provides a reasonable approximation of the observed data, supporting its validity for inference and prediction.\n\n\n\n\n\n\n\n\nFigure 5: Posterior Predictive Checks for Summary Statistics"
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#variable-importance",
+    "href": "projects/reports/florida-coral-bleaching/index.html#variable-importance",
+    "title": "Florida Coral Bleaching",
+    "section": "Variable Importance",
+    "text": "Variable Importance\nThe table below presents the estimated fixed effects from the final Bayesian Beta regression model. Each coefficient represents the effect of a predictor on the proportion of coral bleaching. The interpretation of key predictors is as follows:\n\n\n\n\nTable 4: Estimated Fixed Effects from Bayesian Beta Regression\n\n\n\n\n  \n  \n\n\n\nParameter\nβ1\nSD(β)2\n95% CI3\n\n\n\n\nIntercept\n-1.5876\n0.2392\n(-2.0547, -1.1155)\n\n\nDistance_to_Shore\n0.1005\n0.0339\n(0.0338, 0.1660)\n\n\nTurbidity\n-0.0784\n0.0247\n(-0.1270, -0.0295)\n\n\nCyclone_Frequency\n-0.0524\n0.0260\n(-0.1034, -0.0016)\n\n\nWindspeed\n-0.0466\n0.0214\n(-0.0888, -0.0042)\n\n\nSSTA\n-0.0573\n0.0267\n(-0.1104, -0.0047)\n\n\nTSA\n0.1313\n0.0299\n(0.0725, 0.1917)\n\n\nTSA_DHW\n0.0885\n0.0232\n(0.0425, 0.1340)\n\n\n\n1 Parameter estimate\n\n\n2 Standard Deviation of parameter estimate\n\n\n3 95% Credible Interval of parameter estimate\n\n\n\n\n\n\n\n\n\n\n\n\nKey Observations:\n\nDistance to Shore (β = 0.1005, 95% CI: [0.0338, 0.1660]) – Positively associated with bleaching, indicating that reefs farther from shore experience slightly higher bleaching, potentially due to differences in water quality and exposure to open ocean stressors.\nTurbidity (β = -0.0784, 95% CI: [-0.1270, -0.0295]) – Negatively associated with bleaching, suggesting that murkier waters may provide some shielding from temperature-induced stress.\nCyclone Frequency & Wind Speed (β = -0.0524, -0.0466) – Moderate negative effects, likely due to increased mixing of ocean layers, reducing localized heat stress on corals.\nSSTA (β = -0.0573, 95% CI: [-0.1104, -0.0047]) – Contrary to expectations, this predictor has a small negative effect, possibly reflecting interactions with other environmental conditions or non-linear temperature effects.\nTSA & TSA_DHW (β = 0.1313, 0.0885) – Significant positive effects, confirming that prolonged heat stress increases bleaching probability."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#temporal-effects",
+    "href": "projects/reports/florida-coral-bleaching/index.html#temporal-effects",
+    "title": "Florida Coral Bleaching",
+    "section": "Temporal Effects",
+    "text": "Temporal Effects\nTo evaluate how bleaching trends evolve over time, we analyze posterior estimates of the temporal effect from the GP component.\n\nCounty-Specific Trends\nThe plot below illustrates the estimated temporal variation in bleaching probability across five Florida counties from 2005 to 2016:\n\n\n\n\n\n\n\n\nFigure 6: Temporal Effects by County (Smoothed Trends)\n\n\n\n\n\n\nKey Findings:\n\nEach county shows unique bleaching patterns, with different peak years.\nMonroe and Miami-Dade counties have higher bleaching probabilities and greater interannual variability than the others.\nPalm Beach County maintains relatively low bleaching levels compared to other regions.\n\nThis faceted plot illustrates the modeled county-specific temporal variation in bleaching probability, capturing how bleaching risk fluctuates over time in different locations.\n\n\n\nOverlaid Trends\nTo provide a broader comparison of modeled bleaching trends across counties, the following plot presents an overlay of the estimated temporal effects without faceting:\n\n\n\n\n\n\n\n\nFigure 7: Overlaid Temporal Trends in Percent Bleaching\n\n\n\n\n\n\nKey Observations:\n\nThe overlay allows for direct comparison between counties, highlighting relative differences in bleaching probabilities.\nMonroe and Miami-Dade Counties stand out with the most extreme bleaching peak in 2014-2015.\nThe relatively synchronized bleaching peaks across counties suggest that widespread regional environmental drivers, such as temperature anomalies, are at play.\n\nWhile this plot removes individual county facets, it retains the key modeled trends and provides a clearer comparative perspective on bleaching severity across regions."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#spatial-effects",
+    "href": "projects/reports/florida-coral-bleaching/index.html#spatial-effects",
+    "title": "Florida Coral Bleaching",
+    "section": "Spatial Effects",
+    "text": "Spatial Effects\nThe spatial effects plot provides insights into regional differences in bleaching susceptibility. The spatial random effect was modeled using a tensor-product spline, capturing localized variations beyond the fixed effects.\n\n\n\n\n\n\n\n\nFigure 8: Spatial Effects of Coral Bleaching (Modeled Estimates)\n\n\n\n\n\n\nKey Findings:\n\nHigher bleaching probabilities are concentrated in nearshore reefs along the Florida Keys and southeastern coastline, reinforcing the importance of local environmental stressors.\nSome offshore reef systems exhibit lower bleaching risk, potentially due to deeper waters or localized upwelling that buffers temperature stress.\nThe spatial gradient suggests that conservation efforts should prioritize areas with high predicted bleaching risk, particularly in the southeastern coastal zone."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#limitations",
+    "href": "projects/reports/florida-coral-bleaching/index.html#limitations",
+    "title": "Florida Coral Bleaching",
+    "section": "Limitations",
+    "text": "Limitations\nWhile this study provides valuable insights, several limitations should be considered:\n\nData Constraints: The dataset spans from 2005 to 2016, preventing assessment of more recent bleaching trends.\nModel Assumptions: The Bayesian Beta regression model imposes distributional constraints that may not fully capture extreme bleaching events.\nUnmeasured Factors: Variables such as nutrient levels, local anthropogenic impacts, and additional reef health indicators were not included but may play a role in bleaching dynamics."
+  },
+  {
+    "objectID": "projects/reports/florida-coral-bleaching/index.html#future-directions",
+    "href": "projects/reports/florida-coral-bleaching/index.html#future-directions",
+    "title": "Florida Coral Bleaching",
+    "section": "Future Directions",
+    "text": "Future Directions\nWhile this study leveraged the most recent available FRRP data (2005–2016), future research could benefit from new data collection to assess whether the observed trends persist under current climate conditions. Additionally, further exploration of existing datasets could provide deeper insights into bleaching patterns by incorporating complementary environmental variables or alternative modeling approaches.\nPotential areas for methodological refinement include:\n\nInvestigating Local Influences: Further analysis could assess whether turbidity consistently mitigates bleaching severity and how storm-induced ocean mixing interacts with thermal stress.\nEnhancing Modeling Approaches: Exploring alternative statistical frameworks, such as hierarchical or machine learning-based models, may improve predictive accuracy and better capture nonlinear relationships.\nIntegrating Additional Environmental Variables: If future datasets allow, incorporating nutrient levels, pollution metrics, or additional reef health indicators could refine understanding of bleaching dynamics.\n\nBy focusing on these methodological improvements, future research can build upon this study’s findings to further improve bleaching risk assessments and conservation planning."
+  },
+  {
+    "objectID": "projects/reports/nfl-kicker-analysis/index.html",
+    "href": "projects/reports/nfl-kicker-analysis/index.html",
+    "title": "NFL Kicker Analysis",
+    "section": "",
+    "text": "Jump to full report   \nThis study applies Bayesian analysis to NFL field goal data since 1999, exploring how distance and clutch situations affect success rates. Using data from nflreadr, the analysis models field goal performance and assesses the reliability of kickers in various game scenarios.\n📊 View full analysis\n\n\n\n Back to top"
   }
 ]
