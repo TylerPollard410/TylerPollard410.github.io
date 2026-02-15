@@ -1,37 +1,49 @@
 ---
 title: "Projects"
 author: "Tyler Pollard"
-# Tyler Pollarddescription: "Tyler Pollard's projects"
-listing: 
-  - id: reports
-    contents: "reports/*/index.qmd"
+description: "Apps, packages, and architecture pages for production-facing work."
+listing:
+  - id: apps
+    contents: "apps/*/index.qmd"
     type: default
     sort: "date desc"
     sort-ui: false
     filter-ui: false
     categories: true
-  - id: apps
-    contents: "apps/*/index.qmd"
+  - id: packages
+    contents: "packages/*/index.qmd"
     type: default
-    sort: "date desc"
-    # fields: [image, title, description, categories, date-modified]
+    sort: "title asc"
     sort-ui: false
     filter-ui: false
+    categories: true
+  - id: architecture
+    contents: "architecture/*/index.qmd"
+    type: default
+    sort: "date desc"
+    sort-ui: false
+    filter-ui: false
+    categories: true
 page-layout: full
-toc-title: Content
-toc-location: right
+toc: true
 include-back-link: true
 date-format: "MMMM D, YYYY"
-code-tools: false
 comments: false
 ---
 
-## Reports
-
-:::{#reports}
-:::
+This section contains evergreen project documentation. For dated technical notes and weekly updates, use [/blog/](/blog/).
 
 ## Apps
 
 :::{#apps}
+:::
+
+## Packages
+
+:::{#packages}
+:::
+
+## Architecture
+
+:::{#architecture}
 :::

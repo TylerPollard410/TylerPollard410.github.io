@@ -1,0 +1,22 @@
+# Date display for blog posts
+date-format: "MMMM D, YYYY"
+
+# Blog post defaults
+execute:
+  echo: true
+  message: false
+  warning: false
+
+comments: false
+repo-actions:
+  - source
+
+toc: true
+toc-title: Contents
+toc-location: left
+
+format:
+  html:
+    code-tools: true
+    code-fold: true
+    code-summary: "Show code"

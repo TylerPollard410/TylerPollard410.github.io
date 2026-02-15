@@ -1,0 +1,55 @@
+---
+title: "NFL EndZone Ecosystem Architecture"
+description: "System-level map of nflendzonePipeline, nflendzoneData, nflendzoneModel, and nflendzoneApp."
+author: Tyler Pollard
+date: 2026-02-15
+date-modified: 2026-02-15
+draft: false
+categories:
+  - nfl
+  - nflverse
+  - cmdstanr
+  - brms
+  - architecture
+  - shiny
+image: /blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/img/README-team-strength-plot-1.png
+---
+
+This page is the evergreen system map. Weekly and implementation updates live in Blog posts.
+
+## End-to-End Flow
+
+```{mermaid}
+flowchart LR
+  A[nflverse raw data] --> B[nflendzonePipeline]
+  B --> C[nflendzoneData release tags]
+  C --> D[nflendzoneModel]
+  D --> C
+  C --> E[nflendzoneApp]
+```
+
+## Repository Responsibilities
+
+| Repository | Primary responsibility | Main handoff |
+|---|---|---|
+| `nflendzonePipeline` | ETL, feature engineering, scheduled updates | publishes versioned artifacts |
+| `nflendzoneData` | release/tag warehouse | serves stable API-like data URLs |
+| `nflendzoneModel` | Bayesian team-strength modeling | publishes posterior summaries |
+| `nflendzoneApp` | interactive Shiny/Rhino application | consumes summaries for user-facing probabilities |
+
+## Visual Signals From Weekly Output
+
+::: {.columns}
+::: {.column width="50%"}
+![](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/img/README-team-strength-plot-1.png){fig-alt="Team strength rankings with posterior uncertainty."}
+:::
+::: {.column width="50%"}
+![](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/img/README-win-prob-plot-1.png){fig-alt="Game-level win probability output."}
+:::
+:::
+
+## Related Links
+
+- Pipeline weekly post: [/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)
+- Joint negbinom model post: [/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/](/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/)
+- App architecture: [/projects/architecture/nflendzoneApp-architecture/](/projects/architecture/nflendzoneApp-architecture/)

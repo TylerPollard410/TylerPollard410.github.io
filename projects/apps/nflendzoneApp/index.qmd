@@ -28,7 +28,7 @@ external-url: "https://tylerpollard410-nflendzoneapp.share.connect.posit.cloud/"
 
 ::: {.app-identity-body}
 
-This app is the next generation of my NFL analytics work and **replaces** the earlier [NFL Analysis Dashboard](/projects/apps/nfl-analysis-app/index.qmd).
+This app is the next generation of my NFL analytics work and **replaces** the earlier [NFL Analysis Dashboard](/projects/apps/nfl-analysis-app/).
 
 ::: {.app-actions}
 
@@ -57,5 +57,5 @@ Built with `Rhino`, `Shiny`, and `bslib`, the app combines NFL schedule/team dat
 
 For full technical internals and system-level integration details:
 
-- App architecture deep dive: [/projects/reports/nflendzoneApp-architecture/index.qmd](/projects/reports/nflendzoneApp-architecture/index.qmd)
-- Ecosystem architecture (all four repos): [/projects/reports/nfl-endzone-ecosystem/index.qmd](/projects/reports/nfl-endzone-ecosystem/index.qmd)
+- App architecture deep dive: [/projects/architecture/nflendzoneApp-architecture/](/projects/architecture/nflendzoneApp-architecture/)
+- Ecosystem architecture (all four repos): [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)

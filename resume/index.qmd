@@ -1,5 +1,5 @@
 ---
-title: Resume
+title: CV
 resume:
   pdf: 2026-01-24_resume.pdf
   date: '2026-01-24'

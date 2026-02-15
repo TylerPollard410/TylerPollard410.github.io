@@ -73,8 +73,12 @@ color:
   warning: tp-orange
   danger: tp-pink
 
-  light: ink
-  dark: paper
+  light: 
+    light: paper
+    dark: ink
+  dark: 
+    light: ink
+    dark: paper
 
 typography:
   fonts:
@@ -150,8 +154,9 @@ defaults:
   shiny:
     # Shiny/bslib placeholders
     theme:
-      preset: shiny
-      defaults:
-        bslib-dashboard-design: false
+      preset: bootstrap
+      version: 5
+      #defaults:
+        #bslib-dashboard-design: false
       #rules: |
       #  .navbar-brand { color: $brand-pink }

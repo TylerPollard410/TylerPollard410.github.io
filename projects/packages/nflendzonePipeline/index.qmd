@@ -1,0 +1,52 @@
+---
+title: "nflendzonePipeline"
+description: "Production ETL and feature-engineering package for weekly NFL EndZone data products."
+author: Tyler Pollard
+date: 2026-02-15
+date-modified: 2026-02-15
+categories:
+  - nfl
+  - nflverse
+  - etl
+  - data-engineering
+  - pipeline
+image: /logos/tyler-pollard-icon.png
+repo-url: "https://github.com/TylerPollard410/nflendzonePipeline"
+---
+
+[View repository source {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
+
+`nflendzonePipeline` is the compute/orchestration layer that turns raw `nflverse` data into production-ready release artifacts.
+
+## What It Owns
+
+- Weekly and season-level data extraction.
+- Feature engineering for team/game modeling tables.
+- Release publishing to `nflendzoneData`.
+- Scheduled automation for ETL and report refresh.
+
+## Primary Entry Scripts
+
+| Script | Purpose |
+|---|---|
+| `data-raw/update_all_data.R` | End-to-end ETL refresh and feature generation |
+| `data-raw/update_team_strength_model.R` | Weekly team-strength model update handoff |
+| `data-raw/update_historic_odds_data.R` | Odds/event snapshot update |
+
+## Main Data Products
+
+- Core stats: `nfl_stats_week_*`, `nfl_stats_season_*`
+- Football metrics: `elo`, `srs`, `epa`, `scores`, `turnover`, `redzone`
+- Modeling tables: `team_features`, `game_features`, `team_model`, `game_model`
+
+## How It Connects
+
+1. Pulls source data from `nflverse`.
+2. Builds and validates derived features.
+3. Publishes tagged outputs to `nflendzoneData`.
+4. Feeds downstream app/model workflows.
+
+## Related Pages
+
+- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)
+- Weekly report playbook: [/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)

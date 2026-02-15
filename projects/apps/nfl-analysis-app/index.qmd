@@ -17,7 +17,7 @@ external-url: "https://tylerpollard410.shinyapps.io/NFL_Analysis/"
 
 ::: {.callout-warning}
 ## Deprecated App
-This app has been deprecated and replaced by the [NFL EndZone Analytics App](/projects/apps/nflendzoneApp/index.qmd).
+This app has been deprecated and replaced by the [NFL EndZone Analytics App](/projects/apps/nflendzoneApp/).
 :::
 
 *This dashboard is no longer being actively developed. Historical functionality remains available.* 

@@ -1,0 +1,26 @@
+---
+title: "Case Studies"
+description: "Research-style and long-form analysis projects."
+author: Tyler Pollard
+listing:
+  - id: case-studies
+    contents: "*/index.qmd"
+    type: default
+    sort: "date desc"
+    sort-ui: false
+    filter-ui: true
+    categories: true
+    fields: [image, title, description, date, categories]
+page-layout: full
+toc: false
+include-back-link: true
+date-format: "MMMM D, YYYY"
+comments: false
+---
+
+Case studies are deeper analytical reports and model investigations.
+
+## All Case Studies
+
+:::{#case-studies}
+:::

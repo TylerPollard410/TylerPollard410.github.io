@@ -1,0 +1,41 @@
+---
+title: "nflendzoneData"
+description: "Release-asset repository used as the distribution layer between pipeline/model producers and app/analysis consumers."
+author: Tyler Pollard
+date: 2026-02-15
+date-modified: 2026-02-15
+categories:
+  - nfl
+  - nflverse
+  - data-engineering
+  - releases
+image: /logos/tyler-pollard-icon.png
+repo-url: "https://github.com/TylerPollard410/nflendzoneData"
+---
+
+[View repository source {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
+
+`nflendzoneData` is the distribution layer for the ecosystem. It stores versioned release assets and stable tag URLs that other repos consume.
+
+## What It Owns
+
+- Release tags that act as data APIs.
+- Season/week partitioned artifacts.
+- Timestamp sidecars used for freshness checks.
+
+## Typical Tag Groups
+
+- ETL outputs: `season_standings`, `weekly_standings`, `elo`, `srs`, `epa`
+- Modeling inputs: `team_features`, `game_features`, `team_model`, `game_model`
+- Modeling outputs: `team_strength_*`, `league_hfa_*`, `result_*`, `team_strength_negbinom_summary`
+
+## Why It Matters
+
+- Decouples compute workflows from consumers.
+- Provides deterministic file naming for app/model loaders.
+- Enables lightweight app deployment via summary artifacts.
+
+## Related Pages
+
+- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)
+- nflendzoneApp architecture: [/projects/architecture/nflendzoneApp-architecture/](/projects/architecture/nflendzoneApp-architecture/)

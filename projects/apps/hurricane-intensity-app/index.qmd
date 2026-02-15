@@ -27,6 +27,6 @@ forecasted intensity.
 - Examining relationships between variables and storm intensity  
 - Exploring spatial and temporal trends in the data  
 
-The app is based on data from the [Hurricane Intensity Prediction](/projects/reports/hurricane-intensity/index.qmd) project. 
+The app is based on data from the [Hurricane Intensity Prediction](/case-studies/hurricane-intensity/) project. 
 
 🌀 [Launch the app]({{< meta external-url >}}){target="_blank"}

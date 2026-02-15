@@ -1,0 +1,4 @@
+
+---
+
+If this post is useful, the evergreen system docs live in [Projects Architecture](/projects/#architecture) and package docs live in [Projects Packages](/projects/#packages).

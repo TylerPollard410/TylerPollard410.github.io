@@ -1,0 +1,50 @@
+---
+title: "nflendzoneApp Architecture"
+description: "Rhino/Shiny app architecture and runtime data-flow overview."
+author: Tyler Pollard
+date: 2026-02-15
+date-modified: 2026-02-15
+draft: false
+categories:
+  - shiny
+  - rhino
+  - nfl
+  - nflverse
+  - bayesian
+image: /projects/apps/nflendzoneApp/img/nflendzoneApp-cover-light.png
+repo-url: "https://github.com/TylerPollard410/nflendzoneApp"
+---
+
+[View repository source {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
+
+## App Runtime Position
+
+```{mermaid}
+flowchart LR
+  A[nflreadr schedule and context] --> B[nflendzoneApp startup data layer]
+  C[nflendzoneData summaries] --> B
+  B --> D[standings modules]
+  B --> E[prediction modules]
+```
+
+## Module Areas
+
+| Path area | Purpose |
+|---|---|
+| `app/main.R` | page composition and navigation |
+| `app/logic/data/*` | startup import and release data loading |
+| `app/view/pages/standings/*` | standings and playoff seed views |
+| `app/view/pages/predictions/*` | game prediction UI/server |
+| `app/logic/predictions/games/*` | probability, draw, and plotting helpers |
+
+## Runtime Pattern
+
+1. Load schedule/team context from `nflverse`.
+2. Pull release summaries from `nflendzoneData`.
+3. Reconstruct stochastic state in memory.
+4. Render interactive probabilities with reactive controls.
+
+## Related Links
+
+- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)
+- Weekly report post: [/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)

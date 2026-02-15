@@ -1,0 +1,109 @@
+---
+title: "2026-02-15 | Using nflendzoneModel Joint NegBinom Workflow"
+description: "Draft guide to the joint negative-binomial team-strength workflow in nflendzoneModel, from Stan data prep to app-facing summary artifacts."
+author: Tyler Pollard
+date: 2026-02-15
+date-modified: 2026-02-15
+draft: false
+categories:
+  - nflendzone
+  - nflverse
+  - cmdstanr
+  - brms
+  - stan
+  - bayesian
+  - negbinom
+image: /logos/tyler-pollard-icon.png
+repo-url: "https://github.com/TylerPollard410/nflendzoneModel"
+---
+
+[View repository source {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
+
+This draft is focused on one path: fitting `team_strength_bivar_negbinom` and producing the `team_strength_negbinom_summary` artifact consumed downstream.
+
+## End-To-End Flow
+
+```{mermaid}
+flowchart LR
+  A[nflverse schedule + results] --> B[prepare_schedule_indices]
+  B --> C[prepare_stan_data]
+  C --> D[fit_team_strength_model model=team_strength_bivar_negbinom]
+  D --> E[fit$summary and rvar extraction]
+  E --> F[team_strength_negbinom_summary release]
+  F --> G[nflendzoneApp probability reconstruction]
+```
+
+## Minimal Fit Pattern
+
+This mirrors `inst/examples/update_negbinom_team_strength.r`.
+
+```{r}
+#| eval: false
+fit_stan_data <- prepare_stan_data(
+  game_data = training_data,
+  teams = teams,
+  verbose = TRUE
+)
+
+fit_bivar_negbinom <- fit_team_strength_model(
+  stan_data = fit_stan_data,
+  model = "team_strength_bivar_negbinom",
+  seed = 52,
+  chains = 4,
+  parallel_chains = parallel::detectCores(),
+  iter_warmup = 1000,
+  iter_sampling = 1000,
+  adapt_delta = 0.95,
+  max_treedepth = 10
+)
+```
+
+## Build The Summary Artifact
+
+```{r}
+#| eval: false
+week_vars <- c(
+  "phi_home",
+  "phi_away",
+  "filtered_alpha_log",
+  "filtered_team_off_strength[team]",
+  "filtered_team_def_strength[team]",
+  "filtered_team_hfa[team]",
+  "filtered_league_hfa",
+  "predicted_alpha_log",
+  "predicted_team_off_strength[team]",
+  "predicted_team_def_strength[team]",
+  "predicted_team_hfa[team]",
+  "predicted_league_hfa"
+)
+
+nb_sum <- fit_bivar_negbinom$summary(
+  variables = stringr::str_extract(week_vars, "^\\w+")
+)
+```
+
+## Publish For App Consumption
+
+```{r}
+#| eval: false
+pb_write(
+  x = nb_sum,
+  file = paste0("team_strength_negbinom_summary_", filter_season, ".rds"),
+  repo = github_data_repo,
+  tag = "team_strength_negbinom_summary"
+)
+```
+
+## Why This Model Path Matters
+
+- Joint home/away count modeling is more natural for score-like outcomes than point-difference-only views.
+- The release summary can be compact while still enabling stochastic reconstruction in the app.
+- The same artifact supports weekly diagnostics, slate previews, and betting-probability calculations.
+
+## Practical Checks Before Shipping
+
+1. Validate diagnostics (`rhat`, ESS, divergences) before publishing.
+2. Ensure season/week identifiers in the summary align with release timestamp metadata.
+3. Compare implied game-level probabilities against previous week to catch structural jumps.
+
+{{< include ../../../_footer.qmd >}}

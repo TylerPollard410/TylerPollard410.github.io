@@ -1,0 +1,1148 @@
+---
+title: "Hurricane Intensity Prediction"
+description: "Evaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling."
+date: 2024-08-25
+
+image: img/hurricane-intensity-cover.png
+categories:
+  - bayesian
+  - brms
+  - prediction
+  - weather
+
+execute: 
+  echo: false
+  message: false
+  warning: false
+
+external-url: "https://tylerpollard410.github.io/Hurricane-Analysis/"
+---
+
+[Jump to full report   {{< bi box-arrow-up-right >}}]({{< meta external-url >}}){.btn .btn-secondary target="_blank"}
+
+This study evaluates **24-hour ahead hurricane intensity forecasts**, assessing whether 
+additional **state variables** improve predictions beyond the **HWRF model** alone.
+
+📌 **Key highlights:**
+
+- Bayesian modeling of **maximum wind speed (VMAX)**  
+- Feature importance analysis of **key hurricane predictors**  
+- Improved accuracy over existing forecasts  
+
+📊 [View full analysis]({{< meta external-url >}}){target="_blank"}
+
+```{r}
+#| label: load-libraries
+# Load Libraries ----
+library(knitr)
+library(data.table)
+library(MASS)
+library(bestNormalize)
+library(plyr)
+library(stringr)
+library(lubridate)
+library(sf)
+library(spData)
+library(tictoc)
+library(cowplot)
+library(GGally)
+library(patchwork)
+library(fitdistrplus)
+library(caret)
+library(splines)
+library(mgcv)
+library(DescTools)
+library(car)
+library(bayesplot)
+library(BayesFactor)
+library(rstanarm)
+library(tidybayes)
+library(loo)
+library(brms)
+library(bayesplot)
+library(performance)
+library(gt)
+library(gtsummary)
+library(tidyverse)
+```
+
+```{r}
+#| label: read-data
+
+# Read in data ----
+Stormdata_raw <- fread("_data/E2_data.csv")
+Actual_Y <- fread("_data/Actual Y.csv")
+Actual_Yvec <- Actual_Y |> filter(complete.cases(x)) |> pull(x)
+
+# Data ----
+## Clean data ----
+Stormdata1 <- Stormdata_raw |>
+  mutate(
+    Obs = 1:nrow(Stormdata_raw),
+    StormID = factor(StormID),
+    basin = factor(basin),
+    Date = as_datetime(Date, tz = "UTC"),
+    Year = year(Date),
+    Month = month(Date, label = TRUE),
+    Day = yday(Date),
+    LON180 = LON - 360,
+    DataType = ifelse(is.na(VMAX), "Test", "Train")
+  ) |>
+  group_by(StormID) |>
+  mutate(
+    StormElapsedTime = as.numeric(difftime(Date, min(Date), units = "hours")),
+    StormElapsedTime2 = StormElapsedTime / 6
+  ) |>
+  ungroup() |>
+  select(
+    DataType,
+    StormID,
+    Date,
+    Year,
+    Month,
+    Day,
+    basin,
+    StormElapsedTime,
+    StormElapsedTime2,
+    LAT,
+    LON,
+    LON180,
+    everything(),
+    -lead_time
+  ) |>
+  mutate(
+    LAT2 = LAT,
+    .after = LAT
+  ) |>
+  mutate(
+    LON2 = LON,
+    .after = LON
+  )
+
+### Land Indicator ----
+pts <- st_as_sf(
+  Stormdata1, # |> select(LON, LAT),
+  coords = c("LON180", "LAT"),
+  crs = 4326
+)
+land_pts <- !is.na(as.numeric(st_intersects(pts, world)))
+
+Stormdata <- Stormdata1 |>
+  mutate(
+    Land = factor(land_pts, labels = c("Water", "Land"))
+  ) |>
+  select(
+    DataType,
+    StormID,
+    Date,
+    Year,
+    Month,
+    Day,
+    basin,
+    StormElapsedTime,
+    StormElapsedTime2,
+    LAT,
+    LAT2,
+    LON,
+    LON2,
+    LON180,
+    Land,
+    everything()
+  ) |>
+  mutate(
+    across(c(StormID, Year, Month, basin), ~ factor(.x))
+  )
+
+## Split data -----
+StormdataTrain <- Stormdata |>
+  filter(DataType == "Train") |>
+  select(
+    -c(
+      DataType,
+      Date,
+      Day,
+      LON180,
+      StormElapsedTime2,
+      Obs
+    )
+  ) |>
+  mutate(
+    across(c(StormID, Year, Month, basin), ~ droplevels(.x))
+  )
+
+StormdataTest <- Stormdata |>
+  filter(DataType == "Test") |>
+  select(
+    -c(
+      DataType,
+      Date,
+      Day,
+      LON180,
+      StormElapsedTime2,
+      Obs
+    )
+  ) |>
+  mutate(
+    across(c(StormID, Year, Month, basin), ~ droplevels(.x))
+  ) |>
+  mutate(
+    VMAX = Actual_Yvec
+  )
+
+### Regular ----
+preProc <- preProcess(
+  StormdataTrain |>
+    select(
+      where(is.numeric),
+      -VMAX
+      #-StormElapsedTime,
+      #-LAT,
+      #-LON
+    ),
+  method = c("scale", "center")
+)
+#preProc
+StormdataTrain2 <- predict(preProc, StormdataTrain)
+StormdataTes2 <- predict(preProc, StormdataTest)
+#colnames(StormdataTrain)
+
+### YeoJohnson ----
+preProcYeo <- preProcess(
+  StormdataTrain |>
+    select(
+      where(is.numeric),
+      -VMAX,
+      #-HWRF,
+      -StormElapsedTime,
+      -LAT2,
+      -LON2
+    ),
+  method = c("scale", "center", "YeoJohnson")
+)
+#preProcYeo
+StormdataTrainYeo <- predict(preProcYeo, StormdataTrain)
+StormdataTestYeo <- predict(preProcYeo, StormdataTest)
+#colnames(StormdataTrainYeo)
+
+### Arcsinh ----
+StormdataTrainArcsinhPre <- StormdataTrain |>
+  mutate(
+    across(
+      c(
+        where(is.numeric),
+        -VMAX, #-HWRF,
+        -StormElapsedTime,
+        -LAT2,
+        -LON2
+      ),
+      ~ predict(arcsinh_x(.x, standardize = FALSE), newdata = .x)
+    )
+  )
+
+StormdataTestArcsinhPre <- StormdataTest |>
+  mutate(
+    across(
+      c(
+        where(is.numeric),
+        -VMAX, #-HWRF,
+        -StormElapsedTime,
+        -LAT2,
+        -LON2
+      ),
+      ~ predict(arcsinh_x(.x, standardize = FALSE), newdata = .x)
+    )
+  )
+
+preProcArcsinh <- preProcess(
+  StormdataTrainArcsinhPre |>
+    select(
+      where(is.numeric),
+      -VMAX, #-HWRF,
+      -StormElapsedTime,
+      -LAT2,
+      -LON2
+    ),
+  method = c("scale", "center")
+)
+#preProcArcsinh
+StormdataTrainArcsinh <- predict(preProcArcsinh, StormdataTrainArcsinhPre)
+StormdataTestArcsinh <- predict(preProcArcsinh, StormdataTestArcsinhPre)
+```
+
+# Introduction
+
+The data for this analysis are from [A Feed Forward Neural Network Based on Model Output Statistics for Short-Term Hurricane Intensity Prediction](https://journals.ametsoc.org/view/journals/wefo/34/4/waf-d-18-0173_1.xml), with detailed variable descriptions available [here](https://github.com/TylerPollard410/Hurricane-Analysis/blob/main/docs/data_description.pdf). This paper uses deep learning to improve 24-hour ahead forecasts of hurricane intensity (maximum wind velocity, VMAX). 
+
+The primary prediction model, [HWRF](https://www.aoml.noaa.gov/hurricane-weather-research-forecast-model/), which is a mathematical weather prediction model based on differential equations. In addition to the forecast, HWRF has many other state variables such as **sea surface temperature, longitude, time of year, etc**, that are usually discarded. 
+
+This analysis aims to assess whether incorporating these **HWRF state variables** can enhance the accuracy of hurricane intensity predictions
+
+# Data Exploration (Shiny App)
+
+To facilitate exploratory analysis, I developed an interactive <a href="https://tylerpollard410.shinyapps.io/Hurricane_EDA/" target="_blank"><b> Hurricane Analysis app</b></a>. This tool enables the visualization of key variables and their relationships with VMAX:
+
+* The Histogram plot reveals that **VMAX exhibits positive right-skewed distribution**.
+* The Map feature illustrates the geographic influence of spatial variables like basin, land presence, latitude, and longitude.
+* Scatter plots of VMAX against potential predictors highlight the importance of **feature transformations** for model fitting.
+
+# Model Description
+
+The response variable $Y_i$ is the observed VMAX for each hurricane observation. The dataset consists of $i = 1, ..., n = 1705$ total observations from 87 unique storms, where each storm is identified by a StormID ($S_i$). Every observation is associated with $p = 20$ covariates ($X_{ij}$, where $j = 1, ..., p$) that capture key **spatial characteristics**, **environmental conditions**, and **forecast-based features** relevant to hurricane intensity.
+
+Observations are recorded at **6-hour intervals**, representing StormElapsedTime. However, some storms have missing increments, making the time sequence irregular. StormElapsedTime was not included as a predictor in the model because the HWRF model already accounts for time evolution through its differential equation framework.
+
+To ensure comparability across variables, all covariates underwent the following preprocessing steps:
+
+1.  **Arcsinh transformation** was applied to handle skewed distributions.
+2.  **Centering** and **scaling** were performed to standardize the variables.
+
+Given the positive right-skewed distribution of VMAX, two likelihood functions were considered:
+
+## Log-normal
+
+$$
+\begin{aligned}
+Y_{i} &\sim \text{LogNormal}(\mu_i, \sigma^2) \\
+\mu_i &= \beta_{0} + \sum_{j=1}^{p}X_{ij}\beta_{j} + \theta_{S_i} \\
+\theta_{S_i} &\sim \text{Normal}(0, \tau^2)
+\end{aligned}
+$$
+
+## Gamma
+
+$$
+\begin{aligned}
+Y_{i} &\sim \text{Gamma}(\alpha, \alpha/\mu_i) \\
+log(\mu_i) &= \beta_{0} + \sum_{j=1}^{p}X_{ij}\beta_{j} + \theta_{S_i} \\
+\theta_{S_i} &\sim \text{Normal}(0, \tau^2)
+\end{aligned}
+$$
+
+where $\beta_{j}$ is the effect of covariate $j$ with weakly informative priors $\beta_j \sim \text{Normal}(0,5)$. We set a weakly prior on $\alpha \sim \text{InvGamma}(0.1, 0.1)$. In the random effects models, we set weakly priors $\tau \sim \text{InvGamma}(0.1, 0.1)$, otherwise $\theta_{S_i} = 0$.
+
+# Model Comparisons
+
+All four models were fit to the data and assessed for convergence to ensure reliable parameter estimates. After confirming convergence, model selection was performed using the **Widely Applicable Information Criterion (WAIC)** and **Expected Log Predictive Density (ELPD)**, both of which estimates out-of-sample predictive accuracy. @tbl-waic presents the WAIC values along with associated parameters for each model:
+
+```{r}
+#| label: tbl-waic
+#| tbl-cap: "Model Selection Criteria Using WAIC and ELPD"
+
+load(file = "_data/waicComps.RData")
+
+waicListComp |>
+  select(
+    Model,
+    waic,
+    p_waic,
+    elpd_waic,
+    elpd_diff,
+    se_diff
+  ) |>
+  gt() |>
+  # tab_header(
+  #   title = "Table 1: Model Selection Criteria"
+  # ) |>
+  fmt_number(
+    decimals = 2,
+    use_seps = FALSE
+  ) |>
+  cols_align(
+    align = "center",
+    columns = -Model
+  ) |>
+  tab_footnote(
+    footnote = "WAIC (waic): Widely Applicable Information Criterion, a model selection metric balancing fit and complexity. Lower values indicate better expected predictive accuracy.",
+    locations = cells_column_labels(columns = waic)
+  ) |>
+  tab_footnote(
+    footnote = "Effective Parameters (p_waic): An estimate of the number of effective parameters in the model; higher values indicate more flexibility.",
+    locations = cells_column_labels(columns = p_waic)
+  ) |>
+  tab_footnote(
+    footnote = "ELPD (elpd_waic): Expected log predictive density, quantifying out-of-sample predictive performance. Higher (less negative) values indicate better predictive accuracy.",
+    locations = cells_column_labels(columns = elpd_waic)
+  ) |>
+  tab_footnote(
+    footnote = "ELPD Difference (elpd_diff): The difference in elpd_waic relative to the best model (logNormal_Rand_Fit). The best model always has elpd_diff = 0.",
+    locations = cells_column_labels(columns = elpd_diff)
+  ) |>
+  tab_footnote(
+    footnote = "SE of Difference (se_diff): The standard error of elpd_diff, measuring uncertainty in the difference estimates. Large absolute elpd_diff values relative to se_diff indicate meaningful performance differences.",
+    locations = cells_column_labels(columns = se_diff)
+  ) |>
+  tab_style(
+    style = list(
+      cell_borders(sides = "right")
+    ),
+    locations = list(
+      cells_body(columns = Model),
+      cells_column_labels(columns = Model)
+    )
+  ) |>
+  tab_options(
+    table.align = "center"
+  ) |>
+  # tab_style(
+  #   style = list(
+  #     cell_fill(color = "#373737"),
+  #     cell_text(color = "#fff")
+  #   ),
+  #   locations = list(
+  #     cells_column_labels()
+  #   )
+  # ) |>
+  # tab_options(
+  #   column_labels.padding = "10px",
+  #   table.background.color = "#f2f2f2"
+  # ) |>
+  # #opt_vertical_padding(scale = 0.25) |>
+  # tab_caption(
+  #   caption = md("Table 1: Model Selection Criteria Using WAIC and ELPD")
+  # ) |>
+  as_raw_html()
+```
+
+Based on WAIC and elpd_diff, the **Log-normal model with random effects** demonstrated the best overall predictive performance. This decision was supported by the following observations:
+
+* **Lowest WAIC & Best Predictive Performance**: The log-normal random effects model had the smallest WAIC and elpd_diff = 0, meaning no other model demonstrated better expected predictive accuracy.
+* **Better Likelihood Choice**: Both Log-normal models outperformed their Gamma counterparts, suggesting that a log-normal likelihood is better suited for modeling VMAX.
+* **Importance of Random Effects**: The random effects models consistently had lower elpd_diff values than their fixed-effects counterparts, reinforcing the need for a random intercept for StormID. For example, the fixed-effects log-normal model had elpd_diff = `r round(waicListComp$elpd_diff[waicListComp$Model == "Log-normal (Fixed Effects)"], 2)`, showing a substantial decrease in predictive performance compared to the selected model.
+
+## Model Refinement
+
+After selecting the **Log-normal model with random effects**, additional refinements were made to improve model interpretability and predictive performance. The refinement process followed two key steps:
+
+1.  **Addressing Multicollinearity**
+
+    * Covariates with high variance inflation factors (VIF) were identified and removed to reduce multicollinearity, ensuring stable parameter estimates.
+    * TCOND7002, INST2, and SHTFL2 exhibited high VIF values and were removed before refitting the model.
+    
+2.  **Iterative Variable Selection**
+
+    * To improve model parsimony, variables were removed one at a time, with the model iteratively refit after each removal.
+    * This process continued until the 95\% credible intervals of all remaining covariates no longer contained 0, ensuring that only statistically meaningful predictors were retained.
+
+## Final Model
+
+After refinement, the final model retained $p = 9$ covariates:
+
+* Land
+* Wind Shear Magnitude (SHR_MAG)
+* Relative Humidity (RHLO)
+* Convective Available Potential Energy (CAPE3)
+* Coupling Parameter 1 (CP1)
+* Total Condensate Symmetry Parameter (TCONDSYM2)
+* Coupling CP3 Parameter (COUPLSYM3)
+* HWFI forecast
+* HWRF forecast
+
+This final model strikes a balance between **parsimony and predictive power**, ensuring that only the most relevant predictors are retained while minimizing unnecessary complexity. By including variables that significantly contribute to explaining variations in VMAX, the refined model improves both **interpretability and generalizability** for forecasting hurricane intensity.
+
+# Goodness of Fit
+
+To assess the model's goodness of fit, **posterior predictive checks (PPCs)** were performed by drawing samples from the **posterior predictive distribution (PPD)**. These checks compare key summary statistics of the observed data to those generated from the model, ensuring that the fitted model can replicate important characteristics of the data.
+
+The figure below displays the empirical distribution of observed VMAX alongside the posterior predictive distribution, as well as **Bayesian p-values** for the **mean**, **standard deviation (SD)**, and **range**:
+
+```{r}
+#| label: fig-gof
+#| fig-cap: "Posterior Predictive Checks for Log-normal Random Effects Model"
+#| fig-align: "center"
+#| out-width: "90%"
+
+load(file = "_data/final_Fit.RData")
+
+iters <- 4000
+burn <- 2000
+chains <- 4
+sims <- (iters - burn) * chains
+
+fillPPC <- "#d1e1ec"
+colorPPC <- "#b3cde0"
+fill2PPC <- "#011f4b"
+
+## Posteriors ----
+### Training ----
+set.seed(52)
+posteriorFit <- posterior_predict(final_Fit)
+posteriorFitMean <- colMeans(posteriorFit)
+posteriorFitMed <- apply(posteriorFit, 2, function(x) {
+  quantile(x, 0.5)
+})
+posteriorFitLCB <- apply(posteriorFit, 2, function(x) {
+  quantile(x, 0.025)
+})
+posteriorFitUCB <- apply(posteriorFit, 2, function(x) {
+  quantile(x, 0.975)
+})
+
+## PPC ----
+trainVMAX <- StormdataTrain$VMAX
+testVMAX <- Actual_Yvec
+
+set.seed(52)
+sampFitID <- sample(1:sims, 1000, replace = FALSE)
+postSampFit <- posteriorFit[sampFitID, ]
+
+### Density -----
+ppcDensPlot <- ppc_dens_overlay(
+  y = trainVMAX,
+  yrep = postSampFit
+) +
+  labs(
+    # title = "Simulated density of draws from the PPD vs Observed VMAX",
+    # subtitle = "n = 1000 draws",
+    x = "VMAX",
+    y = "Density"
+  ) +
+  scale_x_continuous(limits = c(0, 250), breaks = seq(0, 250, 25)) +
+  theme_bw() +
+  theme(
+    legend.position = "none"
+  )
+
+
+#### Stats ----
+# Make stat functions
+meanFunc <- function(y) {
+  mean(y)
+}
+sdFunc <- function(y) {
+  sd(y)
+}
+rangeFunc <- function(y) {
+  max(y) - min(y)
+}
+
+##### Mean ----
+set.seed(52) # for reproducibility
+meanY <- meanFunc(trainVMAX)
+
+ppcMeanStat <- ppc_stat_data(
+  y = trainVMAX,
+  yrep = posteriorFit,
+  group = NULL,
+  stat = c("meanFunc")
+) |>
+  mutate(
+    meanProbLow = value < meanY,
+    meanProbHigh = value > meanY
+  )
+
+ppcMeanPlotGG <- ggplot() +
+  geom_histogram(
+    data = ppcMeanStat |> filter(variable != "y"),
+    aes(x = value, color = "Posterior"),
+    fill = fillPPC
+  ) +
+  geom_vline(
+    data = ppcMeanStat |> filter(variable == "y"),
+    aes(xintercept = value, color = "Observed"),
+    linewidth = 1
+  ) +
+  scale_x_continuous(
+    name = "VMAX"
+  ) +
+  scale_y_continuous(
+    name = "Number of Posterior Draws",
+    expand = expansion(mult = c(0, 0.01))
+  ) +
+  scale_color_manual(
+    name = "Data",
+    values = c(
+      "Posterior" = colorPPC,
+      "Observed" = "black"
+    ),
+    breaks = c("Posterior", "Observed")
+  ) +
+  labs(
+    title = "Mean",
+    subtitle = paste("p-value =", round(mean(ppcMeanStat$meanProbLow[-1]), 4))
+  ) +
+  theme_bw() +
+  guides(color = guide_legend(byrow = TRUE)) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    legend.key.spacing.y = unit(5, "points"),
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  )
+
+##### SD ----
+set.seed(52) # for reproducibility
+sdY <- sdFunc(trainVMAX)
+
+ppcSDStat <- ppc_stat_data(
+  y = trainVMAX,
+  yrep = posteriorFit,
+  group = NULL,
+  stat = c("sdFunc")
+) |>
+  mutate(
+    sdProbLow = value < sdY,
+    sdProbHigh = value > sdY
+  )
+
+ppcSDPlotGG <- ggplot() +
+  geom_histogram(
+    data = ppcSDStat |> filter(variable != "y"),
+    aes(x = value, color = "Posterior"),
+    fill = fillPPC
+  ) +
+  geom_vline(
+    data = ppcSDStat |> filter(variable == "y"),
+    aes(xintercept = value, color = "Observed"),
+    linewidth = 1
+  ) +
+  scale_x_continuous(
+    name = "VMAX"
+  ) +
+  scale_y_continuous(
+    name = "Number of Posterior Draws",
+    expand = expansion(mult = c(0, 0.01))
+  ) +
+  scale_color_manual(
+    name = "Data",
+    values = c(
+      "Posterior" = colorPPC,
+      "Observed" = "black"
+    ),
+    breaks = c("Posterior", "Observed")
+  ) +
+  labs(
+    title = "SD",
+    subtitle = paste("p-value =", round(mean(ppcSDStat$sdProbLow[-1]), 4))
+  ) +
+  theme_bw() +
+  guides(color = guide_legend(byrow = TRUE)) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    legend.key.spacing.y = unit(5, "points"),
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  )
+
+##### Range ----
+set.seed(52) # for reproducibility
+rangeY <- rangeFunc(trainVMAX)
+
+ppcRangeStat <- ppc_stat_data(
+  y = trainVMAX,
+  yrep = posteriorFit,
+  group = NULL,
+  stat = c("rangeFunc")
+) |>
+  mutate(
+    rangeProbLow = value < rangeY,
+    rangeProbHigh = value > rangeY
+  )
+
+ppcRangePlotGG <- ggplot() +
+  geom_histogram(
+    data = ppcRangeStat |> filter(variable != "y"),
+    aes(x = value, color = "Posterior"),
+    fill = fillPPC
+  ) +
+  geom_vline(
+    data = ppcRangeStat |> filter(variable == "y"),
+    aes(xintercept = value, color = "Observed"),
+    linewidth = 1
+  ) +
+  scale_x_continuous(
+    name = "VMAX"
+  ) +
+  scale_y_continuous(
+    name = "Number of Posterior Draws",
+    expand = expansion(mult = c(0, 0.01))
+  ) +
+  scale_color_manual(
+    name = "Data",
+    values = c(
+      "Posterior" = colorPPC,
+      "Observed" = "black"
+    ),
+    breaks = c("Posterior", "Observed")
+  ) +
+  labs(
+    title = "Range",
+    subtitle = paste("p-value =", round(mean(ppcRangeStat$rangeProbLow[-1]), 4))
+  ) +
+  theme_bw() +
+  guides(color = guide_legend(byrow = TRUE)) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    legend.key.spacing.y = unit(5, "points"),
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  )
+
+
+#### Combined plot ----
+ppcCombPlot <-
+  ppcDensPlot /
+  (ppcMeanPlotGG + ppcSDPlotGG + ppcRangePlotGG) +
+  plot_layout(
+    guides = "collect",
+    axes = "collect_x"
+  ) +
+  plot_annotation(
+    #title = "Posterior Predictive Checks for Distributional Statistics",
+    #subtitle = paste("Bayesian predictive p-values for", sims, "Simulations"),
+    theme = theme(
+      legend.position = "bottom",
+      legend.direction = "horizontal"
+    )
+  )
+ppcCombPlot
+```
+
+These **p-values fall within an acceptable range**, staying sufficiently away from 0 and 1, indicating that the model does not systematically overestimate or underestimate variability in the data. Additionally, the **empirical distribution of observed VMAX aligns well** with the simulated distributions from the PPD draws, further supporting model adequacy.
+
+Overall, the **PPCs confirm that the model provides a reasonable fit to the observed data** and successfully captures key characteristics of VMAX distribution.
+
+# Variable Importance
+
+After fitting the **final model** with **random intercepts** and **weakly informative priors**, the importance of each covariate was examined. @tbl-var presents the posterior mean, standard deviation, and 95\% credible interval for each parameter after **partially pooling over StormIDs**.
+
+Since all covariates were centered and scaled, the posterior means allow for direct comparison of covariate importance, where **larger absolute values indicate stronger effects on VMAX**.
+
+From @tbl-var, the most influential covariates in modeling VMAX were **Land, HWFI, and HWRF**. Given that HWRF is already a widely used forecast for VMAX, its significance in the model is expected. However, an interesting result is that **HWFI appears to have a larger effect on VMAX than HWRF**, suggesting it may contribute more predictive value in this model.
+
+```{r}
+#| label: tbl-var
+#| tbl-cap: "Posterior Summary for Final Model Parameters"
+
+finalFitSum <- summary(final_Fit, digits = 4)
+finalFitFixed <- finalFitSum$fixed
+finalFitRand <- finalFitSum$random$StormID
+
+finalFitFixed |>
+  select(
+    Mean = Estimate,
+    SD = Est.Error,
+    `Q2.5` = `l-95% CI`,
+    `Q97.5` = `u-95% CI`
+  ) |>
+  round(digits = 4) |>
+  rownames_to_column(var = "Parameter") |>
+  gt() |>
+  # tab_header(
+  #   title = "Table 2: Posterior summary for model parameters"
+  # ) |>
+  cols_align(
+    align = "center",
+    columns = c(everything(), -Parameter)
+  ) |>
+  tab_style(
+    style = list(
+      cell_borders(sides = "right")
+    ),
+    locations = list(
+      cells_body(columns = Parameter),
+      cells_column_labels(columns = Parameter)
+    )
+  ) |>
+  # tab_style(
+  #   style = list(
+  #     cell_fill(color = "#373737"),
+  #     cell_text(color = "#fff")
+  #   ),
+  #   locations = list(
+  #     cells_column_labels()
+  #   )
+  # ) |>
+  # tab_options(
+  #   column_labels.padding = "10px",
+  #   table.background.color = "#f2f2f2"
+  # ) |>
+  # #opt_vertical_padding(scale = 0.25) |>
+  # tab_caption(
+  #   caption = md("Table 2: Posterior summary for model parameters")
+  # ) |>
+  as_raw_html()
+```
+
+# Prediction
+
+In the dataset provided for this project, there were an additional 668 observations from new StormIDs where VMAX was missing. The posterior predictive mean and 95% credible interval were used to estimate VMAX for these out-of-sample (OOS) observations. The predictive performance of the model was assessed using cross-validation and, later, by evaluating its predictions against the actual OOS values.
+
+## Cross-Validation
+
+To estimate predictive accuracy, 5-fold cross-validation (CV) was performed by splitting the 1,705 observations into 5 approximately equal folds based on randomly selected StormIDs. This mimics the real-world scenario of predicting entirely new hurricanes.
+
+The model’s performance was evaluated using:
+
+* **Mean Absolute Error (MAE)**: Measures the average absolute difference between observed and predicted VMAX.
+* **Coverage (COV) of 95% Credible Intervals**: Measures the proportion of observations where the true VMAX fell within the model’s 95% posterior predictive interval.
+
+Alongside CV, predictions were also generated using the PPD by treating the fit observations as missing. @tbl-OOS-Prediction presents the prediction metrics for both methods:
+
+```{r}
+#| label: CV-Prediction
+
+load(file = "_data/final_cv.RData")
+load(file = "_data/final_cv_Metrics.RData")
+
+trainHWRF <- StormdataTrain$HWRF
+
+### Model ----
+final_Fit_predMetrics <- tibble(
+  Method = "Model PPD",
+  MAE_HWRF = mean(abs(trainHWRF - trainVMAX)),
+  MAE_Model = mean(abs(posteriorFitMean - trainVMAX)),
+  COV = mean(posteriorFitLCB < trainVMAX & trainVMAX < posteriorFitUCB)
+)
+
+### CV ----
+predMetricDF <- bind_rows(
+  final_Fit_predMetrics,
+  final_cv_Metrics |>
+    select(
+      MAE_HWRF,
+      MAE_Model = MAE_kfold,
+      COV = COV_kfold
+    ) |>
+    round(digits = 3) |>
+    mutate(
+      Method = "5-fold CV",
+      .before = 1
+    )
+)
+```
+
+The 95% credible interval coverage from CV (`r round(final_cv_Metrics$COV_kfold, 3)`) aligns closely with the expected 0.95, confirming that the model reliably quantifies uncertainty in its predictions. Additionally, the MAE from CV (`r round(final_cv_Metrics$MAE_kfold, 3)`) represents a **`r round(1 - final_cv_Metrics$MAE_kfold/final_cv_Metrics$MAE_HWRF, 2)*100`\% improvement** over the HWRF baseline and demonstrates the model’s **ability to generalize to new storms**.
+
+```{r}
+#| label: tbl-CV-Prediction-Comp
+#| tbl-cap: "Cross-Validation Prediction Metrics"
+
+predMetricDF |>
+  gt() |>
+  # tab_header(
+  #   title = "Table 3: Prediction metrics"
+  # ) |>
+  fmt_number(
+    decimals = 3
+  ) |>
+  cols_label(
+    MAE_HWRF = "HWRF MAE",
+    MAE_Model = "Model MAE"
+  ) |>
+  cols_align(
+    align = "center",
+    columns = -Method
+  ) |>
+  tab_style(
+    style = list(
+      cell_borders(sides = "right")
+    ),
+    locations = list(
+      cells_body(columns = Method),
+      cells_column_labels(columns = Method)
+    )
+  ) |>
+  # tab_style(
+  #   style = list(
+  #     cell_fill(color = "#373737"),
+  #     cell_text(color = "#fff")
+  #   ),
+  #   locations = list(
+  #     cells_column_labels()
+  #   )
+  # ) |>
+  # tab_options(
+  #   column_labels.padding = "10px",
+  #   table.background.color = "#f2f2f2"
+  # ) |>
+  # #opt_vertical_padding(scale = 0.25) |>
+  # tab_caption(
+  #   caption = md(
+  #     "Table 3: Cross-Validation prediction metrics on observed data"
+  #   )
+  # ) |>
+  as_raw_html()
+```
+
+## Out-of-Sample 
+
+```{r}
+#| label: OOS-Prediction
+
+### Posterior ----
+set.seed(52)
+posteriorPred <- posterior_predict(
+  final_Fit,
+  newdata = StormdataTestArcsinh,
+  allow_new_levels = TRUE,
+  re_formula = NULL
+)
+posteriorPredMean <- colMeans(posteriorPred)
+posteriorPredMed <- apply(posteriorPred, 2, function(x) {
+  quantile(x, 0.5)
+})
+posteriorPredLCB <- apply(posteriorPred, 2, function(x) {
+  quantile(x, 0.025)
+})
+posteriorPredUCB <- apply(posteriorPred, 2, function(x) {
+  quantile(x, 0.975)
+})
+
+#### Prediction Metrics ----
+trainVMAX <- StormdataTrain$VMAX
+testVMAX <- Actual_Yvec
+
+trainHWRF <- StormdataTrain$HWRF
+testHWRF <- StormdataTest$HWRF
+
+OOS_predMetrics <- tibble(
+  Method = "Model PPD",
+  MAE_HWRF = mean(abs(testHWRF - testVMAX)),
+  MAE_Model = mean(abs(posteriorPredMean - testVMAX)),
+  MAD_Model = mean(abs(posteriorPredMed - testVMAX)),
+  COV = mean(posteriorPredLCB < testVMAX & testVMAX < posteriorPredUCB)
+)
+```
+
+Following the initial analysis, the actual VMAX values for the 668 out-of-sample observations were obtained. This allowed for a true performance evaluation of the model, rather than relying solely on cross-validation estimates.
+
+The PPD mean and 95% credible interval were computed for these OOS observations, and prediction accuracy was assessed using MAE, Mean Absolute Deviation (MAD), and COV. The results are presented in @tbl-OOS-Prediction:
+
+```{r}
+#| label: tbl-OOS-Prediction
+#| tbl-cap: "Out-of-Sample Prediction Metrics"
+
+OOS_predMetrics |>
+  gt() |>
+  # tab_header(
+  #   title = "Table 3: Prediction metrics"
+  # ) |>
+  fmt_number(
+    decimals = 3
+  ) |>
+  cols_label(
+    MAE_HWRF = "HWRF MAE",
+    MAE_Model = "Model MAE",
+    MAD_Model = "Model MAD"
+  ) |>
+  cols_align(
+    align = "center",
+    columns = -Method
+  ) |>
+  tab_style(
+    style = list(
+      cell_borders(sides = "right")
+    ),
+    locations = list(
+      cells_body(columns = Method),
+      cells_column_labels(columns = Method)
+    )
+  ) |>
+  # tab_style(
+  #   style = list(
+  #     cell_fill(color = "#373737"),
+  #     cell_text(color = "#fff")
+  #   ),
+  #   locations = list(
+  #     cells_column_labels()
+  #   )
+  # ) |>
+  # tab_options(
+  #   column_labels.padding = "10px",
+  #   table.background.color = "#f2f2f2"
+  # ) |>
+  # #opt_vertical_padding(scale = 0.25) |>
+  # tab_caption(
+  #   caption = md("Table 4: Prediction metrics on out-of-sample data")
+  # ) |>
+  as_raw_html()
+```
+
+The **model outperforms HWRF** (`r round(OOS_predMetrics$MAE_Model, 3)` vs. `r round(OOS_predMetrics$MAE_HWRF, 3)` MAE), confirming its predictive strength. The coverage (`r round(OOS_predMetrics$COV, 3)`) suggests that the **model’s uncertainty quantification remains reliable** even when predicting unseen storms.
+
+### Prediction Plots
+
+To visualize the model’s performance on OOS predictions, we compare the PPD mean and 95% credible intervals against the actual observed VMAX values.
+
+@fig-OOS-All-Plot provides a comprehensive view of **all OOS storms**, showing how well the model’s predictive mean aligns with actual VMAX values.
+
+To complement this, the @fig-OOS-Long-Plot focuses on **longer-duration storms**, offering a closer look at **how predictions evolve over time**. This plot also includes HWRF forecasts alongside actual VMAX values, allowing for a direct comparison between the model and HWRF predictions.
+
+```{r}
+#| label: fig-OOS-All-Plot
+#| fig-cap: "Out-of-Sample Forecasts - Full Dataset. The model’s posterior predictive mean (green) tracks closely with observed VMAX values (gray), with the 95% credible interval (blue) capturing most data points, indicating well-calibrated uncertainty estimates."
+#| fig-align: "center"
+#| out-width: "90%"
+
+oosPosteriorDF <- bind_cols(
+  StormdataTest,
+  LCB = posteriorPredLCB,
+  Mean = posteriorPredMean,
+  Med = posteriorPredMed,
+  UCB = posteriorPredUCB
+) |>
+  mutate(
+    VMAX = Actual_Yvec
+  )
+
+fillPPD <- "lightblue"
+colorActual <- "#011f4b"
+colorHWRF <- "coral"
+colorPPD <- "springgreen3"
+
+#### All ----
+oosPPD_plot_All <- ggplot(data = oosPosteriorDF, aes(x = StormElapsedTime)) +
+  geom_ribbon(aes(ymin = LCB, ymax = UCB, fill = "95% CI"), alpha = 0.5) +
+  geom_line(aes(y = VMAX, color = "Actual"), linewidth = 1, alpha = 0.5) +
+  #geom_line(aes(y = HWRF, color = "HWRF")) +
+  geom_line(aes(y = Mean, color = "PPD Mean"), linewidth = 0.75) +
+  scale_y_continuous(limits = c(0, 250), breaks = seq(0, 275, 50)) +
+  facet_wrap(vars(StormID)) + #, ncol = 6)+
+  labs(
+    #title = "PPD Mean vs Observed VMAX",
+    #subtitle = "95% Credible Interval about PPD Mean",
+    x = "Storm Elapsed Time"
+  ) +
+  scale_color_manual(
+    name = NULL,
+    breaks = c(
+      "Actual",
+      #"HWRF",
+      "PPD Mean"
+    ),
+    values = c(
+      "Actual" = colorActual,
+      #"HWRF" = colorHWRF,
+      "PPD Mean" = colorPPD
+    )
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = c(
+      "95% CI" = fillPPD
+    )
+  ) +
+  guides(
+    color = guide_legend(override.aes = list(linewidth = 1), order = 2)
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+  )
+oosPPD_plot_All
+```
+
+```{r}
+#| label: fig-OOS-Long-Plot
+#| fig-cap: "Out-of-Sample Forecasts - Long Storms. The model’s posterior predictive mean (green) is compared against both HWRF forecasts (red) and actual VMAX values (gray). The model successfully tracks storm intensity while providing well-calibrated uncertainty estimates, demonstrating improvement over HWRF in many cases."
+#| fig-align: "center"
+#| out-width: "90%"
+
+#### Long 9 ----
+predStorms <- oosPosteriorDF |>
+  group_by(StormID) |>
+  summarise(
+    MaxTime = max(StormElapsedTime)
+  ) |>
+  #arrange(desc(MaxTime))
+  arrange(MaxTime)
+
+predStormsLong <- tail(predStorms, 9)
+
+predStormsLongID <- predStormsLong |>
+  arrange(MaxTime) |>
+  mutate(
+    StormID = factor(as.character(StormID), levels = as.character(StormID))
+  )
+#predStormsLongID
+
+oosPosteriorDF_Long <- left_join(
+  predStormsLongID,
+  oosPosteriorDF
+)
+
+oosPPD_plot_Long <-
+  ggplot(data = oosPosteriorDF_Long, aes(x = StormElapsedTime)) +
+  geom_ribbon(aes(ymin = LCB, ymax = UCB, fill = "95% CI"), alpha = 0.5) +
+  geom_line(aes(y = VMAX, color = "Actual"), linewidth = 1, alpha = .5) +
+  geom_line(aes(y = HWRF, color = "HWRF"), linewidth = .75) +
+  geom_line(aes(y = Mean, color = "PPD Mean"), linewidth = .75) +
+  scale_y_continuous(limits = c(0, 250), breaks = seq(0, 275, 50)) +
+  facet_wrap(vars(StormID), dir = "h") + #, ncol = 6)+
+  labs(
+    #title = "PPD Mean vs Observed VMAX",
+    #subtitle = "95% Credible Interval about PPD Mean",
+    x = "Storm Elapsed Time"
+  ) +
+  scale_color_manual(
+    name = NULL,
+    breaks = c(
+      "Actual",
+      "HWRF",
+      "PPD Mean"
+      #"HWRF" = "dodgerblue"
+    ),
+    values = c(
+      "Actual" = colorActual,
+      "HWRF" = colorHWRF,
+      "PPD Mean" = colorPPD
+    )
+  ) +
+  scale_fill_manual(
+    name = NULL,
+    values = c(
+      "95% CI" = fillPPD
+    )
+  ) +
+  guides(
+    color = guide_legend(override.aes = list(linewidth = 1), order = 2)
+  ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+  )
+oosPPD_plot_Long
+```
+
+### Key Takeaways
+
+* The model provides **well-calibrated forecasts**, with credible intervals capturing the majority of actual observations.
+* The PPD mean aligns well with observed VMAX values, confirming **strong predictive performance**.
+* The **model outperforms HWRF**, particularly for long-duration storms, where accurate forecasting is crucial.
+
+These results further support the **statistical improvements in MAE** reported in Table 4, reinforcing the model's reliability for predicting hurricane intensity.
+
+# Discussion
+
+This analysis explored whether incorporating additional HWRF state variables improves hurricane intensity predictions beyond the existing HWRF model alone. A **Log-normal random effects model** was selected as the final model **based on WAIC and ELPD criteria**, demonstrating the best predictive performance.
+
+Through **cross-validation and out-of-sample evaluation**, the model consistently **outperformed HWRF forecasts**:
+
+* Cross-validation showed a **`r round(1 - final_cv_Metrics$MAE_kfold/final_cv_Metrics$MAE_HWRF, 2)*100`\% reduction in MAE**, while maintaining well-calibrated uncertainty estimates.
+* Out-of-sample results confirmed that the model **improved MAE by `r round(1 - OOS_predMetrics$MAE_Model/OOS_predMetrics$MAE_HWRF, 2)*100`\% over HWRF**.
+
+The prediction plots further validated the model’s reliability, demonstrating **well-calibrated posterior** intervals and a **strong alignment between predicted and observed VMAX values**, particularly for long-duration storms, where forecasting is most critical.
+
+Limitations and Future Work
+While the model performed well, there are areas for potential improvement:
+
+## Limitations
+
+While the model performed well, there are areas where future improvements may be warranted:
+
+* **Data Availability & Feature Selection** → The model relies on available HWRF state variables, which may not capture all drivers of hurricane intensity. Incorporating additional environmental predictors could enhance accuracy.
+* **Evolving Hurricane Conditions** → Although the model generalized well to out-of-sample storms in this dataset, its performance should be monitored as new storms form under changing climate and atmospheric conditions.
+* **Computational Constraints** → The inclusion of random effects improves accuracy but increases computational complexity, which may be a limitation for real-time forecasting applications.
+
+## Future Work
+
+Several avenues could further improve the model's performance and practical application:
+
+* **Expanding Feature Engineering** → Incorporating additional meteorological variables or external data sources, such as satellite-derived atmospheric conditions or oceanographic data.
+* **Alternative Priors** → Exploring hierarchical priors for better regularization and robustness against uncertainty.
+* **Probabilistic Forecasting** → Extending the model to provide multi-step hurricane intensity forecasts, allowing for dynamic updates as storms evolve.
+
+This study demonstrates that **leveraging additional state variables from HWRF significantly enhances hurricane intensity prediction**, offering a data-driven approach to **improving forecasting accuracy**. Future refinements can build upon these results to further enhance predictive performance in operational forecasting settings.

@@ -8,6 +8,11 @@ project:
     navigate: true
   render:
     - "*.qmd"
+    - "about/*.qmd"
+    - "case-studies/**/*.qmd"
+    - "projects/**/*.qmd"
+    - "blog/**/*.qmd"
+    - "resume/*.qmd"
 
 profile: 
   default: development
@@ -43,8 +48,12 @@ website:
         text: About
       - href: projects/index.qmd
         text: Projects
+      - href: case-studies/index.qmd
+        text: Case Studies
+      - href: blog/index.qmd
+        text: Blog
       - href: resume/index.qmd
-        text: Resume
+        text: CV
     right: 
       - icon: github
         href: https://github.com/TylerPollard410

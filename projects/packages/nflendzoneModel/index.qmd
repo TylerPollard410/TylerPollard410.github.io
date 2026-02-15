@@ -1,0 +1,49 @@
+---
+title: "nflendzoneModel"
+description: "Bayesian team-strength modeling package built on Stan/cmdstanr for the NFL EndZone ecosystem."
+author: Tyler Pollard
+date: 2026-02-15
+date-modified: 2026-02-15
+categories:
+  - nfl
+  - nflverse
+  - cmdstanr
+  - brms
+  - stan
+  - bayesian
+  - state-space
+image: /logos/tyler-pollard-icon.png
+repo-url: "https://github.com/TylerPollard410/nflendzoneModel"
+---
+
+[View repository source {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
+
+`nflendzoneModel` is the Bayesian inference engine used for weekly team-strength updates and game-level probability generation.
+
+## Core Workflow Functions
+
+- `prepare_schedule_indices()`
+- `prepare_stan_data()`
+- `fit_team_strength_model()`
+- `prepare_gq_data()`
+- `predict_team_strength()`
+- `extract_game_predictions()`
+
+## Stan Model Assets
+
+- `team_strength_fit.stan`
+- `team_strength_gq.stan`
+- `team_strength_bivar_negbinom.stan`
+- `team_strength_recursive.stan`
+
+## Operational Role
+
+1. Consumes model-ready data from pipeline outputs.
+2. Fits Bayesian state-space models via `cmdstanr`.
+3. Publishes posterior summaries to `nflendzoneData`.
+4. Supports app-side probability reconstruction workflows.
+
+## Related Pages
+
+- Joint negbinom workflow note: [/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/](/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/)
+- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)

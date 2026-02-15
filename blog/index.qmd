@@ -1,0 +1,21 @@
+---
+title: "Blog"
+author: Tyler Pollard
+description: "Dated technical notes, weekly updates, and vignette-style walkthroughs."
+listing:
+  - id: posts_2026
+    contents: "posts/2026/**/index.qmd"
+    sort: "date desc"
+    categories: true
+page-layout: full
+toc-title: Year
+toc-location: right
+comments: false
+---
+
+Blog posts are dated by design and used for iterative notes (weekly pipeline updates, modeling notes, and vignette walkthroughs).
+
+## 2026
+
+:::{#posts_2026}
+:::
