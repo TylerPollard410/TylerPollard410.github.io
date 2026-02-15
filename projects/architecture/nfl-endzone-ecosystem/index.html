@@ -6,9 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-01-24">
+<meta name="author" content="Tyler Pollard">
+<meta name="dcterms.date" content="2026-02-15">
+<meta name="description" content="System-level map of nflendzonePipeline, nflendzoneData, nflendzoneModel, and nflendzoneApp.">
 
-<title>CV – Tyler Pollard (DEV)</title>
+<title>NFL EndZone Ecosystem Architecture – Tyler Pollard (DEV)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,27 +26,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../logos/tyler-pollard-icon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-9fa6dbbe6219e357c3a17d5a2c09c803.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-d2800b5aef52857891e752670e942548.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ad1131659e9c72a83df75a815661c742.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-3a3452762409c0ed4fed818deb8a5b6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../logos/tyler-pollard-icon.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-9fa6dbbe6219e357c3a17d5a2c09c803.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d2800b5aef52857891e752670e942548.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-ad1131659e9c72a83df75a815661c742.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-dark-3a3452762409c0ed4fed818deb8a5b6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -99,17 +101,22 @@ gtag('config', 'G-LG5XRX930Y', { 'anonymize_ip': true});
 background: var(--brand-tp-cyan);
       }
 </style>
+<script src="../../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
-<meta name="twitter:title" content="CV – Tyler Pollard (DEV)">
-<meta name="twitter:description" content="Portfolio website of Tyler Pollard, Statistician">
-<meta name="twitter:image" content="https://tylerpollard410.github.io//files/profiles/twitter-card-large.png">
+<meta name="twitter:title" content="NFL EndZone Ecosystem Architecture – Tyler Pollard (DEV)">
+<meta name="twitter:description" content="System-level map of nflendzonePipeline, nflendzoneData, nflendzoneModel, and nflendzoneApp.">
+<meta name="twitter:image" content="https://tylerpollard410.github.io//blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/img/README-team-strength-plot-1.png">
 <meta name="twitter:creator" content="@tylerpollard410">
 <meta name="twitter:site" content="@tylerpollard410">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="1344">
+<meta name="twitter:image-width" content="960">
 </head>
 
-<body class="nav-fixed fullcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -276,11 +283,11 @@ background: var(--brand-tp-cyan);
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo light-content">
-    <img src="../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo dark-content">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo light-content">
+    <img src="../../../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Tyler Pollard</span>
     </a>
   </div>
@@ -290,27 +297,27 @@ background: var(--brand-tp-cyan);
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/index.html"> 
+    <a class="nav-link" href="../../../about/index.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../projects/index.html"> 
+    <a class="nav-link" href="../../../projects/index.html"> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../case-studies/index.html"> 
+    <a class="nav-link" href="../../../case-studies/index.html"> 
 <span class="menu-text">Case Studies</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog/index.html"> 
+    <a class="nav-link" href="../../../blog/index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../resume/index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../resume/index.html"> 
 <span class="menu-text">CV</span></a>
   </li>  
 </ul>
@@ -342,21 +349,46 @@ background: var(--brand-tp-cyan);
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">CV</h1>
-                      </div>
+      <h1 class="title">NFL EndZone Ecosystem Architecture</h1>
+                  <div>
+        <div class="description">
+          System-level map of nflendzonePipeline, nflendzoneData, nflendzoneModel, and nflendzoneApp.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">nfl</div>
+                <div class="quarto-category">nflverse</div>
+                <div class="quarto-category">cmdstanr</div>
+                <div class="quarto-category">brms</div>
+                <div class="quarto-category">architecture</div>
+                <div class="quarto-category">shiny</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Tyler Pollard </p>
+            </div>
+    </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 24, 2026</p>
+        <p class="date">February 15, 2026</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">February 15, 2026</p>
+      </div>
+    </div>
       
     </div>
     
@@ -364,7 +396,18 @@ background: var(--brand-tp-cyan);
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#end-to-end-flow" id="toc-end-to-end-flow" class="nav-link active" data-scroll-target="#end-to-end-flow">End-to-End Flow</a></li>
+  <li><a href="#repository-responsibilities" id="toc-repository-responsibilities" class="nav-link" data-scroll-target="#repository-responsibilities">Repository Responsibilities</a></li>
+  <li><a href="#visual-signals-from-weekly-output" id="toc-visual-signals-from-weekly-output" class="nav-link" data-scroll-target="#visual-signals-from-weekly-output">Visual Signals From Weekly Output</a></li>
+  <li><a href="#related-links" id="toc-related-links" class="nav-link" data-scroll-target="#related-links">Related Links</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -373,12 +416,86 @@ background: var(--brand-tp-cyan);
 
 
 
-<p><a href="2026-01-24_resume.pdf" class="btn btn-warning">Download PDF</a></p>
-<object data="2026-01-24_resume.pdf?#scrollbar=0&amp;toolbar=0&amp;navpanes=0" type="application/pdf" width="100%" height="900">
-  <p>Your browser does not support embedded PDFs. <a href="2026-01-24_resume.pdf">Download the PDF</a>.</p>
-</object>
+<p>This page is the evergreen system map. Weekly and implementation updates live in Blog posts.</p>
+<section id="end-to-end-flow" class="level2">
+<h2 class="anchored" data-anchor-id="end-to-end-flow">End-to-End Flow</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A[nflverse raw data] --&gt; B[nflendzonePipeline]
+  B --&gt; C[nflendzoneData release tags]
+  C --&gt; D[nflendzoneModel]
+  D --&gt; C
+  C --&gt; E[nflendzoneApp]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="repository-responsibilities" class="level2">
+<h2 class="anchored" data-anchor-id="repository-responsibilities">Repository Responsibilities</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Repository</th>
+<th>Primary responsibility</th>
+<th>Main handoff</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>nflendzonePipeline</code></td>
+<td>ETL, feature engineering, scheduled updates</td>
+<td>publishes versioned artifacts</td>
+</tr>
+<tr class="even">
+<td><code>nflendzoneData</code></td>
+<td>release/tag warehouse</td>
+<td>serves stable API-like data URLs</td>
+</tr>
+<tr class="odd">
+<td><code>nflendzoneModel</code></td>
+<td>Bayesian team-strength modeling</td>
+<td>publishes posterior summaries</td>
+</tr>
+<tr class="even">
+<td><code>nflendzoneApp</code></td>
+<td>interactive Shiny/Rhino application</td>
+<td>consumes summaries for user-facing probabilities</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visual-signals-from-weekly-output" class="level2">
+<h2 class="anchored" data-anchor-id="visual-signals-from-weekly-output">Visual Signals From Weekly Output</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img src="../../../blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/img/README-team-strength-plot-1.png" class="img-fluid" alt="Team strength rankings with posterior uncertainty."></p>
+</div><div class="column" style="width:50%;">
+<p><img src="../../../blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/img/README-win-prob-plot-1.png" class="img-fluid" alt="Game-level win probability output."></p>
+</div>
+</div>
+</section>
+<section id="related-links" class="level2">
+<h2 class="anchored" data-anchor-id="related-links">Related Links</h2>
+<ul>
+<li>Pipeline weekly post: <a href="../../../blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/">/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/</a></li>
+<li>Joint negbinom model post: <a href="../../../blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/">/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/</a></li>
+<li>App architecture: <a href="../../../projects/architecture/nflendzoneApp-architecture/">/projects/architecture/nflendzoneApp-architecture/</a></li>
+</ul>
 
 
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -804,7 +921,7 @@ background: var(--brand-tp-cyan);
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p>Website built with <a href="https://quarto.org"><img src="../logos/quarto.png" style="height:1em"></a></p>
+<p>Website built with <a href="https://quarto.org"><img src="../../../logos/quarto.png" style="height:1em"></a></p>
 </div>
   </div>
 </footer>

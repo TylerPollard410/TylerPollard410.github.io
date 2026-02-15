@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Tyler Pollard">
+<meta name="description" content="Apps, packages, and architecture pages for production-facing work.">
 
 <title>Projects – Tyler Pollard (DEV)</title>
 <style>
@@ -45,8 +46,8 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-d2800b5aef52857891e752670e942548.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-99c007e8800b9265abf5654700655a8d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-5103301e8bffe16140699f291c19c776.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-ad1131659e9c72a83df75a815661c742.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-3a3452762409c0ed4fed818deb8a5b6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -77,34 +78,6 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-reports .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-reports'] = new List('listing-reports', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
     const listingTargetEl = window.document.querySelector('#listing-apps .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
@@ -119,6 +92,62 @@ ul.task-list li input[type="checkbox"] {
 
     window['quarto-listings'] = window['quarto-listings'] || {};
     window['quarto-listings']['listing-apps'] = new List('listing-apps', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-packages .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-packages'] = new List('listing-packages', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-architecture .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-architecture'] = new List('listing-architecture', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -190,6 +219,7 @@ window.Quarto = {
 </script>
 
 <meta name="twitter:title" content="Projects – Tyler Pollard (DEV)">
+<meta name="twitter:description" content="Apps, packages, and architecture pages for production-facing work.">
 <meta name="twitter:image" content="https://tylerpollard410.github.io//files/profiles/twitter-card-large.png">
 <meta name="twitter:creator" content="@tylerpollard410">
 <meta name="twitter:site" content="@tylerpollard410">
@@ -389,8 +419,16 @@ window.Quarto = {
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../case-studies/index.html"> 
+<span class="menu-text">Case Studies</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../resume/index.html"> 
-<span class="menu-text">Resume</span></a>
+<span class="menu-text">CV</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -422,7 +460,12 @@ window.Quarto = {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
       <h1 class="title">Projects</h1>
-                      </div>
+                  <div>
+        <div class="description">
+          Apps, packages, and architecture pages for production-facing work.
+        </div>
+      </div>
+                </div>
   </div>
     
   
@@ -445,14 +488,15 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Content</h2>
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#reports" id="toc-reports" class="nav-link active" data-scroll-target="#reports">Reports</a></li>
-  <li><a href="#apps" id="toc-apps" class="nav-link" data-scroll-target="#apps">Apps</a></li>
+  <li><a href="#apps" id="toc-apps" class="nav-link active" data-scroll-target="#apps">Apps</a></li>
+  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages">Packages</a></li>
+  <li><a href="#architecture" id="toc-architecture" class="nav-link" data-scroll-target="#architecture">Architecture</a></li>
   </ul>
 </nav>
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div><div class="category" data-category="YmF5ZXNpYW4=">bayesian <span class="quarto-category-count">(4)</span></div><div class="category" data-category="YnM0RGFzaA==">bs4Dash <span class="quarto-category-count">(3)</span></div><div class="category" data-category="YnNsaWI=">bslib <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bmZs">nfl <span class="quarto-category-count">(3)</span></div><div class="category" data-category="bmZsZW5kem9uZQ==">nflendzone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bmZsdmVyc2U=">nflverse <span class="quarto-category-count">(3)</span></div><div class="category" data-category="cHJlZGljdGlvbg==">prediction <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(2)</span></div><div class="category" data-category="cmVhbCUyMGVzdGF0ZQ==">real estate <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmhpbm8=">rhino <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c2hpbnk=">shiny <span class="quarto-category-count">(4)</span></div><div class="category" data-category="c3BhdGlvdGVtcG9yYWw=">spatiotemporal <span class="quarto-category-count">(1)</span></div><div class="category" data-category="d2VhdGhlcg==">weather <span class="quarto-category-count">(3)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(9)</span></div><div class="category" data-category="YXJjaGl0ZWN0dXJl">architecture <span class="quarto-category-count">(1)</span></div><div class="category" data-category="YmF5ZXNpYW4=">bayesian <span class="quarto-category-count">(3)</span></div><div class="category" data-category="YnJtcw==">brms <span class="quarto-category-count">(2)</span></div><div class="category" data-category="YnM0RGFzaA==">bs4Dash <span class="quarto-category-count">(3)</span></div><div class="category" data-category="YnNsaWI=">bslib <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Y21kc3RhbnI=">cmdstanr <span class="quarto-category-count">(2)</span></div><div class="category" data-category="ZGF0YS1lbmdpbmVlcmluZw==">data-engineering <span class="quarto-category-count">(2)</span></div><div class="category" data-category="ZXRs">etl <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bmZs">nfl <span class="quarto-category-count">(7)</span></div><div class="category" data-category="bmZsZW5kem9uZQ==">nflendzone <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bmZsdmVyc2U=">nflverse <span class="quarto-category-count">(7)</span></div><div class="category" data-category="cGlwZWxpbmU=">pipeline <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cHJlZGljdGlvbg==">prediction <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(2)</span></div><div class="category" data-category="cmVhbCUyMGVzdGF0ZQ==">real estate <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmVsZWFzZXM=">releases <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmhpbm8=">rhino <span class="quarto-category-count">(2)</span></div><div class="category" data-category="c2hpbnk=">shiny <span class="quarto-category-count">(6)</span></div><div class="category" data-category="c3Rhbg==">stan <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3RhdGUtc3BhY2U=">state-space <span class="quarto-category-count">(1)</span></div><div class="category" data-category="d2VhdGhlcg==">weather <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -461,112 +505,12 @@ window.Quarto = {
 
 
 
-<section id="reports" class="level2">
-<h2 class="anchored" data-anchor-id="reports">Reports</h2>
-<div id="listing-reports" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="YmF5ZXNpYW4lMkNwcmVkaWN0aW9uJTJDd2VhdGhlcg==" data-listing-date-sort="1724558400000" data-listing-file-modified-sort="1771115761272" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="30" data-listing-word-count-sort="5854">
-<div class="thumbnail"><a href="../projects/reports/hurricane-intensity/index.html" class="no-external">
-
-<img loading="lazy" src="../projects/reports/hurricane-intensity/img/hurricane-intensity-cover.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../projects/reports/hurricane-intensity/index.html" class="no-external">Hurricane Intensity Prediction</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('cHJlZGljdGlvbg=='); return false;">prediction</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('d2VhdGhlcg=='); return false;">weather</div>
-
-</div>
-<div class="delink listing-description"><a href="../projects/reports/hurricane-intensity/index.html" class="no-external">
-<p>Evaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="../projects/reports/hurricane-intensity/index.html" class="no-external">
-<div class="listing-date">
-August 25, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="YmF5ZXNpYW4lMkNuZmwlMkNuZmx2ZXJzZQ==" data-listing-date-sort="1724299200000" data-listing-file-modified-sort="1771114538020" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3490">
-<div class="thumbnail"><a href="../projects/reports/nfl-kicker-analysis/index.html" class="no-external">
-
-<img loading="lazy" src="../projects/reports/nfl-kicker-analysis/img/nfl-kicker-analysis-cover.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../projects/reports/nfl-kicker-analysis/index.html" class="no-external">NFL Kicker Analysis</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('bmZs'); return false;">nfl</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('bmZsdmVyc2U='); return false;">nflverse</div>
-
-</div>
-<div class="delink listing-description"><a href="../projects/reports/nfl-kicker-analysis/index.html" class="no-external">
-<p>A Bayesian analysis of NFL field goal data since 1999.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="../projects/reports/nfl-kicker-analysis/index.html" class="no-external">
-<div class="listing-date">
-August 22, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="YmF5ZXNpYW4lMkN3ZWF0aGVyJTJDc3BhdGlvdGVtcG9yYWw=" data-listing-date-sort="1714968000000" data-listing-file-modified-sort="1771119479623" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="36" data-listing-word-count-sort="7051">
-<div class="thumbnail"><a href="../projects/reports/florida-coral-bleaching/index.html" class="no-external">
-
-<p class="card-img-top"><img src="reports/florida-coral-bleaching/index_files/figure-html/fig-Temporal-Effects-Facet-1.png"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="../projects/reports/florida-coral-bleaching/index.html" class="no-external">Florida Coral Bleaching</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('d2VhdGhlcg=='); return false;">weather</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('c3BhdGlvdGVtcG9yYWw='); return false;">spatiotemporal</div>
-
-</div>
-<div class="delink listing-description"><a href="../projects/reports/florida-coral-bleaching/index.html" class="no-external">
-<p>Exploring environmental drivers of coral bleaching using Bayesian modeling</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="../projects/reports/florida-coral-bleaching/index.html" class="no-external">
-<div class="listing-date">
-May 6, 2024
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div>
-</section>
+<p>This section contains evergreen project documentation. For dated technical notes and weekly updates, use <a href="../blog/">/blog/</a>.</p>
 <section id="apps" class="level2">
 <h2 class="anchored" data-anchor-id="apps">Apps</h2>
 <div id="listing-apps" class="quarto-listing quarto-listing-container-default">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="c2hpbnklMkNic2xpYiUyQ3JoaW5vJTJDbmZsJTJDbmZsdmVyc2UlMkNuZmxlbmR6b25lJTJDUiUyQ2JheWVzaWFu" data-listing-date-sort="1766811600000" data-listing-file-modified-sort="1770712204935" data-listing-date-modified-sort="1770440400000" data-listing-reading-time-sort="1" data-listing-word-count-sort="156">
+<div class="quarto-post image-right" data-index="0" data-categories="c2hpbnklMkNic2xpYiUyQ3JoaW5vJTJDbmZsJTJDbmZsdmVyc2UlMkNuZmxlbmR6b25lJTJDUiUyQ2JheWVzaWFu" data-listing-date-sort="1766811600000" data-listing-file-modified-sort="1771134466419" data-listing-date-modified-sort="1770440400000" data-listing-reading-time-sort="1" data-listing-word-count-sort="174">
 <div class="thumbnail"><a href="../projects/apps/nflendzoneApp/index.html" class="no-external">
 
 <img loading="lazy" src="../projects/apps/nflendzoneApp/img/nflendzoneApp-cover-light.png" class="thumbnail-image">
@@ -610,7 +554,7 @@ Tyler Pollard
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="c2hpbnklMkNiczREYXNoJTJDbmZsJTJDbmZsdmVyc2UlMkNS" data-listing-date-sort="1745640000000" data-listing-file-modified-sort="1770694028452" data-listing-date-modified-sort="1745640000000" data-listing-reading-time-sort="1" data-listing-word-count-sort="119">
+<div class="quarto-post image-right" data-index="1" data-categories="c2hpbnklMkNiczREYXNoJTJDbmZsJTJDbmZsdmVyc2UlMkNS" data-listing-date-sort="1745640000000" data-listing-file-modified-sort="1771126872335" data-listing-date-modified-sort="1745640000000" data-listing-reading-time-sort="1" data-listing-word-count-sort="119">
 <div class="thumbnail"><a href="../projects/apps/nfl-analysis-app/index.html" class="no-external">
 
 <img loading="lazy" src="../projects/apps/nfl-analysis-app/img/nfl-analysis-app-cover.png" class="thumbnail-image">
@@ -678,7 +622,7 @@ February 1, 2025
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="c2hpbnklMkNiczREYXNoJTJDcHJlZGljdGlvbiUyQ3dlYXRoZXI=" data-listing-date-sort="1724558400000" data-listing-file-modified-sort="1770694028451" data-listing-date-modified-sort="1724558400000" data-listing-reading-time-sort="1" data-listing-word-count-sort="88">
+<div class="quarto-post image-right" data-index="3" data-categories="c2hpbnklMkNiczREYXNoJTJDcHJlZGljdGlvbiUyQ3dlYXRoZXI=" data-listing-date-sort="1724558400000" data-listing-file-modified-sort="1771135152035" data-listing-date-modified-sort="1724558400000" data-listing-reading-time-sort="1" data-listing-word-count-sort="88">
 <div class="thumbnail"><a href="../projects/apps/hurricane-intensity-app/index.html" class="no-external">
 
 <img loading="lazy" src="../projects/apps/hurricane-intensity-app/img/hurricane-intensity-app-cover.png" class="thumbnail-image">
@@ -707,6 +651,216 @@ February 1, 2025
 <a href="../projects/apps/hurricane-intensity-app/index.html" class="no-external">
 <div class="listing-date">
 August 25, 2024
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+</section>
+<section id="packages" class="level2">
+<h2 class="anchored" data-anchor-id="packages">Packages</h2>
+<div id="listing-packages" class="quarto-listing quarto-listing-container-default">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="bmZsJTJDbmZsdmVyc2UlMkNkYXRhLWVuZ2luZWVyaW5nJTJDcmVsZWFzZXM=" data-listing-date-sort="1771131600000" data-listing-file-modified-sort="1771134395455" data-listing-date-modified-sort="1771131600000" data-listing-reading-time-sort="1" data-listing-word-count-sort="100">
+<div class="thumbnail"><a href="../projects/packages/nflendzoneData/index.html" class="no-external">
+
+<img loading="lazy" src="../logos/tyler-pollard-icon.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../projects/packages/nflendzoneData/index.html" class="no-external">nflendzoneData</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZs'); return false;">nfl</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZsdmVyc2U='); return false;">nflverse</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS1lbmdpbmVlcmluZw=='); return false;">data-engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cmVsZWFzZXM='); return false;">releases</div>
+
+</div>
+<div class="delink listing-description"><a href="../projects/packages/nflendzoneData/index.html" class="no-external">
+<p>Release-asset repository used as the distribution layer between pipeline/model producers and app/analysis consumers.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../projects/packages/nflendzoneData/index.html" class="no-external">
+<div class="listing-date">
+February 15, 2026
+</div>
+<div class="listing-author">
+Tyler Pollard
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="bmZsJTJDbmZsdmVyc2UlMkNjbWRzdGFuciUyQ2JybXMlMkNzdGFuJTJDYmF5ZXNpYW4lMkNzdGF0ZS1zcGFjZQ==" data-listing-date-sort="1771131600000" data-listing-file-modified-sort="1771134395460" data-listing-date-modified-sort="1771131600000" data-listing-reading-time-sort="1" data-listing-word-count-sort="73">
+<div class="thumbnail"><a href="../projects/packages/nflendzoneModel/index.html" class="no-external">
+
+<img loading="lazy" src="../logos/tyler-pollard-icon.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../projects/packages/nflendzoneModel/index.html" class="no-external">nflendzoneModel</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZs'); return false;">nfl</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZsdmVyc2U='); return false;">nflverse</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Y21kc3RhbnI='); return false;">cmdstanr</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YnJtcw=='); return false;">brms</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c3Rhbg=='); return false;">stan</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c3RhdGUtc3BhY2U='); return false;">state-space</div>
+
+</div>
+<div class="delink listing-description"><a href="../projects/packages/nflendzoneModel/index.html" class="no-external">
+<p>Bayesian team-strength modeling package built on Stan/cmdstanr for the NFL EndZone ecosystem.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../projects/packages/nflendzoneModel/index.html" class="no-external">
+<div class="listing-date">
+February 15, 2026
+</div>
+<div class="listing-author">
+Tyler Pollard
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="bmZsJTJDbmZsdmVyc2UlMkNldGwlMkNkYXRhLWVuZ2luZWVyaW5nJTJDcGlwZWxpbmU=" data-listing-date-sort="1771131600000" data-listing-file-modified-sort="1771134395449" data-listing-date-modified-sort="1771131600000" data-listing-reading-time-sort="1" data-listing-word-count-sort="129">
+<div class="thumbnail"><a href="../projects/packages/nflendzonePipeline/index.html" class="no-external">
+
+<img loading="lazy" src="../logos/tyler-pollard-icon.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../projects/packages/nflendzonePipeline/index.html" class="no-external">nflendzonePipeline</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZs'); return false;">nfl</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZsdmVyc2U='); return false;">nflverse</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZXRs'); return false;">etl</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS1lbmdpbmVlcmluZw=='); return false;">data-engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cGlwZWxpbmU='); return false;">pipeline</div>
+
+</div>
+<div class="delink listing-description"><a href="../projects/packages/nflendzonePipeline/index.html" class="no-external">
+<p>Production ETL and feature-engineering package for weekly NFL EndZone data products.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../projects/packages/nflendzonePipeline/index.html" class="no-external">
+<div class="listing-date">
+February 15, 2026
+</div>
+<div class="listing-author">
+Tyler Pollard
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+</section>
+<section id="architecture" class="level2">
+<h2 class="anchored" data-anchor-id="architecture">Architecture</h2>
+<div id="listing-architecture" class="quarto-listing quarto-listing-container-default">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="bmZsJTJDbmZsdmVyc2UlMkNjbWRzdGFuciUyQ2JybXMlMkNhcmNoaXRlY3R1cmUlMkNzaGlueQ==" data-listing-date-sort="1771131600000" data-listing-file-modified-sort="1771136741917" data-listing-date-modified-sort="1771131600000" data-listing-reading-time-sort="1" data-listing-word-count-sort="127">
+<div class="thumbnail"><a href="../projects/architecture/nfl-endzone-ecosystem/index.html" class="no-external">
+
+<img loading="lazy" src="../blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/img/README-team-strength-plot-1.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../projects/architecture/nfl-endzone-ecosystem/index.html" class="no-external">NFL EndZone Ecosystem Architecture</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZs'); return false;">nfl</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZsdmVyc2U='); return false;">nflverse</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Y21kc3RhbnI='); return false;">cmdstanr</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YnJtcw=='); return false;">brms</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YXJjaGl0ZWN0dXJl'); return false;">architecture</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c2hpbnk='); return false;">shiny</div>
+
+</div>
+<div class="delink listing-description"><a href="../projects/architecture/nfl-endzone-ecosystem/index.html" class="no-external">
+<p>System-level map of nflendzonePipeline, nflendzoneData, nflendzoneModel, and nflendzoneApp.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../projects/architecture/nfl-endzone-ecosystem/index.html" class="no-external">
+<div class="listing-date">
+February 15, 2026
+</div>
+<div class="listing-author">
+Tyler Pollard
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="c2hpbnklMkNyaGlubyUyQ25mbCUyQ25mbHZlcnNlJTJDYmF5ZXNpYW4=" data-listing-date-sort="1771131600000" data-listing-file-modified-sort="1771136624528" data-listing-date-modified-sort="1771131600000" data-listing-reading-time-sort="1" data-listing-word-count-sort="115">
+<div class="thumbnail"><a href="../projects/architecture/nflendzoneApp-architecture/index.html" class="no-external">
+
+<img loading="lazy" src="../projects/apps/nflendzoneApp/img/nflendzoneApp-cover-light.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../projects/architecture/nflendzoneApp-architecture/index.html" class="no-external">nflendzoneApp Architecture</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('c2hpbnk='); return false;">shiny</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cmhpbm8='); return false;">rhino</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZs'); return false;">nfl</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZsdmVyc2U='); return false;">nflverse</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
+
+</div>
+<div class="delink listing-description"><a href="../projects/architecture/nflendzoneApp-architecture/index.html" class="no-external">
+<p>Rhino/Shiny app architecture and runtime data-flow overview.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../projects/architecture/nflendzoneApp-architecture/index.html" class="no-external">
+<div class="listing-date">
+February 15, 2026
+</div>
+<div class="listing-author">
+Tyler Pollard
 </div>
 </a>
 </div>

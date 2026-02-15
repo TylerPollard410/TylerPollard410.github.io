@@ -6,9 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-01-24">
+<meta name="author" content="Tyler Pollard">
+<meta name="description" content="Research-style and long-form analysis projects.">
 
-<title>CV – Tyler Pollard (DEV)</title>
+<title>Case Studies – Tyler Pollard (DEV)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,6 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../logos/tyler-pollard-icon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -72,6 +75,35 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-case-studies .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-title','listing-description','listing-date','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-case-studies'] = new List('listing-case-studies', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LG5XRX930Y"></script>
 
 <script type="text/javascript">
@@ -100,16 +132,45 @@ background: var(--brand-tp-cyan);
       }
 </style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<meta name="twitter:title" content="CV – Tyler Pollard (DEV)">
-<meta name="twitter:description" content="Portfolio website of Tyler Pollard, Statistician">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta name="twitter:title" content="Case Studies – Tyler Pollard (DEV)">
+<meta name="twitter:description" content="Research-style and long-form analysis projects.">
 <meta name="twitter:image" content="https://tylerpollard410.github.io//files/profiles/twitter-card-large.png">
 <meta name="twitter:creator" content="@tylerpollard410">
 <meta name="twitter:site" content="@tylerpollard410">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -302,7 +363,7 @@ background: var(--brand-tp-cyan);
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../case-studies/index.html"> 
+    <a class="nav-link active" href="../case-studies/index.html" aria-current="page"> 
 <span class="menu-text">Case Studies</span></a>
   </li>  
   <li class="nav-item">
@@ -310,7 +371,7 @@ background: var(--brand-tp-cyan);
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../resume/index.html" aria-current="page"> 
+    <a class="nav-link" href="../resume/index.html"> 
 <span class="menu-text">CV</span></a>
   </li>  
 </ul>
@@ -341,44 +402,159 @@ background: var(--brand-tp-cyan);
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">CV</h1>
-                      </div>
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Case Studies</h1>
+                  <div>
+        <div class="description">
+          Research-style and long-form analysis projects.
+        </div>
+      </div>
+                </div>
   </div>
     
   
-  <div class="quarto-title-meta">
+  <div class="quarto-title-meta column-page-left">
 
-      
       <div>
-      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 24, 2026</p>
-      </div>
+               <p>Tyler Pollard </p>
+            </div>
     </div>
+      
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="YmF5ZXNpYW4=">bayesian <span class="quarto-category-count">(3)</span></div><div class="category" data-category="YnJtcw==">brms <span class="quarto-category-count">(2)</span></div><div class="category" data-category="bmZs">nfl <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bmZsdmVyc2U=">nflverse <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cHJlZGljdGlvbg==">prediction <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3BhdGlvdGVtcG9yYWw=">spatiotemporal <span class="quarto-category-count">(1)</span></div><div class="category" data-category="d2VhdGhlcg==">weather <span class="quarto-category-count">(2)</span></div></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
 
 
 
 
 
-<p><a href="2026-01-24_resume.pdf" class="btn btn-warning">Download PDF</a></p>
-<object data="2026-01-24_resume.pdf?#scrollbar=0&amp;toolbar=0&amp;navpanes=0" type="application/pdf" width="100%" height="900">
-  <p>Your browser does not support embedded PDFs. <a href="2026-01-24_resume.pdf">Download the PDF</a>.</p>
-</object>
+<p>Case studies are deeper analytical reports and model investigations.</p>
+<section id="all-case-studies" class="level2">
+<h2 class="anchored" data-anchor-id="all-case-studies">All Case Studies</h2>
+<div id="listing-case-studies" class="quarto-listing quarto-listing-container-default">
+<div class="listing-actions-group">
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="YmF5ZXNpYW4lMkNicm1zJTJDcHJlZGljdGlvbiUyQ3dlYXRoZXI=" data-listing-date-sort="1724558400000" data-listing-file-modified-sort="1771124734980" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="30" data-listing-word-count-sort="5854">
+<div class="thumbnail"><a href="../case-studies/hurricane-intensity/index.html" class="no-external">
+
+<img loading="lazy" src="../case-studies/hurricane-intensity/img/hurricane-intensity-cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../case-studies/hurricane-intensity/index.html" class="no-external">Hurricane Intensity Prediction</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YnJtcw=='); return false;">brms</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cHJlZGljdGlvbg=='); return false;">prediction</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('d2VhdGhlcg=='); return false;">weather</div>
+
+</div>
+<div class="delink listing-description"><a href="../case-studies/hurricane-intensity/index.html" class="no-external">
+<p>Evaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../case-studies/hurricane-intensity/index.html" class="no-external">
+<div class="listing-date">
+August 25, 2024
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="YmF5ZXNpYW4lMkNuZmwlMkNuZmx2ZXJzZQ==" data-listing-date-sort="1724299200000" data-listing-file-modified-sort="1771114538020" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3490">
+<div class="thumbnail"><a href="../case-studies/nfl-kicker-analysis/index.html" class="no-external">
+
+<img loading="lazy" src="../case-studies/nfl-kicker-analysis/img/nfl-kicker-analysis-cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../case-studies/nfl-kicker-analysis/index.html" class="no-external">NFL Kicker Analysis</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZs'); return false;">nfl</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bmZsdmVyc2U='); return false;">nflverse</div>
+
+</div>
+<div class="delink listing-description"><a href="../case-studies/nfl-kicker-analysis/index.html" class="no-external">
+<p>A Bayesian analysis of NFL field goal data since 1999.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../case-studies/nfl-kicker-analysis/index.html" class="no-external">
+<div class="listing-date">
+August 22, 2024
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="YmF5ZXNpYW4lMkNicm1zJTJDd2VhdGhlciUyQ3NwYXRpb3RlbXBvcmFs" data-listing-date-sort="1714968000000" data-listing-file-modified-sort="1771124743690" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="36" data-listing-word-count-sort="7051">
+<div class="thumbnail"><a href="../case-studies/florida-coral-bleaching/index.html" class="no-external">
+
+<p class="card-img-top"><img src="florida-coral-bleaching/index_files/figure-html/fig-Temporal-Effects-Facet-1.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../case-studies/florida-coral-bleaching/index.html" class="no-external">Florida Coral Bleaching</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('YmF5ZXNpYW4='); return false;">bayesian</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YnJtcw=='); return false;">brms</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('d2VhdGhlcg=='); return false;">weather</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c3BhdGlvdGVtcG9yYWw='); return false;">spatiotemporal</div>
+
+</div>
+<div class="delink listing-description"><a href="../case-studies/florida-coral-bleaching/index.html" class="no-external">
+<p>Exploring environmental drivers of coral bleaching using Bayesian modeling</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../case-studies/florida-coral-bleaching/index.html" class="no-external">
+<div class="listing-date">
+May 6, 2024
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
 
 
+
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

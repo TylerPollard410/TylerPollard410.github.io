@@ -6,9 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-01-24">
+<meta name="author" content="Tyler Pollard">
+<meta name="dcterms.date" content="2026-02-15">
+<meta name="description" content="Rhino/Shiny app architecture and runtime data-flow overview.">
 
-<title>CV – Tyler Pollard (DEV)</title>
+<title>nflendzoneApp Architecture – Tyler Pollard (DEV)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,27 +26,28 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../logos/tyler-pollard-icon.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-9fa6dbbe6219e357c3a17d5a2c09c803.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-d2800b5aef52857891e752670e942548.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ad1131659e9c72a83df75a815661c742.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-3a3452762409c0ed4fed818deb8a5b6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../logos/tyler-pollard-icon.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-9fa6dbbe6219e357c3a17d5a2c09c803.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d2800b5aef52857891e752670e942548.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-ad1131659e9c72a83df75a815661c742.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-dark-3a3452762409c0ed4fed818deb8a5b6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../site_libs/quarto-contrib/bootstrap-icons-1.9.1/all.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -99,17 +102,22 @@ gtag('config', 'G-LG5XRX930Y', { 'anonymize_ip': true});
 background: var(--brand-tp-cyan);
       }
 </style>
+<script src="../../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
-<meta name="twitter:title" content="CV – Tyler Pollard (DEV)">
-<meta name="twitter:description" content="Portfolio website of Tyler Pollard, Statistician">
-<meta name="twitter:image" content="https://tylerpollard410.github.io//files/profiles/twitter-card-large.png">
+<meta name="twitter:title" content="nflendzoneApp Architecture – Tyler Pollard (DEV)">
+<meta name="twitter:description" content="Rhino/Shiny app architecture and runtime data-flow overview.">
+<meta name="twitter:image" content="https://tylerpollard410.github.io//projects/apps/nflendzoneApp/img/nflendzoneApp-cover-light.png">
 <meta name="twitter:creator" content="@tylerpollard410">
 <meta name="twitter:site" content="@tylerpollard410">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="1452">
+<meta name="twitter:image-width" content="2632">
 </head>
 
-<body class="nav-fixed fullcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-fixed quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -276,11 +284,11 @@ background: var(--brand-tp-cyan);
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo light-content">
-    <img src="../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo dark-content">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo light-content">
+    <img src="../../../logos/tyler-pollard-icon.png" alt="Tyler Pollard icon" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Tyler Pollard</span>
     </a>
   </div>
@@ -290,27 +298,27 @@ background: var(--brand-tp-cyan);
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about/index.html"> 
+    <a class="nav-link" href="../../../about/index.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../projects/index.html"> 
+    <a class="nav-link" href="../../../projects/index.html"> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../case-studies/index.html"> 
+    <a class="nav-link" href="../../../case-studies/index.html"> 
 <span class="menu-text">Case Studies</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog/index.html"> 
+    <a class="nav-link" href="../../../blog/index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../resume/index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../resume/index.html"> 
 <span class="menu-text">CV</span></a>
   </li>  
 </ul>
@@ -342,21 +350,45 @@ background: var(--brand-tp-cyan);
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">CV</h1>
-                      </div>
+      <h1 class="title">nflendzoneApp Architecture</h1>
+                  <div>
+        <div class="description">
+          Rhino/Shiny app architecture and runtime data-flow overview.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">shiny</div>
+                <div class="quarto-category">rhino</div>
+                <div class="quarto-category">nfl</div>
+                <div class="quarto-category">nflverse</div>
+                <div class="quarto-category">bayesian</div>
+              </div>
+                  </div>
   </div>
     
   
   <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Tyler Pollard </p>
+            </div>
+    </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 24, 2026</p>
+        <p class="date">February 15, 2026</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">February 15, 2026</p>
+      </div>
+    </div>
       
     </div>
     
@@ -364,7 +396,18 @@ background: var(--brand-tp-cyan);
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#app-runtime-position" id="toc-app-runtime-position" class="nav-link active" data-scroll-target="#app-runtime-position">App Runtime Position</a></li>
+  <li><a href="#module-areas" id="toc-module-areas" class="nav-link" data-scroll-target="#module-areas">Module Areas</a></li>
+  <li><a href="#runtime-pattern" id="toc-runtime-pattern" class="nav-link" data-scroll-target="#runtime-pattern">Runtime Pattern</a></li>
+  <li><a href="#related-links" id="toc-related-links" class="nav-link" data-scroll-target="#related-links">Related Links</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -373,12 +416,81 @@ background: var(--brand-tp-cyan);
 
 
 
-<p><a href="2026-01-24_resume.pdf" class="btn btn-warning">Download PDF</a></p>
-<object data="2026-01-24_resume.pdf?#scrollbar=0&amp;toolbar=0&amp;navpanes=0" type="application/pdf" width="100%" height="900">
-  <p>Your browser does not support embedded PDFs. <a href="2026-01-24_resume.pdf">Download the PDF</a>.</p>
-</object>
+<p><a href="https://github.com/TylerPollard410/nflendzoneApp" class="btn btn-secondary" target="_blank">View repository source <i class="bi-github " style="" role="img" aria-hidden="true"></i></a></p>
+<section id="app-runtime-position" class="level2">
+<h2 class="anchored" data-anchor-id="app-runtime-position">App Runtime Position</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A[nflreadr schedule and context] --&gt; B[nflendzoneApp startup data layer]
+  C[nflendzoneData summaries] --&gt; B
+  B --&gt; D[standings modules]
+  B --&gt; E[prediction modules]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="module-areas" class="level2">
+<h2 class="anchored" data-anchor-id="module-areas">Module Areas</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Path area</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>app/main.R</code></td>
+<td>page composition and navigation</td>
+</tr>
+<tr class="even">
+<td><code>app/logic/data/*</code></td>
+<td>startup import and release data loading</td>
+</tr>
+<tr class="odd">
+<td><code>app/view/pages/standings/*</code></td>
+<td>standings and playoff seed views</td>
+</tr>
+<tr class="even">
+<td><code>app/view/pages/predictions/*</code></td>
+<td>game prediction UI/server</td>
+</tr>
+<tr class="odd">
+<td><code>app/logic/predictions/games/*</code></td>
+<td>probability, draw, and plotting helpers</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="runtime-pattern" class="level2">
+<h2 class="anchored" data-anchor-id="runtime-pattern">Runtime Pattern</h2>
+<ol type="1">
+<li>Load schedule/team context from <code>nflverse</code>.</li>
+<li>Pull release summaries from <code>nflendzoneData</code>.</li>
+<li>Reconstruct stochastic state in memory.</li>
+<li>Render interactive probabilities with reactive controls.</li>
+</ol>
+</section>
+<section id="related-links" class="level2">
+<h2 class="anchored" data-anchor-id="related-links">Related Links</h2>
+<ul>
+<li>Ecosystem architecture: <a href="../../../projects/architecture/nfl-endzone-ecosystem/">/projects/architecture/nfl-endzone-ecosystem/</a></li>
+<li>Weekly report post: <a href="../../../blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/">/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/</a></li>
+</ul>
 
 
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -804,7 +916,7 @@ background: var(--brand-tp-cyan);
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p>Website built with <a href="https://quarto.org"><img src="../logos/quarto.png" style="height:1em"></a></p>
+<p>Website built with <a href="https://quarto.org"><img src="../../../logos/quarto.png" style="height:1em"></a></p>
 </div>
   </div>
 </footer>

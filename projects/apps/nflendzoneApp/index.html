@@ -45,8 +45,8 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d2800b5aef52857891e752670e942548.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-99c007e8800b9265abf5654700655a8d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../../site_libs/bootstrap/bootstrap-dark-5103301e8bffe16140699f291c19c776.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../site_libs/bootstrap/bootstrap-ad1131659e9c72a83df75a815661c742.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-dark-3a3452762409c0ed4fed818deb8a5b6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../../../site_libs/quarto-contrib/bootstrap-icons-1.9.1/all.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -307,8 +307,16 @@ background: var(--brand-tp-cyan);
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../../../case-studies/index.html"> 
+<span class="menu-text">Case Studies</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../../../resume/index.html"> 
-<span class="menu-text">Resume</span></a>
+<span class="menu-text">CV</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -388,8 +396,14 @@ background: var(--brand-tp-cyan);
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link active" data-scroll-target="#technical-documentation">Technical Documentation</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -402,7 +416,7 @@ background: var(--brand-tp-cyan);
 <div class="app-identity">
 <p><img src="img/favicon.png" class="app-identity-icon img-fluid" alt="NFL EndZone Analytics App icon"></p>
 <div class="app-identity-body">
-<p>This app is the next generation of my NFL analytics work and <strong>replaces</strong> the earlier <a href="../../../projects/apps/nfl-analysis-app/index.html">NFL Analysis Dashboard</a>.</p>
+<p>This app is the next generation of my NFL analytics work and <strong>replaces</strong> the earlier <a href="../../../projects/apps/nfl-analysis-app/">NFL Analysis Dashboard</a>.</p>
 <div class="app-actions">
 <p><a href="https://tylerpollard410-nflendzoneapp.share.connect.posit.cloud/" class="btn btn-info" target="_blank">Launch dashboard &nbsp; <i class="bi-rocket-takeoff " style="" role="img" aria-hidden="true"></i></a> <a href="https://github.com/TylerPollard410/nflendzoneApp" class="btn btn-secondary" target="_blank">View source code &nbsp; <i class="bi-github " style="" role="img" aria-hidden="true"></i></a></p>
 </div>
@@ -418,8 +432,16 @@ background: var(--brand-tp-cyan);
 <li>Multiple visualization modes for expected (<code>mu</code>) and simulated (<code>y</code>) outcomes in both result/total and home/away score spaces.</li>
 <li>Modular, production-oriented architecture using <code>Rhino</code> + <code>box</code>, deployed to Posit Connect Cloud.</li>
 </ul>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h2>
+<p>For full technical internals and system-level integration details:</p>
+<ul>
+<li>App architecture deep dive: <a href="../../../projects/architecture/nflendzoneApp-architecture/">/projects/architecture/nflendzoneApp-architecture/</a></li>
+<li>Ecosystem architecture (all four repos): <a href="../../../projects/architecture/nfl-endzone-ecosystem/">/projects/architecture/nfl-endzone-ecosystem/</a></li>
+</ul>
 
 
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

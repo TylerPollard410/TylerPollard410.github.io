@@ -2,27 +2,59 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://tylerpollard410.github.io/resume/index.html</loc>
-    <lastmod>2026-02-10T03:17:29.138Z</lastmod>
+    <lastmod>2026-02-15T05:47:19.697Z</lastmod>
   </url>
   <url>
-    <loc>https://tylerpollard410.github.io/projects/reports/hurricane-intensity/index.html</loc>
-    <lastmod>2026-02-15T00:36:01.272Z</lastmod>
+    <loc>https://tylerpollard410.github.io/projects/packages/nflendzoneModel/index.html</loc>
+    <lastmod>2026-02-15T05:46:35.460Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/projects/index.html</loc>
-    <lastmod>2026-02-10T03:27:08.460Z</lastmod>
+    <lastmod>2026-02-15T06:42:45.513Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/projects/architecture/nfl-endzone-ecosystem/index.html</loc>
+    <lastmod>2026-02-15T06:25:41.917Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/projects/apps/nflendzoneApp/index.html</loc>
-    <lastmod>2026-02-10T08:30:04.935Z</lastmod>
+    <lastmod>2026-02-15T05:47:46.419Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/projects/apps/hurricane-intensity-app/index.html</loc>
-    <lastmod>2026-02-10T03:27:08.451Z</lastmod>
+    <lastmod>2026-02-15T05:59:12.035Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/case-studies/nfl-kicker-analysis/index.html</loc>
+    <lastmod>2026-02-15T00:15:38.020Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/case-studies/hurricane-intensity/index.html</loc>
+    <lastmod>2026-02-15T03:05:34.980Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/index.html</loc>
+    <lastmod>2026-02-15T07:08:54.603Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/blog/index.html</loc>
+    <lastmod>2026-02-15T06:05:04.107Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/about/index.html</loc>
     <lastmod>2026-02-10T03:17:28.974Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html</loc>
+    <lastmod>2026-02-15T07:11:47.291Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/case-studies/florida-coral-bleaching/index.html</loc>
+    <lastmod>2026-02-15T03:05:43.690Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/case-studies/index.html</loc>
+    <lastmod>2026-02-15T05:59:07.958Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/index.html</loc>
@@ -30,18 +62,22 @@
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/projects/apps/nfl-analysis-app/index.html</loc>
-    <lastmod>2026-02-10T03:27:08.452Z</lastmod>
+    <lastmod>2026-02-15T03:41:12.335Z</lastmod>
   </url>
   <url>
     <loc>https://tylerpollard410.github.io/projects/apps/property-analysis-dashboard/index.html</loc>
     <lastmod>2026-02-10T03:27:08.459Z</lastmod>
   </url>
   <url>
-    <loc>https://tylerpollard410.github.io/projects/reports/florida-coral-bleaching/index.html</loc>
-    <lastmod>2026-02-15T01:37:59.623Z</lastmod>
+    <loc>https://tylerpollard410.github.io/projects/architecture/nflendzoneApp-architecture/index.html</loc>
+    <lastmod>2026-02-15T06:23:44.528Z</lastmod>
   </url>
   <url>
-    <loc>https://tylerpollard410.github.io/projects/reports/nfl-kicker-analysis/index.html</loc>
-    <lastmod>2026-02-15T00:15:38.020Z</lastmod>
+    <loc>https://tylerpollard410.github.io/projects/packages/nflendzoneData/index.html</loc>
+    <lastmod>2026-02-15T05:46:35.455Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tylerpollard410.github.io/projects/packages/nflendzonePipeline/index.html</loc>
+    <lastmod>2026-02-15T05:46:35.449Z</lastmod>
   </url>
 </urlset>
