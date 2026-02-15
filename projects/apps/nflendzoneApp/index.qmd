@@ -52,3 +52,10 @@ Built with `Rhino`, `Shiny`, and `bslib`, the app combines NFL schedule/team dat
 - Bayesian probability outputs for cover, total, and combined outcomes, including implied American odds.
 - Multiple visualization modes for expected (`mu`) and simulated (`y`) outcomes in both result/total and home/away score spaces.
 - Modular, production-oriented architecture using `Rhino` + `box`, deployed to Posit Connect Cloud.
+
+## Technical Documentation
+
+For full technical internals and system-level integration details:
+
+- App architecture deep dive: [/projects/reports/nflendzoneApp-architecture/index.qmd](/projects/reports/nflendzoneApp-architecture/index.qmd)
+- Ecosystem architecture (all four repos): [/projects/reports/nfl-endzone-ecosystem/index.qmd](/projects/reports/nfl-endzone-ecosystem/index.qmd)

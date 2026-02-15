@@ -1,0 +1,106 @@
+---
+title: "nflendzoneData Deep Dive"
+description: "Release-only artifact storage design for the EndZone ecosystem."
+author: Tyler Pollard
+date: 2026-02-15
+date-modified: 2026-02-15
+categories:
+  - nfl
+  - data-engineering
+  - releases
+  - R
+image: /logos/tyler-pollard-icon.png
+repo-url: "https://github.com/TylerPollard410/nflendzoneData"
+---
+
+[View repository source {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
+
+## Role in the System
+
+`nflendzoneData` is the artifact warehouse for the ecosystem. Instead of storing large datasets in git history, the project uses GitHub Releases as the delivery API.
+
+This repository is intentionally minimal in code and maximal in release metadata.
+
+## Design Pattern
+
+- **Code-light repository**: package scaffold, README docs, license, and almost no runtime R code.
+- **Release-heavy interface**: each logical dataset/model output maps to a stable release tag.
+- **Cross-repo contract**: `nflendzonePipeline` and model workflows publish assets here; `nflendzoneApp` and analysis workflows read from here.
+
+## Active Release Tags (Snapshot)
+
+The following tags were visible through the GitHub API during this audit:
+
+- `nfl_stats_week_team_regpost`
+- `nfl_stats_week_player_regpost`
+- `nfl_stats_season_team_regpost`
+- `nfl_stats_season_player_regpost`
+- `season_standings`
+- `weekly_standings`
+- `elo`
+- `srs`
+- `epa`
+- `scores`
+- `series`
+- `turnover`
+- `redzone`
+- `team_features`
+- `game_features`
+- `team_model`
+- `game_model`
+- `historic_events`
+- `team_strength_filter`
+- `league_hfa_filter`
+- `result_filter`
+- `team_strength_predict`
+- `league_hfa_predict`
+- `result_predict`
+- `team_strength_fit`
+- `team_strength_fit_hyperparams`
+- `team_strength_gq`
+- `team_strength_negbinom_summary`
+
+## File Naming Contract
+
+Most tags follow one or more of these formats:
+
+- aggregate artifacts: `tag.rds`, `tag.parquet`, `tag.csv`
+- season partitions: `tag_<season>.rds/.parquet/.csv`
+- week partitions: `tag_<season>_<week>.rds`
+- sidecars: `timestamp.txt`, `timestamp.json`, or `tag_timestamp.json`
+
+The naming convention is the cross-language API that lets app/model code stay simple and deterministic.
+
+## Why This Repository Stays Small
+
+### `.gitignore`
+
+- excludes R session and project-state files (`.Rhistory`, `.RData`, `.Rproj.user`)
+
+### `.Rbuildignore`
+
+- excludes development docs and project files (`README.Rmd`, `.Rproj`, `LICENSE.md`)
+
+No local `R/` runtime code is currently tracked in this snapshot. That is consistent with a repository optimized for release assets over package logic.
+
+## Practical Consumer Paths
+
+### App/runtime consumption
+
+- direct URL reads from release assets (for example, `load_from_url(...)`)
+- selective week/season asset resolution via helper utilities
+
+### Analysis consumption
+
+- RDS for exact R object fidelity
+- Parquet for lazy/cloud pipelines
+- CSV for universal interoperability
+
+## Operational Position
+
+`nflendzoneData` is the middle layer between compute and product:
+
+- upstream producers: `nflendzonePipeline`, `nflendzoneModel` workflows
+- downstream consumers: `nflendzoneApp`, notebooks/reports, backtests
+
+This isolation keeps compute repos lean while preserving reproducible, versioned data snapshots.
