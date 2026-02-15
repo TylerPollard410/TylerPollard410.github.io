@@ -65,7 +65,7 @@ color:
     dark: ink
 
   primary: tp-purple
-  secondary: tp-second
+  secondary: tp-cyan
   tertiary: tp-teal
 
   success: tp-green
@@ -111,8 +111,8 @@ typography:
   monospace-inline:
     color: tp-orange
     background-color: 
-      light: rgba(var(--bs-secondary-rgb), 0.08)
-      dark: rgba(var(--bs-secondary-rgb), 0.5)
+      light: rgba(var(--bs-dark-rgb), 0.2)
+      dark: rgba(var(--bs-light-rgb), 0.2)
 
   monospace-block:
     color: tp-orange

@@ -3,16 +3,18 @@ project:
   output-dir: _site
   preview:
     port: 5555
-    browser: false
+    browser: true
     watch-inputs: true
     navigate: true
+  render:
+    - "*.qmd"
 
 profile: 
   default: development
 
 execute: 
   # Development: always re-execute changed content while iterating.
-  freeze: true
+  freeze: auto
 
 website:
   title: "Tyler Pollard (DEV)"
