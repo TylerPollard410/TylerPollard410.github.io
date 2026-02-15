@@ -102,6 +102,35 @@ background: var(--brand-tp-cyan);
       }
 </style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta name="twitter:title" content="Hurricane Intensity Prediction – Tyler Pollard (DEV)">
 <meta name="twitter:description" content="Evaluating 24-hour ahead forecasts of hurricane intensity with Bayesian modeling.">
@@ -370,8 +399,41 @@ background: var(--brand-tp-cyan);
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data-exploration-shiny-app" id="toc-data-exploration-shiny-app" class="nav-link" data-scroll-target="#data-exploration-shiny-app">Data Exploration (Shiny App)</a></li>
+  <li><a href="#model-description" id="toc-model-description" class="nav-link" data-scroll-target="#model-description">Model Description</a>
+  <ul class="collapse">
+  <li><a href="#log-normal" id="toc-log-normal" class="nav-link" data-scroll-target="#log-normal">Log-normal</a></li>
+  <li><a href="#gamma" id="toc-gamma" class="nav-link" data-scroll-target="#gamma">Gamma</a></li>
+  </ul></li>
+  <li><a href="#model-comparisons" id="toc-model-comparisons" class="nav-link" data-scroll-target="#model-comparisons">Model Comparisons</a>
+  <ul class="collapse">
+  <li><a href="#model-refinement" id="toc-model-refinement" class="nav-link" data-scroll-target="#model-refinement">Model Refinement</a></li>
+  <li><a href="#final-model" id="toc-final-model" class="nav-link" data-scroll-target="#final-model">Final Model</a></li>
+  </ul></li>
+  <li><a href="#goodness-of-fit" id="toc-goodness-of-fit" class="nav-link" data-scroll-target="#goodness-of-fit">Goodness of Fit</a></li>
+  <li><a href="#variable-importance" id="toc-variable-importance" class="nav-link" data-scroll-target="#variable-importance">Variable Importance</a></li>
+  <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction">Prediction</a>
+  <ul class="collapse">
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">Cross-Validation</a></li>
+  <li><a href="#out-of-sample" id="toc-out-of-sample" class="nav-link" data-scroll-target="#out-of-sample">Out-of-Sample</a>
+  <ul class="collapse">
+  <li><a href="#prediction-plots" id="toc-prediction-plots" class="nav-link" data-scroll-target="#prediction-plots">Prediction Plots</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a>
+  <ul class="collapse">
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -392,8 +454,480 @@ background: var(--brand-tp-cyan);
 <li>Improved accuracy over existing forecasts</li>
 </ul>
 <p>📊 <a href="https://tylerpollard410.github.io/Hurricane-Analysis/" target="_blank">View full analysis</a></p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>The data for this analysis are from <a href="https://journals.ametsoc.org/view/journals/wefo/34/4/waf-d-18-0173_1.xml">A Feed Forward Neural Network Based on Model Output Statistics for Short-Term Hurricane Intensity Prediction</a>, with detailed variable descriptions available <a href="https://github.com/TylerPollard410/Hurricane-Analysis/blob/main/docs/data_description.pdf">here</a>. This paper uses deep learning to improve 24-hour ahead forecasts of hurricane intensity (maximum wind velocity, VMAX).</p>
+<p>The primary prediction model, <a href="https://www.aoml.noaa.gov/hurricane-weather-research-forecast-model/">HWRF</a>, which is a mathematical weather prediction model based on differential equations. In addition to the forecast, HWRF has many other state variables such as <strong>sea surface temperature, longitude, time of year, etc</strong>, that are usually discarded.</p>
+<p>This analysis aims to assess whether incorporating these <strong>HWRF state variables</strong> can enhance the accuracy of hurricane intensity predictions</p>
+</section>
+<section id="data-exploration-shiny-app" class="level1">
+<h1>Data Exploration (Shiny App)</h1>
+<p>To facilitate exploratory analysis, I developed an interactive <a href="https://tylerpollard410.shinyapps.io/Hurricane_EDA/" target="_blank"><b> Hurricane Analysis app</b></a>. This tool enables the visualization of key variables and their relationships with VMAX:</p>
+<ul>
+<li>The Histogram plot reveals that <strong>VMAX exhibits positive right-skewed distribution</strong>.</li>
+<li>The Map feature illustrates the geographic influence of spatial variables like basin, land presence, latitude, and longitude.</li>
+<li>Scatter plots of VMAX against potential predictors highlight the importance of <strong>feature transformations</strong> for model fitting.</li>
+</ul>
+</section>
+<section id="model-description" class="level1">
+<h1>Model Description</h1>
+<p>The response variable <span class="math inline">\(Y_i\)</span> is the observed VMAX for each hurricane observation. The dataset consists of <span class="math inline">\(i = 1, ..., n = 1705\)</span> total observations from 87 unique storms, where each storm is identified by a StormID (<span class="math inline">\(S_i\)</span>). Every observation is associated with <span class="math inline">\(p = 20\)</span> covariates (<span class="math inline">\(X_{ij}\)</span>, where <span class="math inline">\(j = 1, ..., p\)</span>) that capture key <strong>spatial characteristics</strong>, <strong>environmental conditions</strong>, and <strong>forecast-based features</strong> relevant to hurricane intensity.</p>
+<p>Observations are recorded at <strong>6-hour intervals</strong>, representing StormElapsedTime. However, some storms have missing increments, making the time sequence irregular. StormElapsedTime was not included as a predictor in the model because the HWRF model already accounts for time evolution through its differential equation framework.</p>
+<p>To ensure comparability across variables, all covariates underwent the following preprocessing steps:</p>
+<ol type="1">
+<li><strong>Arcsinh transformation</strong> was applied to handle skewed distributions.</li>
+<li><strong>Centering</strong> and <strong>scaling</strong> were performed to standardize the variables.</li>
+</ol>
+<p>Given the positive right-skewed distribution of VMAX, two likelihood functions were considered:</p>
+<section id="log-normal" class="level2">
+<h2 class="anchored" data-anchor-id="log-normal">Log-normal</h2>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{i} &amp;\sim \text{LogNormal}(\mu_i, \sigma^2) \\
+\mu_i &amp;= \beta_{0} + \sum_{j=1}^{p}X_{ij}\beta_{j} + \theta_{S_i} \\
+\theta_{S_i} &amp;\sim \text{Normal}(0, \tau^2)
+\end{aligned}
+\]</span></p>
+</section>
+<section id="gamma" class="level2">
+<h2 class="anchored" data-anchor-id="gamma">Gamma</h2>
+<p><span class="math display">\[
+\begin{aligned}
+Y_{i} &amp;\sim \text{Gamma}(\alpha, \alpha/\mu_i) \\
+log(\mu_i) &amp;= \beta_{0} + \sum_{j=1}^{p}X_{ij}\beta_{j} + \theta_{S_i} \\
+\theta_{S_i} &amp;\sim \text{Normal}(0, \tau^2)
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\beta_{j}\)</span> is the effect of covariate <span class="math inline">\(j\)</span> with weakly informative priors <span class="math inline">\(\beta_j \sim \text{Normal}(0,5)\)</span>. We set a weakly prior on <span class="math inline">\(\alpha \sim \text{InvGamma}(0.1, 0.1)\)</span>. In the random effects models, we set weakly priors <span class="math inline">\(\tau \sim \text{InvGamma}(0.1, 0.1)\)</span>, otherwise <span class="math inline">\(\theta_{S_i} = 0\)</span>.</p>
+</section>
+</section>
+<section id="model-comparisons" class="level1">
+<h1>Model Comparisons</h1>
+<p>All four models were fit to the data and assessed for convergence to ensure reliable parameter estimates. After confirming convergence, model selection was performed using the <strong>Widely Applicable Information Criterion (WAIC)</strong> and <strong>Expected Log Predictive Density (ELPD)</strong>, both of which estimates out-of-sample predictive accuracy. <a href="#tbl-waic" class="quarto-xref">Table&nbsp;1</a> presents the WAIC values along with associated parameters for each model:</p>
+<div class="cell">
+<div id="tbl-waic" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-waic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Model Selection Criteria Using WAIC and ELPD
+</figcaption>
+<div aria-describedby="tbl-waic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="moaruzwrxa" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+  
+  
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
+<thead style="border-style: none;">
+<tr class="gt_col_headings header" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
+<th id="Model" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" scope="col" data-bgcolor="#FFFFFF" data-valign="bottom">Model</th>
+<th id="waic" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">waic<span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>1</sup></span></th>
+<th id="p_waic" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">p_waic<span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>2</sup></span></th>
+<th id="elpd_waic" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">elpd_waic<span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>3</sup></span></th>
+<th id="elpd_diff" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">elpd_diff<span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>4</sup></span></th>
+<th id="se_diff" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">se_diff<span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>5</sup></span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;">
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Model" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">Log-normal (Random Effects)</td>
+<td class="gt_row gt_center" headers="waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">12697.84</td>
+<td class="gt_row gt_center" headers="p_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">91.02</td>
+<td class="gt_row gt_center" headers="elpd_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">−6348.92</td>
+<td class="gt_row gt_center" headers="elpd_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.00</td>
+<td class="gt_row gt_center" headers="se_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.00</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Model" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">Gamma (Random Effects)</td>
+<td class="gt_row gt_center" headers="waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">12712.67</td>
+<td class="gt_row gt_center" headers="p_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">92.91</td>
+<td class="gt_row gt_center" headers="elpd_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">−6356.33</td>
+<td class="gt_row gt_center" headers="elpd_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">−7.41</td>
+<td class="gt_row gt_center" headers="se_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">4.18</td>
+</tr>
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Model" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">Log-normal (Fixed Effects)</td>
+<td class="gt_row gt_center" headers="waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">12835.91</td>
+<td class="gt_row gt_center" headers="p_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">22.22</td>
+<td class="gt_row gt_center" headers="elpd_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">−6417.95</td>
+<td class="gt_row gt_center" headers="elpd_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">−69.03</td>
+<td class="gt_row gt_center" headers="se_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">12.87</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Model" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">Gamma (Fixed Effects)</td>
+<td class="gt_row gt_center" headers="waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">12863.94</td>
+<td class="gt_row gt_center" headers="p_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">22.85</td>
+<td class="gt_row gt_center" headers="elpd_waic" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">−6431.97</td>
+<td class="gt_row gt_center" headers="elpd_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">−83.05</td>
+<td class="gt_row gt_center" headers="se_diff" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">13.85</td>
+</tr>
+</tbody><tfoot style="border-style: none;">
+<tr class="gt_footnotes odd" style="border-style: none; color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3;" data-bgcolor="#FFFFFF">
+<td colspan="6" class="gt_footnote" style="text-align: left; border-style: none; margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px;"><span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>1</sup></span> WAIC (waic): Widely Applicable Information Criterion, a model selection metric balancing fit and complexity. Lower values indicate better expected predictive accuracy.</td>
+</tr>
+<tr class="gt_footnotes even" style="border-style: none; color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3;" data-bgcolor="#FFFFFF">
+<td colspan="6" class="gt_footnote" style="text-align: left; border-style: none; margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px;"><span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>2</sup></span> Effective Parameters (p_waic): An estimate of the number of effective parameters in the model; higher values indicate more flexibility.</td>
+</tr>
+<tr class="gt_footnotes odd" style="border-style: none; color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3;" data-bgcolor="#FFFFFF">
+<td colspan="6" class="gt_footnote" style="text-align: left; border-style: none; margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px;"><span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>3</sup></span> ELPD (elpd_waic): Expected log predictive density, quantifying out-of-sample predictive performance. Higher (less negative) values indicate better predictive accuracy.</td>
+</tr>
+<tr class="gt_footnotes even" style="border-style: none; color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3;" data-bgcolor="#FFFFFF">
+<td colspan="6" class="gt_footnote" style="text-align: left; border-style: none; margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px;"><span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>4</sup></span> ELPD Difference (elpd_diff): The difference in elpd_waic relative to the best model (logNormal_Rand_Fit). The best model always has elpd_diff = 0.</td>
+</tr>
+<tr class="gt_footnotes odd" style="border-style: none; color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3;" data-bgcolor="#FFFFFF">
+<td colspan="6" class="gt_footnote" style="text-align: left; border-style: none; margin: 0px; font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px;"><span class="gt_footnote_marks" style="font-size: 75%; vertical-align: 0.4em; position: initial; white-space: nowrap; font-style: italic; font-weight: normal; line-height: 0;"><sup>5</sup></span> SE of Difference (se_diff): The standard error of elpd_diff, measuring uncertainty in the difference estimates. Large absolute elpd_diff values relative to se_diff indicate meaningful performance differences.</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Based on WAIC and elpd_diff, the <strong>Log-normal model with random effects</strong> demonstrated the best overall predictive performance. This decision was supported by the following observations:</p>
+<ul>
+<li><strong>Lowest WAIC &amp; Best Predictive Performance</strong>: The log-normal random effects model had the smallest WAIC and elpd_diff = 0, meaning no other model demonstrated better expected predictive accuracy.</li>
+<li><strong>Better Likelihood Choice</strong>: Both Log-normal models outperformed their Gamma counterparts, suggesting that a log-normal likelihood is better suited for modeling VMAX.</li>
+<li><strong>Importance of Random Effects</strong>: The random effects models consistently had lower elpd_diff values than their fixed-effects counterparts, reinforcing the need for a random intercept for StormID. For example, the fixed-effects log-normal model had elpd_diff = -69.03, showing a substantial decrease in predictive performance compared to the selected model.</li>
+</ul>
+<section id="model-refinement" class="level2">
+<h2 class="anchored" data-anchor-id="model-refinement">Model Refinement</h2>
+<p>After selecting the <strong>Log-normal model with random effects</strong>, additional refinements were made to improve model interpretability and predictive performance. The refinement process followed two key steps:</p>
+<ol type="1">
+<li><p><strong>Addressing Multicollinearity</strong></p>
+<ul>
+<li>Covariates with high variance inflation factors (VIF) were identified and removed to reduce multicollinearity, ensuring stable parameter estimates.</li>
+<li>TCOND7002, INST2, and SHTFL2 exhibited high VIF values and were removed before refitting the model.</li>
+</ul></li>
+<li><p><strong>Iterative Variable Selection</strong></p>
+<ul>
+<li>To improve model parsimony, variables were removed one at a time, with the model iteratively refit after each removal.</li>
+<li>This process continued until the 95% credible intervals of all remaining covariates no longer contained 0, ensuring that only statistically meaningful predictors were retained.</li>
+</ul></li>
+</ol>
+</section>
+<section id="final-model" class="level2">
+<h2 class="anchored" data-anchor-id="final-model">Final Model</h2>
+<p>After refinement, the final model retained <span class="math inline">\(p = 9\)</span> covariates:</p>
+<ul>
+<li>Land</li>
+<li>Wind Shear Magnitude (SHR_MAG)</li>
+<li>Relative Humidity (RHLO)</li>
+<li>Convective Available Potential Energy (CAPE3)</li>
+<li>Coupling Parameter 1 (CP1)</li>
+<li>Total Condensate Symmetry Parameter (TCONDSYM2)</li>
+<li>Coupling CP3 Parameter (COUPLSYM3)</li>
+<li>HWFI forecast</li>
+<li>HWRF forecast</li>
+</ul>
+<p>This final model strikes a balance between <strong>parsimony and predictive power</strong>, ensuring that only the most relevant predictors are retained while minimizing unnecessary complexity. By including variables that significantly contribute to explaining variations in VMAX, the refined model improves both <strong>interpretability and generalizability</strong> for forecasting hurricane intensity.</p>
+</section>
+</section>
+<section id="goodness-of-fit" class="level1">
+<h1>Goodness of Fit</h1>
+<p>To assess the model’s goodness of fit, <strong>posterior predictive checks (PPCs)</strong> were performed by drawing samples from the <strong>posterior predictive distribution (PPD)</strong>. These checks compare key summary statistics of the observed data to those generated from the model, ensuring that the fitted model can replicate important characteristics of the data.</p>
+<p>The figure below displays the empirical distribution of observed VMAX alongside the posterior predictive distribution, as well as <strong>Bayesian p-values</strong> for the <strong>mean</strong>, <strong>standard deviation (SD)</strong>, and <strong>range</strong>:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-gof" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-gof-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gof-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Posterior Predictive Checks for Log-normal Random Effects Model
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>These <strong>p-values fall within an acceptable range</strong>, staying sufficiently away from 0 and 1, indicating that the model does not systematically overestimate or underestimate variability in the data. Additionally, the <strong>empirical distribution of observed VMAX aligns well</strong> with the simulated distributions from the PPD draws, further supporting model adequacy.</p>
+<p>Overall, the <strong>PPCs confirm that the model provides a reasonable fit to the observed data</strong> and successfully captures key characteristics of VMAX distribution.</p>
+</section>
+<section id="variable-importance" class="level1">
+<h1>Variable Importance</h1>
+<p>After fitting the <strong>final model</strong> with <strong>random intercepts</strong> and <strong>weakly informative priors</strong>, the importance of each covariate was examined. <a href="#tbl-var" class="quarto-xref">Table&nbsp;2</a> presents the posterior mean, standard deviation, and 95% credible interval for each parameter after <strong>partially pooling over StormIDs</strong>.</p>
+<p>Since all covariates were centered and scaled, the posterior means allow for direct comparison of covariate importance, where <strong>larger absolute values indicate stronger effects on VMAX</strong>.</p>
+<p>From <a href="#tbl-var" class="quarto-xref">Table&nbsp;2</a>, the most influential covariates in modeling VMAX were <strong>Land, HWFI, and HWRF</strong>. Given that HWRF is already a widely used forecast for VMAX, its significance in the model is expected. However, an interesting result is that <strong>HWFI appears to have a larger effect on VMAX than HWRF</strong>, suggesting it may contribute more predictive value in this model.</p>
+<div class="cell">
+<div id="tbl-var" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Posterior Summary for Final Model Parameters
+</figcaption>
+<div aria-describedby="tbl-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="rssxenwcqu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+  
+  
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
+<thead style="border-style: none;">
+<tr class="gt_col_headings header" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
+<th id="Parameter" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" scope="col" data-bgcolor="#FFFFFF" data-valign="bottom">Parameter</th>
+<th id="Mean" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">Mean</th>
+<th id="SD" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">SD</th>
+<th id="Q2.5" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">Q2.5</th>
+<th id="Q97.5" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">Q97.5</th>
+</tr>
+</thead>
+<tbody class="gt_table_body" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;">
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">Intercept</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">4.0114</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0111</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">3.9891</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">4.0330</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">LandLand</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">-0.1175</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0243</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">-0.1655</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">-0.0699</td>
+</tr>
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">SHR_MAG</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">-0.0456</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0058</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">-0.0569</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">-0.0340</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">RHLO</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0275</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0066</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0146</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0407</td>
+</tr>
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">CAPE3</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0270</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0070</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0133</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0404</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">CP1</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0141</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0072</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0001</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0282</td>
+</tr>
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">TCONDSYM2</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0305</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0076</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0157</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0452</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">COUPLSYM3</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0237</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0107</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0030</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0447</td>
+</tr>
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">HWFI</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.2204</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0127</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.1954</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.2450</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Parameter" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">HWRF</td>
+<td class="gt_row gt_center" headers="Mean" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.1849</td>
+<td class="gt_row gt_center" headers="SD" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.0132</td>
+<td class="gt_row gt_center" headers="Q2.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.1597</td>
+<td class="gt_row gt_center" headers="Q97.5" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.2105</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="prediction" class="level1">
+<h1>Prediction</h1>
+<p>In the dataset provided for this project, there were an additional 668 observations from new StormIDs where VMAX was missing. The posterior predictive mean and 95% credible interval were used to estimate VMAX for these out-of-sample (OOS) observations. The predictive performance of the model was assessed using cross-validation and, later, by evaluating its predictions against the actual OOS values.</p>
+<section id="cross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="cross-validation">Cross-Validation</h2>
+<p>To estimate predictive accuracy, 5-fold cross-validation (CV) was performed by splitting the 1,705 observations into 5 approximately equal folds based on randomly selected StormIDs. This mimics the real-world scenario of predicting entirely new hurricanes.</p>
+<p>The model’s performance was evaluated using:</p>
+<ul>
+<li><strong>Mean Absolute Error (MAE)</strong>: Measures the average absolute difference between observed and predicted VMAX.</li>
+<li><strong>Coverage (COV) of 95% Credible Intervals</strong>: Measures the proportion of observations where the true VMAX fell within the model’s 95% posterior predictive interval.</li>
+</ul>
+<p>Alongside CV, predictions were also generated using the PPD by treating the fit observations as missing. <a href="#tbl-OOS-Prediction" class="quarto-xref">Table&nbsp;4</a> presents the prediction metrics for both methods:</p>
+<p>The 95% credible interval coverage from CV (0.949) aligns closely with the expected 0.95, confirming that the model reliably quantifies uncertainty in its predictions. Additionally, the MAE from CV (8.778) represents a <strong>12% improvement</strong> over the HWRF baseline and demonstrates the model’s <strong>ability to generalize to new storms</strong>.</p>
+<div class="cell">
+<div id="tbl-CV-Prediction-Comp" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-CV-Prediction-Comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Cross-Validation Prediction Metrics
+</figcaption>
+<div aria-describedby="tbl-CV-Prediction-Comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="yrhhwnwxum" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+  
+  
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
+<thead style="border-style: none;">
+<tr class="gt_col_headings header" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
+<th id="Method" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" scope="col" data-bgcolor="#FFFFFF" data-valign="bottom">Method</th>
+<th id="MAE_HWRF" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">HWRF MAE</th>
+<th id="MAE_Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">Model MAE</th>
+<th id="COV" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">COV</th>
+</tr>
+</thead>
+<tbody class="gt_table_body" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;">
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Method" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">Model PPD</td>
+<td class="gt_row gt_center" headers="MAE_HWRF" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">10.006</td>
+<td class="gt_row gt_center" headers="MAE_Model" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">8.017</td>
+<td class="gt_row gt_center" headers="COV" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.951</td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Method" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">5-fold CV</td>
+<td class="gt_row gt_center" headers="MAE_HWRF" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">10.006</td>
+<td class="gt_row gt_center" headers="MAE_Model" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">8.778</td>
+<td class="gt_row gt_center" headers="COV" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.949</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="out-of-sample" class="level2">
+<h2 class="anchored" data-anchor-id="out-of-sample">Out-of-Sample</h2>
+<p>Following the initial analysis, the actual VMAX values for the 668 out-of-sample observations were obtained. This allowed for a true performance evaluation of the model, rather than relying solely on cross-validation estimates.</p>
+<p>The PPD mean and 95% credible interval were computed for these OOS observations, and prediction accuracy was assessed using MAE, Mean Absolute Deviation (MAD), and COV. The results are presented in <a href="#tbl-OOS-Prediction" class="quarto-xref">Table&nbsp;4</a>:</p>
+<div class="cell">
+<div id="tbl-OOS-Prediction" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-OOS-Prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Out-of-Sample Prediction Metrics
+</figcaption>
+<div aria-describedby="tbl-OOS-Prediction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="vtnixnhmdf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+  
+  
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
+<thead style="border-style: none;">
+<tr class="gt_col_headings header" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
+<th id="Method" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" scope="col" data-bgcolor="#FFFFFF" data-valign="bottom">Method</th>
+<th id="MAE_HWRF" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">HWRF MAE</th>
+<th id="MAE_Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">Model MAE</th>
+<th id="MAD_Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">Model MAD</th>
+<th id="COV" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col" style="text-align: center; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom">COV</th>
+</tr>
+</thead>
+<tbody class="gt_table_body" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;">
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Method" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; border-right-width: 1px; border-right-style: solid; border-right-color: #000000;" data-valign="middle">Model PPD</td>
+<td class="gt_row gt_center" headers="MAE_HWRF" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">7.530</td>
+<td class="gt_row gt_center" headers="MAE_Model" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">7.131</td>
+<td class="gt_row gt_center" headers="MAD_Model" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">6.966</td>
+<td class="gt_row gt_center" headers="COV" style="text-align: center; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle">0.970</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The <strong>model outperforms HWRF</strong> (7.131 vs.&nbsp;7.53 MAE), confirming its predictive strength. The coverage (0.97) suggests that the <strong>model’s uncertainty quantification remains reliable</strong> even when predicting unseen storms.</p>
+<section id="prediction-plots" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-plots">Prediction Plots</h3>
+<p>To visualize the model’s performance on OOS predictions, we compare the PPD mean and 95% credible intervals against the actual observed VMAX values.</p>
+<p><a href="#fig-OOS-All-Plot" class="quarto-xref">Figure&nbsp;2</a> provides a comprehensive view of <strong>all OOS storms</strong>, showing how well the model’s predictive mean aligns with actual VMAX values.</p>
+<p>To complement this, the <a href="#fig-OOS-Long-Plot" class="quarto-xref">Figure&nbsp;3</a> focuses on <strong>longer-duration storms</strong>, offering a closer look at <strong>how predictions evolve over time</strong>. This plot also includes HWRF forecasts alongside actual VMAX values, allowing for a direct comparison between the model and HWRF predictions.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-OOS-All-Plot" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-OOS-All-Plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-OOS-All-Plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-OOS-All-Plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Out-of-Sample Forecasts - Full Dataset. The model’s posterior predictive mean (green) tracks closely with observed VMAX values (gray), with the 95% credible interval (blue) capturing most data points, indicating well-calibrated uncertainty estimates.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-OOS-Long-Plot" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-OOS-Long-Plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-OOS-Long-Plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-OOS-Long-Plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Out-of-Sample Forecasts - Long Storms. The model’s posterior predictive mean (green) is compared against both HWRF forecasts (red) and actual VMAX values (gray). The model successfully tracks storm intensity while providing well-calibrated uncertainty estimates, demonstrating improvement over HWRF in many cases.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="key-takeaways" class="level3">
+<h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
+<ul>
+<li>The model provides <strong>well-calibrated forecasts</strong>, with credible intervals capturing the majority of actual observations.</li>
+<li>The PPD mean aligns well with observed VMAX values, confirming <strong>strong predictive performance</strong>.</li>
+<li>The <strong>model outperforms HWRF</strong>, particularly for long-duration storms, where accurate forecasting is crucial.</li>
+</ul>
+<p>These results further support the <strong>statistical improvements in MAE</strong> reported in Table 4, reinforcing the model’s reliability for predicting hurricane intensity.</p>
+</section>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<p>This analysis explored whether incorporating additional HWRF state variables improves hurricane intensity predictions beyond the existing HWRF model alone. A <strong>Log-normal random effects model</strong> was selected as the final model <strong>based on WAIC and ELPD criteria</strong>, demonstrating the best predictive performance.</p>
+<p>Through <strong>cross-validation and out-of-sample evaluation</strong>, the model consistently <strong>outperformed HWRF forecasts</strong>:</p>
+<ul>
+<li>Cross-validation showed a <strong>12% reduction in MAE</strong>, while maintaining well-calibrated uncertainty estimates.</li>
+<li>Out-of-sample results confirmed that the model <strong>improved MAE by 5% over HWRF</strong>.</li>
+</ul>
+<p>The prediction plots further validated the model’s reliability, demonstrating <strong>well-calibrated posterior</strong> intervals and a <strong>strong alignment between predicted and observed VMAX values</strong>, particularly for long-duration storms, where forecasting is most critical.</p>
+<p>Limitations and Future Work While the model performed well, there are areas for potential improvement:</p>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>While the model performed well, there are areas where future improvements may be warranted:</p>
+<ul>
+<li><strong>Data Availability &amp; Feature Selection</strong> → The model relies on available HWRF state variables, which may not capture all drivers of hurricane intensity. Incorporating additional environmental predictors could enhance accuracy.</li>
+<li><strong>Evolving Hurricane Conditions</strong> → Although the model generalized well to out-of-sample storms in this dataset, its performance should be monitored as new storms form under changing climate and atmospheric conditions.</li>
+<li><strong>Computational Constraints</strong> → The inclusion of random effects improves accuracy but increases computational complexity, which may be a limitation for real-time forecasting applications.</li>
+</ul>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
+<p>Several avenues could further improve the model’s performance and practical application:</p>
+<ul>
+<li><strong>Expanding Feature Engineering</strong> → Incorporating additional meteorological variables or external data sources, such as satellite-derived atmospheric conditions or oceanographic data.</li>
+<li><strong>Alternative Priors</strong> → Exploring hierarchical priors for better regularization and robustness against uncertainty.</li>
+<li><strong>Probabilistic Forecasting</strong> → Extending the model to provide multi-step hurricane intensity forecasts, allowing for dynamic updates as storms evolve.</li>
+</ul>
+<p>This study demonstrates that <strong>leveraging additional state variables from HWRF significantly enhances hurricane intensity prediction</strong>, offering a data-driven approach to <strong>improving forecasting accuracy</strong>. Future refinements can build upon these results to further enhance predictive performance in operational forecasting settings.</p>
 
 
+</section>
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
