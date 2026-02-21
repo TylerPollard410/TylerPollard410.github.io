@@ -1,6 +1,6 @@
 /.quarto/
 **/*.quarto_ipynb
-_site/
+/_site/
 **/*_cache/*
 
 /.luarc.json

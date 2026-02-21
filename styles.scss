@@ -35,14 +35,49 @@ body.quarto-dark .quarto-color-scheme-toggle i::before {
 // Title and description
 #title-block-header {
   .quarto-title-banner {
-    border-bottom: 1px solid var(--bs-border-color);
+    // border-bottom: 1px solid var(--bs-border-color);
 
     .description {
       font-size: 1.1em;
       margin-top: 1em !important;
     }
+
+    .quarto-category {
+      background-color: shift-color($cyan, -25%);
+      opacity: 1;
+    }
   }
 }
+
+/* Keep title-banner divider visible on light backgrounds. */
+// body.quarto-light #title-block-header .quarto-title-banner {
+//   border-bottom-color: rgba(var(--bs-dark-rgb), 0.28);
+// }
+
+/* Listing title links: use brand yellow and reveal underline on hover/focus. */
+// body.quarto-light .quarto-listing .listing-title a {
+//   color: $brand-tp-yellow-dark;
+//   text-decoration: none;
+//   // text-underline-offset: 0.16em;
+//   // text-decoration-thickness: 0.08em;
+
+//   &:hover,
+//   &:focus-visible {
+//     text-decoration: underline;
+//   }
+// }
+
+// body.quarto-dark .quarto-listing .listing-title a {
+//   color: $brand-tp-yellow;
+//   text-decoration: none;
+//   // text-underline-offset: 0.16em;
+//   // text-decoration-thickness: 0.08em;
+
+//   &:hover,
+//   &:focus-visible {
+//     text-decoration: underline;
+//   }
+// }
 
 /* Category pills in title banner + listing cards */
 /*
@@ -97,12 +132,12 @@ body.quarto-dark :not(pre) > code {
   margin: 0.5rem 0 1rem;
   padding: 1rem 1.1rem;
   border-radius: 0.9rem;
-  border: 1px solid var(--bs-border-color);
-  background-color: rgba(var(--bs-secondary-rgb), 0.08);
+  border: 1px solid;
+  background-color: rgba(var(--bs-dark-rgb), 0.1);
 }
 
 body.quarto-dark .app-identity {
-  background-color: rgba(var(--bs-secondary-rgb), 0.2);
+  background-color: rgba(var(--bs-light-rgb), 0.2);
 }
 
 .app-identity-icon {

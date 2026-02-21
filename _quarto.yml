@@ -3,16 +3,16 @@ project:
   output-dir: _site
   preview:
     port: 5555
-    browser: true
+    browser: false
     watch-inputs: true
     navigate: true
-  render:
-    - "*.qmd"
-    - "about/*.qmd"
-    - "case-studies/**/*.qmd"
-    - "projects/**/*.qmd"
-    - "blog/**/*.qmd"
-    - "resume/*.qmd"
+  # render:
+  #   - "*.qmd"
+  #   - "about/*.qmd"
+  #   - "case-studies/**/*.qmd"
+  #   - "projects/**/*.qmd"
+  #   - "blog/**/*.qmd"
+  #   - "resume/*.qmd"
 
 profile: 
   default: development
@@ -75,6 +75,13 @@ website:
   page-navigation: true
   back-to-top-navigation: true
 
+preview-colour:
+  code: true
+
+brand:
+  dark: _extensions/TylerPollard410/my-brand/brand-dark.yml
+  light: _extensions/TylerPollard410/my-brand/brand-light.yml
+
 format:
   # Quarto format placeholders (keep allowed formats only)
   html:
@@ -83,12 +90,14 @@ format:
       dark:
         - default
         - brand
-        - styles.scss
+        #- my-brand
+        - _extensions/TylerPollard410/my-brand/styles.scss
       light:
         - default
         - brand
-        - styles.scss
+        #- my-brand
+        - _extensions/TylerPollard410/my-brand/styles.scss
     # css: styles.scss
+    respect-user-color-scheme: false
     toc: true
-    # title-block-banner: true
     anchor-sections: true

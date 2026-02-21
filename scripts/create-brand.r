@@ -150,3 +150,37 @@ bs_dark_theme <- bs_dark_theme_base |>
     sass_file("styles.scss")
   )
 bs_theme_preview(bs_dark_theme_base)
+
+
+# NEW LIGHT / DARK EXT ----
+bs_light_ext <- read_brand_yml(
+  "_extensions/TylerPollard410/brand/light-brand.yml"
+)
+
+bs_dark_ext <- read_brand_yml(
+  "_extensions/TylerPollard410/brand/dark-brand.yml"
+)
+
+## Light bslib ----
+bs_light_theme_ext <- bs_theme(
+  version = 5,
+  preset = "shiny",
+  brand = "_extensions/TylerPollard410/brand/light-brand.yml"
+) |>
+  bs_theme_update(
+    `enable-gradients` = TRUE,
+    `enable-shadows` = TRUE
+  )
+bs_theme_preview(bs_light_theme_ext)
+
+## Dark bslib ----
+bs_dark_theme_ext <- bs_theme(
+  version = 5,
+  preset = "bootstrap",
+  brand = "_extensions/TylerPollard410/brand/dark-brand.yml"
+) |>
+  bs_theme_update(
+    `enable-gradients` = TRUE,
+    `enable-shadows` = TRUE
+  )
+bs_theme_preview(bs_light_theme_ext)

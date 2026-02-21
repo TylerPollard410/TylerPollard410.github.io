@@ -1,8 +1,10 @@
 meta:
-  name: Tyler Pollard
+  name: 
+    full: Tyler Pollard
+    short: TP
   description: "Statistician and operations research analyst focused on Bayesian modeling, predictive analytics, and data visualization."
   link:
-    # home: https://your-domain.com # TODO: add your main site URL
+    home: https://tylerpollard410.github.io
     github: https://github.com/TylerPollard410
     linkedin: https://www.linkedin.com/in/tyler-pollard-763b8315b/
     email: mailto:tylerpollard410@gmail.com
@@ -33,52 +35,61 @@ logo:
 
 color:
   palette:
-    # Core neutrals
-    ink: "#202020"          # deep indigo / near-black (dark backgrounds)
-    paper: "#f8f8f8"        # soft off-white (light backgrounds)
-    white: "#FFFFFF"        # pure white (for accents, highlights, and contrast
-    black: "#000000"        # pure black (for accents, highlights, and contrast)
-
-    # Miami Vice / retro core
-    tp-purple: "#6B2EFF"  # saturated but printable purple
-    tp-pink: "#FF5BC8"    # neon pink accent
-    tp-teal: "#00E5D4"    # cyan-teal accent 
+    # Retro core
+    tp-purple: "#6B2EFF"
+    tp-pink: "#FF5BC8"
+    tp-teal: "#00E5D4"
     tp-cyan: "#03c7e8"
-    tp-green: "#6fff00ff"
-
-    # Sports + analytics warmth
+    tp-green: "#6fff00"
     tp-orange: "#FF7A1A"
-    tp-gold: "#FFC857"
+    tp-orange-dark: "#cc6214"
+    tp-yellow: "#FFC857"
+    tp-yellow-dark: "#cca046"
 
-    # Utility
-    muted-gray: "#7A728C"
-    tp-gray: "#303030"
-    tp-second: "#404040"
+    blue:    "#0d6efd"
+    indigo:  "#6610f2"
+    purple:  tp-purple
+    pink:    tp-pink
+    red:     "#dc3545"
+    orange:  tp-orange
+    yellow:  tp-yellow
+    green:   tp-green
+    teal:    tp-teal
+    cyan:    "#0dcaf0"
 
-  # Theme roles
-  # Leave foreground/background unset so flatly/darkly keep distinct light/dark body colors.
-  foreground:
-    light: ink
-    dark: paper
+    # Grays
+    white:    "#fff"
+    gray-100: "#f8f9fa"
+    gray-200: "#e9ecef"
+    gray-300: "#dee2e6"
+    gray-400: "#ced4da"
+    gray-500: "#adb5bd"
+    gray-600: "#6c757d"
+    gray-700: "#495057"
+    gray-800: "#343a40"
+    gray-900: "#212529"
+    black:    "#000"
+
+  # Mode-specific semantic roles
   background:
-    light: paper
-    dark: ink
+    light: "#f0f0f0"
+    dark: "#121212"
+  foreground:
+    light: "#222222"
+    dark: "#f2f2f2"
 
-  primary: tp-purple
-  secondary: tp-cyan
-  tertiary: tp-teal
+  primary: purple
+  # secondary: cyan
+  # tertiary:
+  #   light: gray-200
+  #   dark: gray-700
 
-  success: tp-green
-  info: tp-gold
-  warning: tp-orange
-  danger: tp-pink
-
-  light: 
-    light: paper
-    dark: ink
-  dark: 
-    light: ink
-    dark: paper
+  success: green
+  info: cyan
+  warning: yellow
+  danger: pink
+  light: white
+  dark: gray-800
 
 typography:
   fonts:
@@ -105,7 +116,7 @@ typography:
     family: Space Grotesk
     weight: 600
     line-height: 1.2
-    color: tp-pink
+    color: danger
 
   monospace:
     family: JetBrains Mono
@@ -113,25 +124,33 @@ typography:
     size: 0.9em
 
   monospace-inline:
-    color: tp-orange
+    weight: 400
+    color:
+      light: orange
+      dark: orange
     background-color: 
-      light: rgba(var(--bs-dark-rgb), 0.2)
-      dark: rgba(var(--bs-light-rgb), 0.2)
+      light: rgba(var(--bs-dark-rgb), 0.1) #0.1
+      dark: rgba(var(--bs-light-rgb), 0.1) #0.14
 
   monospace-block:
-    color: tp-orange
-    #background-color: ink
+    color: orange
+    background-color: 
+      light: rgba(var(--bs-dark-rgb), 0.1) #0.1
+      dark: rgba(var(--bs-light-rgb), 0.1) #0.14
     line-height: 1.4
 
   link:
     weight: 600
-    color: tp-gold
-    decoration: underline
+    color: 
+      light: primary # tp-yellow-dark
+      dark: warning
+    #decoration: underline
 
 defaults:
   bootstrap:
     # Bootstrap 5 placeholders (safe to keep empty until needed)
-    # defaults:
+    defaults:
+      version: 5
     rules: |
       /* Global navbar logo sizing (applies to Quarto + bslib Bootstrap navbars) */
       .navbar-brand .navbar-logo,
@@ -145,8 +164,8 @@ defaults:
     format:
       # Quarto format placeholders (keep allowed formats only)
       html:
-        title-block-banner: "var(--brand-tp-cyan)"
-        title-block-banner-color: "var(--bs-body-color)"
+        title-block-banner: "var(--bs-cyan)"
+        title-block-banner-color: "var(--bs-black)"
       # dashboard: {}
       # revealjs: {}
       # typst:

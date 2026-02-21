@@ -32,8 +32,8 @@ This app is the next generation of my NFL analytics work and **replaces** the ea
 
 ::: {.app-actions}
 
-[Launch dashboard   {{< bi rocket-takeoff >}}]({{< meta external-url >}}){.btn .btn-info target="_blank"}
-[View source code   {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-secondary target="_blank"}
+[Launch dashboard   {{< bi rocket-takeoff >}}]({{< meta external-url >}}){.btn .btn-warning target="_blank"}
+[View source code   {{< bi github >}}]({{< meta repo-url >}}){.btn .btn-info target="_blank"}
 
 :::
 

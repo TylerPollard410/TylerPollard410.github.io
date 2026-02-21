@@ -1,5 +1,20 @@
 [
   {
+    "listing": "/case-studies/index.html",
+    "items": [
+      "/case-studies/hurricane-intensity/index.html",
+      "/case-studies/nfl-kicker-analysis/index.html",
+      "/case-studies/florida-coral-bleaching/index.html"
+    ]
+  },
+  {
+    "listing": "/blog/index.html",
+    "items": [
+      "/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html",
+      "/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/index.html"
+    ]
+  },
+  {
     "listing": "/projects/index.html",
     "items": [
       "/projects/apps/nflendzoneApp/index.html",
@@ -11,21 +26,6 @@
       "/projects/packages/nflendzonePipeline/index.html",
       "/projects/architecture/nfl-endzone-ecosystem/index.html",
       "/projects/architecture/nflendzoneApp-architecture/index.html"
-    ]
-  },
-  {
-    "listing": "/blog/index.html",
-    "items": [
-      "/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html",
-      "/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/index.html"
-    ]
-  },
-  {
-    "listing": "/case-studies/index.html",
-    "items": [
-      "/case-studies/hurricane-intensity/index.html",
-      "/case-studies/nfl-kicker-analysis/index.html",
-      "/case-studies/florida-coral-bleaching/index.html"
     ]
   }
 ]
