@@ -1,5 +1,5 @@
 ---
-title: "2026-02-15 | Using nflendzoneModel Joint NegBinom Workflow"
+title: "Using nflendzoneModel Joint NegBinom Workflow"
 description: "Draft guide to the joint negative-binomial team-strength workflow in nflendzoneModel, from Stan data prep to app-facing summary artifacts."
 author: Tyler Pollard
 date: 2026-02-15

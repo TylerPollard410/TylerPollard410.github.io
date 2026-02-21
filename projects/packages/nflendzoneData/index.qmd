@@ -37,5 +37,5 @@ repo-url: "https://github.com/TylerPollard410/nflendzoneData"
 
 ## Related Pages
 
-- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)
-- nflendzoneApp architecture: [/projects/architecture/nflendzoneApp-architecture/](/projects/architecture/nflendzoneApp-architecture/)
+- Ecosystem architecture: [NFL EndZone Ecosystem Architecture](/projects/architecture/nfl-endzone-ecosystem/)
+- nflendzoneApp architecture: [nflendzoneApp Architecture](/projects/architecture/nflendzoneApp-architecture/)

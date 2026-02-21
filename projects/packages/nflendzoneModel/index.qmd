@@ -45,5 +45,5 @@ repo-url: "https://github.com/TylerPollard410/nflendzoneModel"
 
 ## Related Pages
 
-- Joint negbinom workflow note: [/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/](/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/)
-- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)
+- Joint negbinom workflow note: [Using nflendzoneModel Joint NegBinom Workflow](/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/)
+- Ecosystem architecture: [NFL EndZone Ecosystem Architecture](/projects/architecture/nfl-endzone-ecosystem/)

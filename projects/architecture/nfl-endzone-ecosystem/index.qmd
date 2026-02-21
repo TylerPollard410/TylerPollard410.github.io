@@ -50,6 +50,6 @@ flowchart LR
 
 ## Related Links
 
-- Pipeline weekly post: [/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)
-- Joint negbinom model post: [/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/](/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/)
-- App architecture: [/projects/architecture/nflendzoneApp-architecture/](/projects/architecture/nflendzoneApp-architecture/)
+- Pipeline weekly post: [NFL EndZone Pipeline Weekly Report Playbook](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)
+- Joint negbinom model post: [Using nflendzoneModel Joint NegBinom Workflow](/blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/)
+- App architecture: [nflendzoneApp Architecture](/projects/architecture/nflendzoneApp-architecture/)

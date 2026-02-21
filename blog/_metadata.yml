@@ -7,7 +7,14 @@ execute:
   message: false
   warning: false
 
-comments: false
+comments: 
+  giscus: 
+    repo: TylerPollard410/TylerPollard410.github.io
+    repo-id: R_kgDOJj8n9A
+    category: "Blog comments" 
+    category-id: "DIC_kwDOMdwPFs4C250u" 
+    mapping: pathname
+
 repo-actions:
   - source
 

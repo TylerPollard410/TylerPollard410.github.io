@@ -48,5 +48,5 @@ repo-url: "https://github.com/TylerPollard410/nflendzonePipeline"
 
 ## Related Pages
 
-- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)
-- Weekly report playbook: [/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)
+- Ecosystem architecture: [NFL EndZone Ecosystem Architecture](/projects/architecture/nfl-endzone-ecosystem/)
+- Weekly report playbook: [NFL EndZone Pipeline Weekly Report Playbook](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)

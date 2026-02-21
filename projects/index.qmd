@@ -28,10 +28,9 @@ page-layout: full
 toc: true
 include-back-link: true
 date-format: "MMMM D, YYYY"
-comments: false
 ---
 
-This section contains evergreen project documentation. For dated technical notes and weekly updates, use [/blog/](/blog/).
+This section contains evergreen project documentation. For dated technical notes and weekly updates, visit my [blog](/blog/).
 
 ## Apps
 

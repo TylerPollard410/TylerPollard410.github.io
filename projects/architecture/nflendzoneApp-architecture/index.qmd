@@ -46,5 +46,5 @@ flowchart LR
 
 ## Related Links
 
-- Ecosystem architecture: [/projects/architecture/nfl-endzone-ecosystem/](/projects/architecture/nfl-endzone-ecosystem/)
-- Weekly report post: [/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)
+- Ecosystem architecture: [NFL EndZone Ecosystem Architecture](/projects/architecture/nfl-endzone-ecosystem/)
+- Weekly report post: [NFL EndZone Pipeline Weekly Report Playbook](/blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/)
