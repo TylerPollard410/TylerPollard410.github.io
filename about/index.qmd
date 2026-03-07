@@ -22,9 +22,12 @@ While at AEC, I pursued my **Master of Statistics at North Carolina State Univer
 
 Now living in **Florida**, I work as an **Operations Research Analyst (ORSA) at U.S. Special Operations Command (USSOCOM)**, where I apply **Bayesian modeling, predictive analytics, and data science methodologies** to support decision-making in high-stakes environments. My work involves **developing statistical models, optimizing operational strategies, and providing data-driven insights** to enhance mission effectiveness.
 
-Beyond my professional work, I continuously seek opportunities to expand my expertise through independent research and projects. While I've begun deeply exploring **NFL analytics**, most of the work showcased on my [Projects](/projects/) page originated as graduate research that I've significantly enhanced - incorporating advanced methodologies and refining insights well beyond their original scope. These projects reflect my ongoing commitment to leveraging data science in innovative and meaningful ways.
+Beyond my professional work, I continuously seek opportunities to expand my expertise through independent research, software development, and writing. My in-depth analytical reports—many of which originated as graduate research that I've since significantly enhanced—are now featured as comprehensive **Case Studies**. For a look at my more technical work, including interactive apps, R packages, and system architecture, you can explore my **Projects**. I've also recently launched a **Blog** to share shorter insights, tutorials, and my ongoing deep dives into **NFL analytics**. Together, these collections reflect my ongoing commitment to leveraging data science in innovative, practical, and meaningful ways.
 
-[View Projects](/projects/){.btn .btn-warning}
+::: {.d-flex .gap-2}
+[View Case Studies](/case-studies/){.btn .btn-warning}
+[View Projects](/projects/){.btn .btn-orange}
+:::
 
 ## Beyond the Numbers
 
