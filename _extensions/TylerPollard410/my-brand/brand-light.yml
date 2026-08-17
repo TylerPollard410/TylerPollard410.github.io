@@ -2,7 +2,8 @@ meta:
   name:
     full: Tyler Pollard
     short: TP
-  description: Statistician and operations research analyst focused on Bayesian modeling,
+  description:
+    Statistician and operations research analyst focused on Bayesian modeling,
     predictive analytics, and data visualization.
   link:
     home: https://tylerpollard410.github.io
@@ -28,74 +29,73 @@ logo:
   large: header-logo
 color:
   palette:
-    tp-light-bg: '#f0f0f0'
-    tp-light-fg: '#222222'
-    tp-dark-bg: '#121212'
-    tp-dark-fg: '#f2f2f2'
-    tp-purple: '#6B2EFF'
-    tp-purple-dark: '#4F1FCC'
-    tp-pink: '#FF5BC8'
-    tp-pink-dark: '#BE2F93'
-    tp-teal: '#00E5D4'
-    tp-teal-dark: '#0A7A73'
-    tp-cyan: '#03c7e8'
-    tp-cyan-dark: '#0B6E80'
-    tp-green: '#6fff00'
-    tp-green-dark: '#227A00'
-    tp-orange: '#FF7A1A'
-    tp-orange-dark: '#A94E10'
-    tp-yellow: '#FFC857'
-    tp-yellow-dark: '#8A5A00'
-    blue: '#0d6efd'
-    indigo: '#6610f2'
+    tp-white: "#f2f2f2"
+    tp-black: "#121212"
+    tp-light-bg: "#f0f0f0"
+    tp-light-fg: "#222222"
+    tp-dark-bg: "#121212"
+    tp-dark-fg: "#f2f2f2"
+    tp-purple: "#6B2EFF"
+    tp-purple-dark: "#4F1FCC"
+    tp-pink: "#FF5BC8"
+    tp-pink-dark: "#DF41AC"
+    tp-teal: "#00E5D4"
+    tp-teal-dark: "#0EBFB1"
+    tp-cyan: "#03c7e8"
+    tp-cyan-dark: "#04A7C3"
+    tp-green: "#6fff00"
+    tp-green-dark: "#5CD503"
+    tp-orange: "#FF7A1A"
+    tp-orange-dark: "#D46824"
+    tp-yellow: "#FFC857"
+    tp-yellow-dark: "#CD9B02"
+    default: tp-cyan
+    blue: tp-cyan
+    indigo: "#6610f2"
     purple: tp-purple
     pink: tp-pink
-    red: '#dc3545'
+    red: "#dc3545"
     orange: tp-orange
     yellow: tp-yellow
     green: tp-green
     teal: tp-teal
     cyan: tp-cyan
-    white: '#fff'
-    gray-100: '#f8f9fa'
-    gray-200: '#e9ecef'
-    gray-300: '#dee2e6'
-    gray-400: '#ced4da'
-    gray-500: '#adb5bd'
-    gray-600: '#6c757d'
-    gray-700: '#495057'
-    gray-800: '#343a40'
-    gray-900: '#212529'
-    black: '#000'
-  background: tp-light-bg
-  foreground: tp-light-fg
+    white: tp-white
+    gray-100: "#DCDCDC"
+    gray-200: "#C5C5C5"
+    gray-300: "#AFAFAF"
+    gray-400: "#989898"
+    gray-500: "#828282"
+    gray-600: "#6C6C6C"
+    gray-700: "#555555"
+    gray-800: "#3F3F3F"
+    gray-900: "#282828"
+    black: tp-black
+  background: white
+  foreground: black
   primary: purple
-  secondary: gray-600
-  tertiary: gray-200
-  success: green
-  info: cyan
-  warning: yellow
-  danger: pink
-  light: tp-dark-fg
-  dark: tp-dark-bg
+  success: tp-green-dark
+  info: tp-cyan-dark
+  warning: tp-yellow-dark
+  danger: tp-pink-dark
 typography:
   fonts:
-  - family: Space Grotesk
-    source: google
-    weight:
-    - 400
-    - 500
-    - 600
-    - 700
-    style: normal
-  - family: JetBrains Mono
-    source: google
-    weight:
-    - 400
-    - 600
-    style:
-    - normal
-    - italic
+    - family: Space Grotesk
+      source: google
+      weight:
+        - 400
+        - 500
+        - 600
+        - 700
+      style: normal
+    - family: JetBrains Mono
+      source: google
+      weight:
+        - 400
+        - 600
+      style:
+        - normal
+        - italic
   base:
     family: Space Grotesk
     weight: 400
@@ -113,10 +113,10 @@ typography:
   monospace-inline:
     weight: 400
     color: tp-orange-dark
-    background-color: gray-200
+    background-color: gray-100
   monospace-block:
     color: tp-orange-dark
-    background-color: gray-200
+    background-color: gray-100
     line-height: 1.4
   link:
     weight: 600
@@ -126,6 +126,10 @@ defaults:
   bootstrap:
     defaults:
       version: 5
+      enable-gradients: yes
+      enable-shadows: yes
+      navbar-bg: $brand-purple
+      # min-contrast-ratio: 1.5
     rules: |
       /* Global navbar logo sizing (applies to Quarto + bslib Bootstrap navbars) */
       .navbar-brand .navbar-logo,
@@ -140,5 +144,9 @@ defaults:
         title-block-banner-color: var(--bs-black)
   shiny:
     theme:
-      preset: bootstrap
+      preset: shiny
       version: 5
+      defaults:
+        headings-color-dark: $brand-tp-pink-dark
+        link-color: $brand-tp-yellow-dark
+        link-color-dark: $brand-tp-yellow

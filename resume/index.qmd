@@ -1,12 +1,12 @@
 ---
 title: CV
 resume:
-  pdf: 2026-01-24_resume.pdf
-  date: '2026-01-24'
+  pdf: 2026-08-17_resume.pdf
+  date: '2026-08-17'
 format:
   html:
     toc: false
-date: '2026-01-24'
+date: '2026-08-17'
 ---
 
 [Download PDF]({{< meta resume.pdf >}}){.btn .btn-warning}

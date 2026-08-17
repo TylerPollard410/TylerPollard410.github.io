@@ -63,13 +63,13 @@ brand:
 
 # Professional Summary
 
-Statistician with 7+ years of experience in predictive modeling, advanced statistical analysis, and delivering actionable insights. Passionate about sports analytics, with personal projects modeling NFL data to predict scores, spreads, and outcomes using R and Stan. Skilled in developing dynamic R Shiny applications and scalable workflows, combining technical excellence with a commitment to innovation and data-driven decision-making.
+Statistician with 8+ years of experience in predictive modeling, advanced statistical analysis, forecasting, and decision support. Experienced applying probabilistic models to sports and financial event-market data, including NFL outcomes, spreads, and Kalshi market prices to estimate implied probabilities, evaluate uncertainty, and identify actionable signals. Skilled in R with practical Python experience, developing scalable analytical workflows that combine technical rigor, innovation, and data-driven decision-making.
 
 # Skills
 
 ## Programming & Tools
 
-R, R Shiny, Stan, CmdStan, GitHub, GitLab, Python, JAGS, SQL, JMP, SAS, Tableau
+R, Python, SQL, R Shiny, Quarto, Stan, CmdStan, GitHub, JAGS, JMP, SAS, Tableau
 
 ## Machine Learning
 
@@ -92,6 +92,7 @@ Workflow Automation, ETL, Cloud Deployment, CI/CD, Decision Support Systems, Rep
   description: [U.S. Special Operations Command],
 )
 #resume-item[
+- Built an internal R package to automate retrieval of live data from a MySQL database, perform statistical analysis, and generate Quarto-based schedule reports, creating a reproducible workflow for recurring stakeholder deliverables.
 - Developed Bayesian multilevel ordinal regression models to analyze Likert survey data, enabling iterative updates to improve model accuracy. Delivered actionable insights that informed strategic decision-making and enhanced the evaluation of behavior change.
 - Designed and implemented a stance detection framework combining large language models with Bayesian hierarchical modeling. Scaled analysis from 43 text items to tens of thousands, achieving a 32% improvement in prediction accuracy while quantifying uncertainty for more informed decision-making.
 - Conducted survival analysis on social media time-to-event data using semi-parametric joint models with time-varying predictors. Identified critical time thresholds that shaped strategic adjustments in planning and execution.
