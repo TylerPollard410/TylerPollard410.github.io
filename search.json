@@ -133,6 +133,349 @@
     "text": "2026\n\n\n\n\n\n\n\n\n\n\nUsing nflendzoneModel Joint NegBinom Workflow\n\n\n\nnflendzone\n\nnflverse\n\ncmdstanr\n\nbrms\n\nstan\n\nbayesian\n\nnegbinom\n\n\n\nDraft guide to the joint negative-binomial team-strength workflow in nflendzoneModel, from Stan data prep to app-facing summary artifacts.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nNFL EndZone Pipeline Weekly Report Playbook\n\n\n\nnflendzone\n\nnflverse\n\npipeline\n\netl\n\ndata-engineering\n\n\n\nDraft walkthrough of the nflendzonePipeline weekly-report vignette and the six core outputs it generates each run.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html",
+    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html",
+    "title": "Using nflendzoneModel Joint NegBinom Workflow",
+    "section": "",
+    "text": "View repository source\nThis draft is focused on one path: fitting team_strength_bivar_negbinom and producing the team_strength_negbinom_summary artifact consumed downstream."
+  },
+  {
+    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#end-to-end-flow",
+    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#end-to-end-flow",
+    "title": "Using nflendzoneModel Joint NegBinom Workflow",
+    "section": "End-To-End Flow",
+    "text": "End-To-End Flow\n\n\nShow code\nflowchart LR\n  A[nflverse schedule + results] --&gt; B[prepare_schedule_indices]\n  B --&gt; C[prepare_stan_data]\n  C --&gt; D[fit_team_strength_model model=team_strength_bivar_negbinom]\n  D --&gt; E[fit$summary and rvar extraction]\n  E --&gt; F[team_strength_negbinom_summary release]\n  F --&gt; G[nflendzoneApp probability reconstruction]\n\n\n\n\n\nflowchart LR\n  A[nflverse schedule + results] --&gt; B[prepare_schedule_indices]\n  B --&gt; C[prepare_stan_data]\n  C --&gt; D[fit_team_strength_model model=team_strength_bivar_negbinom]\n  D --&gt; E[fit$summary and rvar extraction]\n  E --&gt; F[team_strength_negbinom_summary release]\n  F --&gt; G[nflendzoneApp probability reconstruction]"
+  },
+  {
+    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#minimal-fit-pattern",
+    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#minimal-fit-pattern",
+    "title": "Using nflendzoneModel Joint NegBinom Workflow",
+    "section": "Minimal Fit Pattern",
+    "text": "Minimal Fit Pattern\nThis mirrors inst/examples/update_negbinom_team_strength.r.\n\n\nShow code\nfit_stan_data &lt;- prepare_stan_data(\n  game_data = training_data,\n  teams = teams,\n  verbose = TRUE\n)\n\nfit_bivar_negbinom &lt;- fit_team_strength_model(\n  stan_data = fit_stan_data,\n  model = \"team_strength_bivar_negbinom\",\n  seed = 52,\n  chains = 4,\n  parallel_chains = parallel::detectCores(),\n  iter_warmup = 1000,\n  iter_sampling = 1000,\n  adapt_delta = 0.95,\n  max_treedepth = 10\n)"
+  },
+  {
+    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#build-the-summary-artifact",
+    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#build-the-summary-artifact",
+    "title": "Using nflendzoneModel Joint NegBinom Workflow",
+    "section": "Build The Summary Artifact",
+    "text": "Build The Summary Artifact\n\n\nShow code\nweek_vars &lt;- c(\n  \"phi_home\",\n  \"phi_away\",\n  \"filtered_alpha_log\",\n  \"filtered_team_off_strength[team]\",\n  \"filtered_team_def_strength[team]\",\n  \"filtered_team_hfa[team]\",\n  \"filtered_league_hfa\",\n  \"predicted_alpha_log\",\n  \"predicted_team_off_strength[team]\",\n  \"predicted_team_def_strength[team]\",\n  \"predicted_team_hfa[team]\",\n  \"predicted_league_hfa\"\n)\n\nnb_sum &lt;- fit_bivar_negbinom$summary(\n  variables = stringr::str_extract(week_vars, \"^\\\\w+\")\n)"
+  },
+  {
+    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#publish-for-app-consumption",
+    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#publish-for-app-consumption",
+    "title": "Using nflendzoneModel Joint NegBinom Workflow",
+    "section": "Publish For App Consumption",
+    "text": "Publish For App Consumption\n\n\nShow code\npb_write(\n  x = nb_sum,\n  file = paste0(\"team_strength_negbinom_summary_\", filter_season, \".rds\"),\n  repo = github_data_repo,\n  tag = \"team_strength_negbinom_summary\"\n)"
+  },
+  {
+    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#why-this-model-path-matters",
+    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#why-this-model-path-matters",
+    "title": "Using nflendzoneModel Joint NegBinom Workflow",
+    "section": "Why This Model Path Matters",
+    "text": "Why This Model Path Matters\n\nJoint home/away count modeling is more natural for score-like outcomes than point-difference-only views.\nThe release summary can be compact while still enabling stochastic reconstruction in the app.\nThe same artifact supports weekly diagnostics, slate previews, and betting-probability calculations."
+  },
+  {
+    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#practical-checks-before-shipping",
+    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#practical-checks-before-shipping",
+    "title": "Using nflendzoneModel Joint NegBinom Workflow",
+    "section": "Practical Checks Before Shipping",
+    "text": "Practical Checks Before Shipping\n\nValidate diagnostics (rhat, ESS, divergences) before publishing.\nEnsure season/week identifiers in the summary align with release timestamp metadata.\nCompare implied game-level probabilities against previous week to catch structural jumps.\n\n\nIf this post is useful, the evergreen system docs live in Projects Architecture and package docs live in Projects Packages."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Tyler Pollard (DEV)",
+    "section": "",
+    "text": "Welcome to my portfolio! I’m a statistician who thrives at the intersection of data and decision-making. Whether I’m developing statistical models, creating interactive dashboards, or exploring new analytical techniques, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey—from mastering statistical methods to building impactful projects. Take a look around, and I hope you find something that sparks collaboration or inspires a new idea!\n\n\n Back to top"
+  },
+  {
+    "objectID": "resume/index.html",
+    "href": "resume/index.html",
+    "title": "CV",
+    "section": "",
+    "text": "Download PDF\n\n  Your browser does not support embedded PDFs. Download the PDF.\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/hurricane-intensity-app/index.html",
+    "href": "projects/apps/hurricane-intensity-app/index.html",
+    "title": "Hurricane Intensity App",
+    "section": "",
+    "text": "Launch app   \nThis interactive app allows users to explore key variables and trends in hurricane intensity data. Featuring dynamic visualizations, it helps uncover relationships between storm characteristics, environmental factors, and forecasted intensity.\n📌 Key highlights:\n\nVisualizing hurricane tracks and key predictors\n\nExamining relationships between variables and storm intensity\n\nExploring spatial and temporal trends in the data\n\nThe app is based on data from the Hurricane Intensity Prediction project.\n🌀 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/nflendzoneApp/index.html",
+    "href": "projects/apps/nflendzoneApp/index.html",
+    "title": "NFL EndZone Analytics App",
+    "section": "",
+    "text": "This app is the next generation of my NFL analytics work and replaces the earlier NFL Analysis Dashboard.\n\nLaunch dashboard    View source code\nActively in development: standings and game prediction modules are live, with additional features planned.\nBuilt with Rhino, Shiny, and bslib, the app combines NFL schedule/team data from nflverse with weekly model outputs from the companion nflendzoneData release assets.\n📌 Key highlights:"
+  },
+  {
+    "objectID": "projects/apps/nflendzoneApp/index.html#technical-documentation",
+    "href": "projects/apps/nflendzoneApp/index.html#technical-documentation",
+    "title": "NFL EndZone Analytics App",
+    "section": "Technical Documentation",
+    "text": "Technical Documentation\nFor full technical internals and system-level integration details:\n\nApp architecture deep dive: nflendzoneApp Architecture\nEcosystem architecture (all four repos): NFL EndZone Ecosystem Architecture"
+  },
+  {
+    "objectID": "projects/packages/nflendzonePipeline/index.html",
+    "href": "projects/packages/nflendzonePipeline/index.html",
+    "title": "nflendzonePipeline",
+    "section": "",
+    "text": "View repository source\nnflendzonePipeline is the compute/orchestration layer that turns raw nflverse data into production-ready release artifacts."
+  },
+  {
+    "objectID": "projects/packages/nflendzonePipeline/index.html#what-it-owns",
+    "href": "projects/packages/nflendzonePipeline/index.html#what-it-owns",
+    "title": "nflendzonePipeline",
+    "section": "What It Owns",
+    "text": "What It Owns\n\nWeekly and season-level data extraction.\nFeature engineering for team/game modeling tables.\nRelease publishing to nflendzoneData.\nScheduled automation for ETL and report refresh."
+  },
+  {
+    "objectID": "projects/packages/nflendzonePipeline/index.html#primary-entry-scripts",
+    "href": "projects/packages/nflendzonePipeline/index.html#primary-entry-scripts",
+    "title": "nflendzonePipeline",
+    "section": "Primary Entry Scripts",
+    "text": "Primary Entry Scripts\n\n\n\n\n\n\n\nScript\nPurpose\n\n\n\n\ndata-raw/update_all_data.R\nEnd-to-end ETL refresh and feature generation\n\n\ndata-raw/update_team_strength_model.R\nWeekly team-strength model update handoff\n\n\ndata-raw/update_historic_odds_data.R\nOdds/event snapshot update"
+  },
+  {
+    "objectID": "projects/packages/nflendzonePipeline/index.html#main-data-products",
+    "href": "projects/packages/nflendzonePipeline/index.html#main-data-products",
+    "title": "nflendzonePipeline",
+    "section": "Main Data Products",
+    "text": "Main Data Products\n\nCore stats: nfl_stats_week_*, nfl_stats_season_*\nFootball metrics: elo, srs, epa, scores, turnover, redzone\nModeling tables: team_features, game_features, team_model, game_model"
+  },
+  {
+    "objectID": "projects/packages/nflendzonePipeline/index.html#how-it-connects",
+    "href": "projects/packages/nflendzonePipeline/index.html#how-it-connects",
+    "title": "nflendzonePipeline",
+    "section": "How It Connects",
+    "text": "How It Connects\n\nPulls source data from nflverse.\nBuilds and validates derived features.\nPublishes tagged outputs to nflendzoneData.\nFeeds downstream app/model workflows."
+  },
+  {
+    "objectID": "projects/packages/nflendzonePipeline/index.html#related-pages",
+    "href": "projects/packages/nflendzonePipeline/index.html#related-pages",
+    "title": "nflendzonePipeline",
+    "section": "Related Pages",
+    "text": "Related Pages\n\nEcosystem architecture: NFL EndZone Ecosystem Architecture\nWeekly report playbook: NFL EndZone Pipeline Weekly Report Playbook"
+  },
+  {
+    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html",
+    "href": "projects/architecture/nfl-endzone-ecosystem/index.html",
+    "title": "NFL EndZone Ecosystem Architecture",
+    "section": "",
+    "text": "This page is the evergreen system map. Weekly and implementation updates live in Blog posts."
+  },
+  {
+    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#end-to-end-flow",
+    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#end-to-end-flow",
+    "title": "NFL EndZone Ecosystem Architecture",
+    "section": "End-to-End Flow",
+    "text": "End-to-End Flow\n\n\n\n\n\nflowchart LR\n  A[nflverse raw data] --&gt; B[nflendzonePipeline]\n  B --&gt; C[nflendzoneData release tags]\n  C --&gt; D[nflendzoneModel]\n  D --&gt; C\n  C --&gt; E[nflendzoneApp]"
+  },
+  {
+    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#repository-responsibilities",
+    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#repository-responsibilities",
+    "title": "NFL EndZone Ecosystem Architecture",
+    "section": "Repository Responsibilities",
+    "text": "Repository Responsibilities\n\n\n\n\n\n\n\n\nRepository\nPrimary responsibility\nMain handoff\n\n\n\n\nnflendzonePipeline\nETL, feature engineering, scheduled updates\npublishes versioned artifacts\n\n\nnflendzoneData\nrelease/tag warehouse\nserves stable API-like data URLs\n\n\nnflendzoneModel\nBayesian team-strength modeling\npublishes posterior summaries\n\n\nnflendzoneApp\ninteractive Shiny/Rhino application\nconsumes summaries for user-facing probabilities"
+  },
+  {
+    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#visual-signals-from-weekly-output",
+    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#visual-signals-from-weekly-output",
+    "title": "NFL EndZone Ecosystem Architecture",
+    "section": "Visual Signals From Weekly Output",
+    "text": "Visual Signals From Weekly Output"
+  },
+  {
+    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#related-links",
+    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#related-links",
+    "title": "NFL EndZone Ecosystem Architecture",
+    "section": "Related Links",
+    "text": "Related Links\n\nPipeline weekly post: NFL EndZone Pipeline Weekly Report Playbook\nJoint negbinom model post: Using nflendzoneModel Joint NegBinom Workflow\nApp architecture: nflendzoneApp Architecture"
+  },
+  {
+    "objectID": "projects/index.html",
+    "href": "projects/index.html",
+    "title": "Projects",
+    "section": "",
+    "text": "This section contains evergreen project documentation. For dated technical notes and weekly updates, visit my blog."
+  },
+  {
+    "objectID": "projects/index.html#apps",
+    "href": "projects/index.html#apps",
+    "title": "Projects",
+    "section": "Apps",
+    "text": "Apps\n\n\n\n\n\n\n\n\n\n\nNFL EndZone Analytics App\n\n\n\nshiny\n\nbslib\n\nrhino\n\nnfl\n\nnflverse\n\nnflendzone\n\nR\n\nbayesian\n\n\n\nRhino/Shiny dashboard for NFL standings, playoff seeding, and Bayesian game probability analysis\n\n\n\n\n\nDecember 27, 2025\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nNFL Analysis Dashboard [DEPRECATED]\n\n\n\nshiny\n\nbs4Dash\n\nnfl\n\nnflverse\n\nR\n\n\n\nInteractive dashboard for exploring NFL data, ranking teams, and analyzing betting probabilities\n\n\n\n\n\nApril 26, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nProperty Analysis Dashboard\n\n\n\nshiny\n\nbs4Dash\n\nprediction\n\nreal estate\n\n\n\nShiny dashboard for analyzing the profitability of short-term rental investments\n\n\n\n\n\nFebruary 1, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nHurricane Intensity App\n\n\n\nshiny\n\nbs4Dash\n\nprediction\n\nweather\n\n\n\nInteractive dashboard for exploring hurricane intensity data.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/index.html#packages",
+    "href": "projects/index.html#packages",
+    "title": "Projects",
+    "section": "Packages",
+    "text": "Packages\n\n\n\n\n\n\n\n\n\n\nnflendzoneData\n\n\n\nnfl\n\nnflverse\n\ndata-engineering\n\nreleases\n\n\n\nRelease-asset repository used as the distribution layer between pipeline/model producers and app/analysis consumers.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nnflendzoneModel\n\n\n\nnfl\n\nnflverse\n\ncmdstanr\n\nbrms\n\nstan\n\nbayesian\n\nstate-space\n\n\n\nBayesian team-strength modeling package built on Stan/cmdstanr for the NFL EndZone ecosystem.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nnflendzonePipeline\n\n\n\nnfl\n\nnflverse\n\netl\n\ndata-engineering\n\npipeline\n\n\n\nProduction ETL and feature-engineering package for weekly NFL EndZone data products.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/index.html#architecture",
+    "href": "projects/index.html#architecture",
+    "title": "Projects",
+    "section": "Architecture",
+    "text": "Architecture\n\n\n\n\n\n\n\n\n\n\nNFL EndZone Ecosystem Architecture\n\n\n\nnfl\n\nnflverse\n\ncmdstanr\n\nbrms\n\narchitecture\n\nshiny\n\n\n\nSystem-level map of nflendzonePipeline, nflendzoneData, nflendzoneModel, and nflendzoneApp.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nnflendzoneApp Architecture\n\n\n\nshiny\n\nrhino\n\nnfl\n\nnflverse\n\nbayesian\n\n\n\nRhino/Shiny app architecture and runtime data-flow overview.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html",
+    "href": "projects/architecture/nflendzoneApp-architecture/index.html",
+    "title": "nflendzoneApp Architecture",
+    "section": "",
+    "text": "View repository source"
+  },
+  {
+    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#app-runtime-position",
+    "href": "projects/architecture/nflendzoneApp-architecture/index.html#app-runtime-position",
+    "title": "nflendzoneApp Architecture",
+    "section": "App Runtime Position",
+    "text": "App Runtime Position\n\n\n\n\n\nflowchart LR\n  A[nflreadr schedule and context] --&gt; B[nflendzoneApp startup data layer]\n  C[nflendzoneData summaries] --&gt; B\n  B --&gt; D[standings modules]\n  B --&gt; E[prediction modules]"
+  },
+  {
+    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#module-areas",
+    "href": "projects/architecture/nflendzoneApp-architecture/index.html#module-areas",
+    "title": "nflendzoneApp Architecture",
+    "section": "Module Areas",
+    "text": "Module Areas\n\n\n\n\n\n\n\nPath area\nPurpose\n\n\n\n\napp/main.R\npage composition and navigation\n\n\napp/logic/data/*\nstartup import and release data loading\n\n\napp/view/pages/standings/*\nstandings and playoff seed views\n\n\napp/view/pages/predictions/*\ngame prediction UI/server\n\n\napp/logic/predictions/games/*\nprobability, draw, and plotting helpers"
+  },
+  {
+    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#runtime-pattern",
+    "href": "projects/architecture/nflendzoneApp-architecture/index.html#runtime-pattern",
+    "title": "nflendzoneApp Architecture",
+    "section": "Runtime Pattern",
+    "text": "Runtime Pattern\n\nLoad schedule/team context from nflverse.\nPull release summaries from nflendzoneData.\nReconstruct stochastic state in memory.\nRender interactive probabilities with reactive controls."
+  },
+  {
+    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#related-links",
+    "href": "projects/architecture/nflendzoneApp-architecture/index.html#related-links",
+    "title": "nflendzoneApp Architecture",
+    "section": "Related Links",
+    "text": "Related Links\n\nEcosystem architecture: NFL EndZone Ecosystem Architecture\nWeekly report post: NFL EndZone Pipeline Weekly Report Playbook"
+  },
+  {
+    "objectID": "projects/packages/nflendzoneModel/index.html",
+    "href": "projects/packages/nflendzoneModel/index.html",
+    "title": "nflendzoneModel",
+    "section": "",
+    "text": "View repository source\nnflendzoneModel is the Bayesian inference engine used for weekly team-strength updates and game-level probability generation."
+  },
+  {
+    "objectID": "projects/packages/nflendzoneModel/index.html#core-workflow-functions",
+    "href": "projects/packages/nflendzoneModel/index.html#core-workflow-functions",
+    "title": "nflendzoneModel",
+    "section": "Core Workflow Functions",
+    "text": "Core Workflow Functions\n\nprepare_schedule_indices()\nprepare_stan_data()\nfit_team_strength_model()\nprepare_gq_data()\npredict_team_strength()\nextract_game_predictions()"
+  },
+  {
+    "objectID": "projects/packages/nflendzoneModel/index.html#stan-model-assets",
+    "href": "projects/packages/nflendzoneModel/index.html#stan-model-assets",
+    "title": "nflendzoneModel",
+    "section": "Stan Model Assets",
+    "text": "Stan Model Assets\n\nteam_strength_fit.stan\nteam_strength_gq.stan\nteam_strength_bivar_negbinom.stan\nteam_strength_recursive.stan"
+  },
+  {
+    "objectID": "projects/packages/nflendzoneModel/index.html#operational-role",
+    "href": "projects/packages/nflendzoneModel/index.html#operational-role",
+    "title": "nflendzoneModel",
+    "section": "Operational Role",
+    "text": "Operational Role\n\nConsumes model-ready data from pipeline outputs.\nFits Bayesian state-space models via cmdstanr.\nPublishes posterior summaries to nflendzoneData.\nSupports app-side probability reconstruction workflows."
+  },
+  {
+    "objectID": "projects/packages/nflendzoneModel/index.html#related-pages",
+    "href": "projects/packages/nflendzoneModel/index.html#related-pages",
+    "title": "nflendzoneModel",
+    "section": "Related Pages",
+    "text": "Related Pages\n\nJoint negbinom workflow note: Using nflendzoneModel Joint NegBinom Workflow\nEcosystem architecture: NFL EndZone Ecosystem Architecture"
+  },
+  {
+    "objectID": "projects/packages/nflendzoneData/index.html",
+    "href": "projects/packages/nflendzoneData/index.html",
+    "title": "nflendzoneData",
+    "section": "",
+    "text": "View repository source\nnflendzoneData is the distribution layer for the ecosystem. It stores versioned release assets and stable tag URLs that other repos consume."
+  },
+  {
+    "objectID": "projects/packages/nflendzoneData/index.html#what-it-owns",
+    "href": "projects/packages/nflendzoneData/index.html#what-it-owns",
+    "title": "nflendzoneData",
+    "section": "What It Owns",
+    "text": "What It Owns\n\nRelease tags that act as data APIs.\nSeason/week partitioned artifacts.\nTimestamp sidecars used for freshness checks."
+  },
+  {
+    "objectID": "projects/packages/nflendzoneData/index.html#typical-tag-groups",
+    "href": "projects/packages/nflendzoneData/index.html#typical-tag-groups",
+    "title": "nflendzoneData",
+    "section": "Typical Tag Groups",
+    "text": "Typical Tag Groups\n\nETL outputs: season_standings, weekly_standings, elo, srs, epa\nModeling inputs: team_features, game_features, team_model, game_model\nModeling outputs: team_strength_*, league_hfa_*, result_*, team_strength_negbinom_summary"
+  },
+  {
+    "objectID": "projects/packages/nflendzoneData/index.html#why-it-matters",
+    "href": "projects/packages/nflendzoneData/index.html#why-it-matters",
+    "title": "nflendzoneData",
+    "section": "Why It Matters",
+    "text": "Why It Matters\n\nDecouples compute workflows from consumers.\nProvides deterministic file naming for app/model loaders.\nEnables lightweight app deployment via summary artifacts."
+  },
+  {
+    "objectID": "projects/packages/nflendzoneData/index.html#related-pages",
+    "href": "projects/packages/nflendzoneData/index.html#related-pages",
+    "title": "nflendzoneData",
+    "section": "Related Pages",
+    "text": "Related Pages\n\nEcosystem architecture: NFL EndZone Ecosystem Architecture\nnflendzoneApp architecture: nflendzoneApp Architecture"
+  },
+  {
+    "objectID": "projects/apps/nfl-analysis-app/index.html",
+    "href": "projects/apps/nfl-analysis-app/index.html",
+    "title": "NFL Analysis Dashboard [DEPRECATED]",
+    "section": "",
+    "text": "WarningDeprecated App\n\n\n\nThis app has been deprecated and replaced by the NFL EndZone Analytics App.\n\n\nThis dashboard is no longer being actively developed. Historical functionality remains available.\nLaunch dashboard   \nThis interactive dashboard explores NFL data from the 2006-2024 seasons, sourced from nflverse. It provides tools to analyze team performance, rankings, and betting insights.\n📌 Key Features:\n\nTeam rankings based on historical performance\n\nAccess near real-time data updates, refreshed daily at 2:00 AM\n\nView Bayesian model predictions for spreads, totals, and game outcomes (coming soon)\n\nAdjust parameters to see probabilities for different betting scenarios (coming soon)\n\n📟 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "projects/apps/property-analysis-dashboard/index.html",
+    "href": "projects/apps/property-analysis-dashboard/index.html",
+    "title": "Property Analysis Dashboard",
+    "section": "",
+    "text": "Launch dashboard   \nThis interactive dashboard helps users evaluate potential short-term rental investments by estimating profitability based on customizable inputs. Built with R Shiny and bs4Dash, the app provides a structured framework to assess expected income, expenses, and overall return on investment.\n📌 Key highlights:\n\nAdjust key property and financial variables to estimate profitability.\nView detailed breakdowns of expected expenses and revenue.\nCompare different investment scenarios in real-time.\n\n🏠 Launch the app\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "about/index.html",
+    "href": "about/index.html",
+    "title": "About Me",
+    "section": "",
+    "text": "I’m Tyler Pollard, a statistician with over 7 years of experience in statistical design and analysis, Bayesian statistics, predictive modeling, and interactive dashboards. My passion lies in transforming complex data into actionable insights - whether that means developing probabilistic models, optimizing decision-making, or building dynamic data visualization tools."
+  },
+  {
+    "objectID": "about/index.html#professional-background",
+    "href": "about/index.html#professional-background",
+    "title": "About Me",
+    "section": "Professional Background",
+    "text": "Professional Background\nOriginally from Baltimore, MD, I earned my B.S. in Mechanical Engineering from Clemson University, where I developed a strong analytical mindset before transitioning into statistics. I began my career at the U.S. Army Evaluation Center (AEC) as a statistician, where I led 25+ teams across survivability, vulnerability, effectiveness, and reliability assessments. My work included designing experiments, developing advanced statistical models, and building R Shiny dashboards to evaluate critical military defense systems.\n\nFor my contributions, I was honored with:\n🎖️ The Department of the Army Civilian Service Commendation Medal\n🎖️ AEC Employee of the Quarter Award\nWhile at AEC, I pursued my Master of Statistics at North Carolina State University, where I developed as a statistician with a strong foundation in statistical theory and methodology, focusing on Bayesian inference, multilevel modeling, time series forecasting, and data science. My graduate studies provided a solid theoretical framework that I’ve since expanded through hands-on experience - integrating advanced statistical techniques into real-world applications."
+  },
+  {
+    "objectID": "about/index.html#current-role",
+    "href": "about/index.html#current-role",
+    "title": "About Me",
+    "section": "Current Role",
+    "text": "Current Role\nNow living in Florida, I work as an Operations Research Analyst (ORSA) at U.S. Special Operations Command (USSOCOM), where I apply Bayesian modeling, predictive analytics, and data science methodologies to support decision-making in high-stakes environments. My work involves developing statistical models, optimizing operational strategies, and providing data-driven insights to enhance mission effectiveness.\nBeyond my professional work, I continuously seek opportunities to expand my expertise through independent research, software development, and writing. My in-depth analytical reports—many of which originated as graduate research that I’ve since significantly enhanced—are now featured as comprehensive Case Studies. For a look at my more technical work, including interactive apps, R packages, and system architecture, you can explore my Projects. I’ve also recently launched a Blog to share shorter insights, tutorials, and my ongoing deep dives into NFL analytics. Together, these collections reflect my ongoing commitment to leveraging data science in innovative, practical, and meaningful ways.\n\nView Case Studies View Projects"
+  },
+  {
+    "objectID": "about/index.html#beyond-the-numbers",
+    "href": "about/index.html#beyond-the-numbers",
+    "title": "About Me",
+    "section": "Beyond the Numbers",
+    "text": "Beyond the Numbers\nWhen I’m not working with data, you’ll probably find me in the gym, on the pickleball courts, on the golf course, or lying by the beach. I love anything that involves optimizing performance - whether it’s refining a model, dialing in my swing, or testing out the latest nutrition trends.\nI’m also a huge Baltimore Ravens, Orioles, and Clemson Tigers fan, and I’m always looking for ways to blend sports and analytics (even if it’s just to justify why my team should’ve gone for it on 4th down)."
+  },
+  {
+    "objectID": "about/index.html#lets-connect",
+    "href": "about/index.html#lets-connect",
+    "title": "About Me",
+    "section": "Let’s Connect",
+    "text": "Let’s Connect\nI’m always open to discussing data-driven challenges, Bayesian modeling, and collaborative opportunities. Feel free to connect with me on LinkedIn or explore my work on GitHub."
+  },
+  {
     "objectID": "blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/index.html",
     "href": "blog/posts/2026/2026-02-15-endzone-pipeline-weekly-report/index.html",
     "title": "NFL EndZone Pipeline Weekly Report Playbook",
@@ -194,349 +537,6 @@
     "title": "NFL EndZone Pipeline Weekly Report Playbook",
     "section": "Weekly Game Predictions",
     "text": "Weekly Game Predictions\nPredicted outcomes for upcoming games with full uncertainty quantification.\n\n\nShow the R code - game-prediction\nresult_predict &lt;- predict_data |&gt;\n  pluck(\"result_predict\")\n# mutate(\n#   y2 = rvar_rng(rnorm, n = n(), mean = mu, sd = sigma, ndraws = 10000),\n#   y3 = mu + rvar_rng(rnorm, n = n(), mean = 0, sd = sigma),\n#   y4 = mu + rvar_rng(rnorm, n = 1, mean = 0, sd = 1) * sigma,\n#   .after = y\n# )\n\npred_df &lt;- inner_join(\n  result_predict,\n  game_data\n) |&gt;\n  mutate(\n    home_mu_cover_prob = Pr(mu &gt; spread_line),\n    home_y_cover_prob = Pr(y &gt; spread_line),\n    away_mu_cover_prob = Pr(mu &lt; spread_line),\n    away_y_cover_prob = Pr(y &lt; spread_line),\n    mu_cover_prob = pmax(home_mu_cover_prob, away_mu_cover_prob),\n    y_cover_prob = pmax(home_y_cover_prob, away_y_cover_prob),\n    mu_cover_team = case_when(\n      home_mu_cover_prob &gt; away_mu_cover_prob ~ home_team,\n      home_mu_cover_prob &lt; away_mu_cover_prob ~ away_team,\n      TRUE ~ NA_character_\n    ),\n    y_cover_team = case_when(\n      home_y_cover_prob &gt; away_y_cover_prob ~ home_team,\n      home_y_cover_prob &lt; away_y_cover_prob ~ away_team,\n      TRUE ~ NA_character_\n    ),\n    mu_bet_team = ifelse(mu_cover_prob &gt; 0.55, mu_cover_team, NA_character_),\n    y_bet_team = ifelse(y_cover_prob &gt; 0.55, y_cover_team, NA_character_)\n  )\n\n\n\n\nShow the R code - prep-prediction-data\n# Prepare data with better formatting\npred_plot_df &lt;- pred_df |&gt;\n  mutate(\n    matchup = paste0(away_team, \" @ \", home_team),\n    matchup_display = if_else(\n      hfa == 1,\n      paste0(away_team, \" @ \", home_team),\n      paste0(away_team, \" vs \", home_team, \" (N)\")\n    )\n  ) |&gt;\n  #rowwise() |&gt;\n  # mutate(\n  #   spread_line_y_prob = density(y, at = spread_line)\n  # ) |&gt;\n  #ungroup() |&gt;\n  arrange(game_idx)\n\n\n\nExpected Point Spreads vs Betting Lines\nHow our model’s expected spread compares to Vegas betting lines. Points show the expected differential with uncertainty intervals.\n\n\nShow the R code - spread-comparison-plot\n# fig-height: 8\n\n# Calculate dynamic x-axis limits based on mu distribution\nmin_mu_data &lt;- quantile(\n  pred_plot_df$mu,\n  probs = 0.025\n) |&gt;\n  min()\nmax_mu_data &lt;- quantile(\n  pred_plot_df$mu,\n  probs = 0.975\n) |&gt;\n  max()\n\n# Calculate logo and text positions\naway_logo_pos_spread &lt;- min_mu_data - 5\nhome_logo_pos_spread &lt;- max_mu_data + 5\n\n# Calculate x-axis limits\nx_min_spread &lt;- floor((min_mu_data - 5) / 5) * 5\nx_max_spread &lt;- ceiling((max_mu_data + 5) / 5) * 5\n\nspread_plot &lt;- pred_plot_df |&gt;\n  rowwise() |&gt;\n  mutate(\n    # Calculate interval bounds for labels (per-game)\n    mu_lower_95 = median(quantile(mu, 0.025)),\n    mu_upper_95 = median(quantile(mu, 0.975)),\n    # Check if spread and mu are close (for label positioning)\n    values_close = abs(spread_line - median(mu)) &lt; 3\n  ) |&gt;\n  ungroup() |&gt;\n  ggplot(aes(y = reorder(matchup_display, game_idx, decreasing = TRUE))) +\n  # Zero reference line\n  geom_vline(\n    xintercept = 0,\n    linetype = \"solid\",\n    color = \"gray50\",\n    linewidth = 0.5\n  ) +\n  # Expected value (mu) - model's best estimate with uncertainty\n  stat_pointinterval(\n    aes(xdist = mu, color = \"Model\", interval_color = \"ink\"),\n    .width = c(0.66, 0.95),\n    point_size = 3.5,\n    linewidth = 1.3\n    #color = \"#013369\",\n    # interval_color = \"black\"\n  ) +\n  # Betting spread line - on top so visible\n  geom_point(\n    aes(x = spread_line, color = \"Vegas\"),\n    #color = \"#D50A0A\",\n    size = 5.5,\n    shape = 18\n  ) +\n  # 95% interval bound labels\n  geom_text(\n    aes(\n      x = mu_lower_95,\n      label = sprintf(\"%.1f\", mu_lower_95)\n    ),\n    vjust = 0.5,\n    hjust = 1.5,\n    size = base_text_size * 0.8,\n    size.unit = \"pt\",\n    #color = \"#013369\",\n    alpha = 0.8\n  ) +\n  geom_text(\n    aes(\n      x = mu_upper_95,\n      label = sprintf(\"%.1f\", mu_upper_95)\n    ),\n    vjust = 0.5,\n    hjust = -0.5,\n    size = base_text_size * 0.8,\n    size.unit = \"pt\",\n    #color = \"#013369\",\n    alpha = 0.8\n  ) +\n  # Spread line value label (horizontal positioning: lower value shifts left)\n  geom_text(\n    aes(\n      x = spread_line,\n      label = sprintf(\"%.1f\", spread_line),\n      hjust = if_else(spread_line &lt; median(mu), 1.2, -0.2),\n      color = \"Vegas\"\n    ),\n    vjust = -1,\n    size = base_text_size * 0.9,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n    #color = \"#D50A0A\"\n  ) +\n  # Model mu value label (horizontal positioning: lower value shifts left)\n  geom_text(\n    aes(\n      x = median(mu),\n      label = sprintf(\"%.1f\", median(mu)),\n      hjust = if_else(median(mu) &lt; spread_line, 1.2, -0.2),\n      color = \"Model\"\n    ),\n    vjust = -1,\n    size = base_text_size * 0.9,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n    #color = \"#013369\"\n  ) +\n  # Add team logos (dynamic positioning)\n  geom_nfl_logos(\n    aes(x = away_logo_pos_spread - 1, team_abbr = away_team),\n    #aes(x = -Inf, team_abbr = away_team),\n    # hjust = 0.5,\n    width = 0.05\n  ) +\n  geom_nfl_logos(\n    aes(x = home_logo_pos_spread + 1, team_abbr = home_team),\n    # hjust = -0.5,\n    width = 0.05\n  ) +\n  annotate(\n    \"text\",\n    x = -Inf,\n    y = (length(unique(pred_plot_df$matchup_display)) + 1) / 2,\n    label = \"Away\",\n    vjust = 1.5,\n    #hjust = -0.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = 90,\n    fontface = \"bold\"\n  ) +\n  annotate(\n    \"text\",\n    x = Inf,\n    y = (length(unique(pred_plot_df$matchup_display)) + 1) / 2,\n    label = \"Home\",\n    vjust = 1.5,\n    #hjust = -0.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = -90,\n    fontface = \"bold\"\n  ) +\n  scale_x_continuous(\n    breaks = seq(\n      floor(min_mu_data / 5) * 5,\n      ceiling(max_mu_data / 5) * 5,\n      5\n    ),\n    expand = expansion(add = c(6, 6))\n    #limits = c(x_min_spread, x_max_spread)\n  ) +\n  # scale_y_discrete(\n  #   \"Away\",\n  #   labels = \\(x) str_extract(x, \"^[^ ]+\"),\n  #   sec.axis = dup_axis(\n  #     name = \"Home\",\n  #     labels =  \\(y) str_extract(y, \"[^ ]+$\")\n  #   )\n  # ) +\n  labs(\n    title = \"Model Predictions vs Betting Lines\",\n    subtitle = paste(\n      \"Season\",\n      attr(predict_data$result_predict, \"season\"),\n      \"- Week\",\n      attr(predict_data$result_predict, \"week\"),\n      \"| Blue: Model expectation (μ) with uncertainty | Red: Vegas spread line\"\n    ),\n    x = \"Point Differential (Positive = Home Team Favored)\",\n    y = NULL,\n    caption = \"Intervals show 66% and 95% credible intervals for model parameter | Full prediction distributions shown in subsequent plots\"\n  ) +\n  theme_ggdist() +\n  theme(\n    plot.title = element_text(face = \"bold\", hjust = 0.5),\n    plot.subtitle = element_text(size = rel(1), hjust = 0.5),\n    plot.caption = element_text(size = rel(1.5), hjust = 0.5), #color = \"gray40\"\n    axis.text.x = element_text(size = rel(1.2)),\n    # axis.text.y = element_nfl_logo(size = rel(1.2)),\n    # axis.text.y = element_text(size = rel(1.2)),\n    axis.text.y = element_blank(),\n    axis.ticks.y = element_blank(),\n    axis.line.y = element_blank(),\n    panel.grid.major.y = element_blank(),\n    panel.grid.major.x = element_line(linewidth = 0.3), #color = \"gray90\",\n    legend.position = \"none\"\n  )\n\n# Create copies to safely modify specific layers without affecting the original\np_dark &lt;- spread_plot\np_light &lt;- spread_plot\n\n# Target avg label to match bg fill and stat_gradientinterval (Layer 2) specifically to set the ink color\n# p_dark$layers$layer_slabinterval$aes_params$interval_colour &lt;- theme_brand_dark$geom$ink\n#p_dark$layers[[3]]$aes_params$colour &lt;- theme_brand_dark$panel.background$fill\np_dark +\n  scale_color_manual(\n    aesthetics = \"interval_colour\",\n    values = c(theme_brand_dark$geom$ink)\n  ) +\n  scale_color_manual(\n    values = c(\n      brand_pluck(dark_brand_yml, \"color\", \"info\"),\n      brand_pluck(dark_brand_yml, \"color\", \"danger\")\n    )\n  ) +\n  theme_brand_dark\n\n#p_light$layers$layer_slabinterval$aes_params$interval_colour &lt;- \"black\"\n#p_light$layers[[2]]$aes_params$colour &lt;- theme_brand_light$panel.background$fill\np_light +\n  scale_color_manual(\n    aesthetics = \"interval_colour\",\n    values = \"black\"\n  ) +\n  scale_color_manual(\n    values = c(\n      darken(brand_pluck(light_brand_yml, \"color\", \"info\"), 0.2),\n      darken(brand_pluck(light_brand_yml, \"color\", \"danger\"), 0.2)\n    )\n  ) +\n  theme_brand_light\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWin Probability by Game\nProbability that the home team wins each matchup.\n\n\nShow the R code - win-prob-plot\nwin_prob_plot &lt;- pred_plot_df |&gt;\n  mutate(\n    home_win_prob = Pr(y &gt; 0),\n    away_win_prob = 1 - home_win_prob,\n    favored_team = if_else(home_win_prob &gt; 0.5, home_team, away_team),\n    label_x = pmin(home_win_prob + 0.03, 0.985),\n    label_hjust = if_else(home_win_prob &gt; 0.94, 1, 0)\n  ) |&gt;\n  ggplot(aes(y = reorder(matchup_display, game_idx, decreasing = TRUE))) +\n  geom_vline(\n    xintercept = 0.5,\n    linetype = \"dashed\",\n    linewidth = 0.8\n  ) +\n  geom_col(\n    aes(x = home_win_prob, fill = favored_team),\n    width = 0.75\n  ) +\n  geom_text(\n    aes(\n      x = label_x,\n      label = scales::percent(home_win_prob, accuracy = 1),\n      hjust = label_hjust\n    ),\n    size = base_text_size * 0.9,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n  ) +\n  geom_nfl_logos(\n    aes(x = 0.03, team_abbr = away_team),\n    width = 0.05\n  ) +\n  geom_nfl_logos(\n    aes(x = 0.97, team_abbr = home_team),\n    width = 0.05\n  ) +\n  annotate(\n    \"text\",\n    x = -Inf,\n    y = (length(unique(pred_plot_df$matchup_display)) + 1) / 2,\n    label = \"Away\",\n    vjust = 1.5,\n    #hjust = -0.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = 90,\n    fontface = \"bold\"\n  ) +\n  annotate(\n    \"text\",\n    x = Inf,\n    y = (length(unique(pred_plot_df$matchup_display)) + 1) / 2,\n    label = \"Home\",\n    vjust = 1.5,\n    #hjust = -0.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = -90,\n    fontface = \"bold\"\n  ) +\n  scale_x_continuous(\n    labels = scales::percent,\n    breaks = seq(0, 1, 0.25),\n    #expand = expansion(add = c(0.05, 0.05))\n    expand = expansion(mult = c(0.1, 0.1))\n  ) +\n  # coord_cartesian(\n  #   xlim = c(0, 1),\n  #   clip = \"off\"\n  # ) +\n  labs(\n    title = \"Home Team Win Probability\",\n    subtitle = paste(\n      \"Season\",\n      attr(predict_data$result_predict, \"season\"),\n      \"- Week\",\n      attr(predict_data$result_predict, \"week\"),\n      \"| Bar color denotes the model favorite\"\n    ),\n    x = \"Probability\",\n    y = NULL,\n    caption = \"Dashed line = coin flip\"\n  ) +\n  theme_ggdist() +\n  theme(\n    plot.title = element_text(face = \"bold\", hjust = 0.5),\n    plot.subtitle = element_text(size = rel(1), hjust = 0.5),\n    plot.caption = element_text(size = rel(1.5), hjust = 0.5),\n    axis.text.y = element_blank(),\n    axis.text.x = element_text(size = rel(1.2)),\n    axis.ticks.y = element_blank(),\n    axis.line.y = element_blank(),\n    panel.grid.major.y = element_blank(),\n    panel.grid.major.x = element_line(linewidth = 0.3),\n    panel.grid.minor.x = element_blank(),\n    legend.position = \"none\"\n  )\n\np_dark &lt;- win_prob_plot\np_light &lt;- win_prob_plot\n\np_dark +\n  scale_fill_manual(values = team_colors) +\n  theme_brand_dark\n\np_light +\n  scale_fill_manual(values = team_colors) +\n  theme_brand_light\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPredicted Score Distributions\nFull predictive distribution for each game showing all possible outcomes.\n\n\nShow the R code - score-dist-plot\n# Calculate dynamic x-axis limits based on 95% intervals (to match trimmed slabs)\nmin_y_data &lt;- quantile(\n  pred_plot_df$y,\n  probs = 0.025\n) |&gt;\n  min()\nmax_y_data &lt;- quantile(\n  pred_plot_df$y,\n  probs = 0.975\n) |&gt;\n  max()\n\n# Calculate logo and text positions (relative to data bounds)\naway_logo_pos &lt;- min_y_data - 5\nhome_logo_pos &lt;- max_y_data + 5\naway_text_pos &lt;- min_y_data - 8\nhome_text_pos &lt;- max_y_data + 8\n\n# Calculate x-axis limits to accommodate logos/text with margin\nx_min_new &lt;- floor((min_y_data - 8) / 5) * 5\nx_max_new &lt;- ceiling((max_y_data + 8) / 5) * 5\naway_side_label_pos &lt;- x_min_new - 2\nhome_side_label_pos &lt;- x_max_new + 2\n\n# Calculate 95% interval bounds for trimming (per-game)\npred_plot_df_bounds &lt;- pred_plot_df |&gt;\n  rowwise() |&gt;\n  mutate(\n    y_lower = median(quantile(y, 0.025)),\n    y_upper = median(quantile(y, 0.975))\n  ) |&gt;\n  ungroup()\n\npred_plot_df2 &lt;- pred_plot_df_bounds |&gt;\n  tibble::as_tibble() |&gt;\n  tidybayes::unnest_rvars()\n\n# Create data subsets for two-toned slabs with smooth density\n# Filter to 95% interval to trim the tails\npred_plot_df_away &lt;- pred_plot_df2 |&gt;\n  filter(y &gt;= y_lower & y &lt;= y_upper & y &lt; spread_line)\n\npred_plot_df_home &lt;- pred_plot_df2 |&gt;\n  filter(y &gt;= y_lower & y &lt;= y_upper & y &gt;= spread_line)\n\nscore_dist_plot_new &lt;- pred_plot_df |&gt;\n  mutate(\n    spread_line_y_prob = density(y, spread_line)\n  ) |&gt;\n  ggplot(\n    aes(\n      y = reorder(matchup_display, game_idx, decreasing = TRUE)\n    )\n  ) +\n  geom_vline(\n    xintercept = 0,\n    linetype = \"solid\",\n    linewidth = 0.6\n  ) +\n  stat_slab(\n    data = pred_plot_df_away,\n    aes(\n      x = y,\n      y = reorder(matchup_display, game_idx, decreasing = TRUE),\n      fill = away_team\n    ),\n    adjust = 4,\n    alpha = 0.85,\n    slab_linewidth = 0,\n    normalize = \"groups\",\n    show.legend = FALSE\n  ) +\n  stat_slab(\n    data = pred_plot_df_home,\n    aes(\n      x = y,\n      y = reorder(matchup_display, game_idx, decreasing = TRUE),\n      fill = home_team\n    ),\n    adjust = 4,\n    alpha = 0.85,\n    slab_linewidth = 0,\n    normalize = \"groups\",\n    show.legend = FALSE\n  ) +\n  stat_pointinterval(\n    aes(xdist = y, color = \"Distribution\", interval_color = \"Distribution\"),\n    point_interval = \"median_qi\",\n    .width = c(0.5, 0.95),\n    point_size = 2.5,\n    linewidth = 1.5\n  ) +\n  stat_spike(\n    aes(\n      x = spread_line,\n      height = spread_line_y_prob,\n      color = \"Vegas\"\n    ),\n    size = 0.9\n  ) +\n  geom_nfl_logos(\n    aes(x = away_logo_pos, team_abbr = away_team),\n    width = 0.05\n  ) +\n  geom_nfl_logos(\n    aes(x = home_logo_pos, team_abbr = home_team),\n    width = 0.05\n  ) +\n  annotate(\n    \"text\",\n    x = -Inf, #away_side_label_pos,\n    y = (length(unique(pred_plot_df$matchup_display)) + 1) / 2,\n    label = \"Away\",\n    vjust = 1.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = 90,\n    fontface = \"bold\"\n  ) +\n  annotate(\n    \"text\",\n    x = Inf, #home_side_label_pos,\n    y = (length(unique(pred_plot_df$matchup_display)) + 1) / 2,\n    label = \"Home\",\n    vjust = 1.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = -90,\n    fontface = \"bold\"\n  ) +\n  geom_text(\n    aes(\n      x = away_text_pos,\n      label = scales::percent(away_y_cover_prob, accuracy = 1)\n    ),\n    hjust = 1,\n    vjust = 0.5,\n    size = base_text_size * 0.8,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n  ) +\n  geom_text(\n    aes(\n      x = home_text_pos,\n      label = scales::percent(home_y_cover_prob, accuracy = 1)\n    ),\n    hjust = 0,\n    vjust = 0.5,\n    size = base_text_size * 0.8,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n  ) +\n  scale_x_continuous(\n    breaks = seq(\n      floor(min_y_data / 10) * 10,\n      ceiling(max_y_data / 10) * 10,\n      10\n    ),\n    minor_breaks = seq(\n      floor(min_y_data / 10) * 10,\n      ceiling(max_y_data / 10) * 10,\n      1\n    ),\n    expand = expansion(mult = c(0.1, 0.1))\n  ) +\n  # coord_cartesian(\n  #   xlim = c(x_min_new, x_max_new),\n  #   clip = \"off\"\n  # ) +\n  labs(\n    title = \"Predicted Score Distributions (Game Outcomes)\",\n    subtitle = paste(\n      \"Season\",\n      attr(predict_data$result_predict, \"season\"),\n      \"- Week\",\n      attr(predict_data$result_predict, \"week\"),\n      \"| Left of line: Away cover area | Right of line: Home cover area\"\n    ),\n    x = \"Point Differential (Positive = Home Team Wins)\",\n    y = NULL,\n    caption = \"Cover probabilities shown near logos (Pr(y &lt; spread) away, Pr(y &gt; spread) home)\"\n  ) +\n  theme_ggdist() +\n  theme(\n    plot.title = element_text(face = \"bold\", hjust = 0.5),\n    plot.subtitle = element_text(size = rel(1), hjust = 0.5),\n    plot.caption = element_text(size = rel(1.5), hjust = 0.5),\n    axis.text.y = element_blank(),\n    axis.text.x = element_text(size = rel(1.2)),\n    axis.ticks.y = element_blank(),\n    axis.line.y = element_blank(),\n    panel.grid.major.y = element_blank(),\n    panel.grid.major.x = element_line(linewidth = 0.3),\n    panel.grid.minor.x = element_line(linewidth = 0.2),\n    legend.position = \"none\"\n  )\n\np_dark &lt;- score_dist_plot_new\np_light &lt;- score_dist_plot_new\n\np_dark +\n  #scale_fill_manual(values = colorspace::lighten(team_colors, amount = 0.45)) +\n  scale_fill_manual(values = team_colors) +\n  scale_color_manual(\n    values = c(\n      Distribution = theme_brand_dark$geom$ink,\n      Vegas = brand_pluck(dark_brand_yml, \"color\", \"danger\")\n    )\n  ) +\n  scale_color_manual(\n    aesthetics = \"interval_colour\",\n    values = c(Distribution = theme_brand_dark$geom$ink)\n  ) +\n  theme_brand_dark\n\np_light +\n  #scale_fill_manual(values = colorspace::lighten(team_colors, amount = 0.2)) +\n  scale_fill_manual(values = team_colors) +\n  scale_color_manual(\n    values = c(\n      Distribution = \"black\",\n      Vegas = darken(brand_pluck(light_brand_yml, \"color\", \"danger\"), 0.2)\n    )\n  ) +\n  scale_color_manual(\n    aesthetics = \"interval_colour\",\n    values = c(Distribution = \"black\")\n  ) +\n  theme_brand_light\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBetting Opportunities\nGames where our model disagrees with Vegas by at least 2 points or shows high confidence.\n\n\nShow the R code - betting-edge-plot\nbetting_plot_df &lt;- pred_plot_df |&gt;\n  mutate(\n    model_spread = E(y),\n    spread_diff = model_spread - spread_line,\n    abs_diff = abs(spread_diff),\n    bet_worthy = abs_diff &gt;= 2 | y_cover_prob &gt;= 0.60\n  ) |&gt;\n  filter(bet_worthy)\n\nbetting_min_data &lt;- min(pmin(\n  betting_plot_df$spread_line,\n  betting_plot_df$model_spread\n))\nbetting_max_data &lt;- max(pmax(\n  betting_plot_df$spread_line,\n  betting_plot_df$model_spread\n))\naway_logo_pos_betting &lt;- betting_min_data - 5\nhome_logo_pos_betting &lt;- betting_max_data + 5\naway_side_label_pos_betting &lt;- away_logo_pos_betting - 2\nhome_side_label_pos_betting &lt;- home_logo_pos_betting + 2\nbetting_x_min &lt;- floor(away_logo_pos_betting / 5) * 5\nbetting_x_max &lt;- ceiling(home_logo_pos_betting / 5) * 5\n\nbetting_plot &lt;- betting_plot_df |&gt;\n  ggplot(aes(y = reorder(matchup_display, abs_diff))) +\n  geom_vline(\n    xintercept = 0,\n    linetype = \"solid\",\n    linewidth = 0.6\n  ) +\n  geom_segment(\n    aes(\n      x = spread_line,\n      xend = model_spread - sign(model_spread - spread_line) * 0.4,\n      yend = matchup_display\n      #color = \"Model\"\n    ),\n    arrow = arrow(length = unit(0.3, \"cm\"), type = \"closed\"),\n    linewidth = 1.8,\n    alpha = 0.7\n  ) +\n  geom_point(\n    aes(x = spread_line, color = \"Vegas\"),\n    size = 6.5,\n    shape = 18\n  ) +\n  geom_point(\n    aes(x = model_spread, color = \"Model\"),\n    size = 5\n  ) +\n  geom_text(\n    aes(\n      x = (spread_line + model_spread) / 2,\n      label = sprintf(\"%.1f pts\", abs(spread_diff))\n      #color = \"Model\"\n    ),\n    vjust = -0.9,\n    size = base_text_size * 0.9,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n  ) +\n  geom_text(\n    aes(\n      x = (spread_line + model_spread) / 2,\n      label = sprintf(\"%d%%\", round(y_cover_prob * 100))\n      #color = \"Model\"\n    ),\n    vjust = 1.8,\n    size = base_text_size * 0.9,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n  ) +\n  geom_text(\n    aes(\n      x = spread_line,\n      label = sprintf(\"%.1f\", spread_line),\n      hjust = if_else(spread_line &lt; model_spread, 1.75, -0.75),\n      color = \"Vegas\"\n    ),\n    vjust = 0.5,\n    size = base_text_size * 0.9,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n  ) +\n  geom_text(\n    aes(\n      x = model_spread,\n      label = sprintf(\"%.1f\", model_spread),\n      hjust = if_else(model_spread &lt; spread_line, 1.75, -0.75),\n      color = \"Model\"\n    ),\n    vjust = 0.5,\n    size = base_text_size * 0.9,\n    size.unit = \"pt\",\n    fontface = \"bold\"\n  ) +\n  geom_nfl_logos(\n    aes(x = away_logo_pos_betting, team_abbr = away_team),\n    width = 0.05\n  ) +\n  geom_nfl_logos(\n    aes(x = home_logo_pos_betting, team_abbr = home_team),\n    width = 0.05\n  ) +\n  annotate(\n    \"text\",\n    x = -Inf, #away_side_label_pos_betting\n    y = (length(unique(betting_plot_df$matchup_display)) + 1) / 2,\n    label = \"Away\",\n    vjust = 1.5,\n    #hjust = -0.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = 90,\n    fontface = \"bold\"\n  ) +\n  annotate(\n    \"text\",\n    x = Inf, #home_side_label_pos_betting\n    y = (length(unique(betting_plot_df$matchup_display)) + 1) / 2,\n    label = \"Home\",\n    vjust = 1.5,\n    #hjust = -0.5,\n    size = base_text_size,\n    size.unit = \"pt\",\n    angle = -90,\n    fontface = \"bold\"\n  ) +\n  scale_x_continuous(\n    breaks = seq(\n      floor(betting_min_data / 5) * 5,\n      ceiling(betting_max_data / 5) * 5,\n      5\n    ),\n    expand = expansion(mult = c(0.1, 0.1))\n  ) +\n  # coord_cartesian(\n  #   xlim = c(betting_x_min, betting_x_max),\n  #   clip = \"off\"\n  # ) +\n  labs(\n    title = \"Betting Edges Over Vegas Lines\",\n    subtitle = paste(\n      \"Season\",\n      attr(predict_data$result_predict, \"season\"),\n      \"- Week\",\n      attr(predict_data$result_predict, \"week\"),\n      \"| Games with 2+ point disagreement or 60%+ cover probability\",\n      \"\\nRed = Vegas | Blue = Model (y) | Percentages show cover probability\"\n    ),\n    x = \"Point Spread (Positive = Home Team Favored)\",\n    y = NULL,\n    caption = \"Uses y (full prediction) for realistic betting expectations\"\n  ) +\n  theme_ggdist() +\n  theme(\n    plot.title = element_text(face = \"bold\", hjust = 0.5),\n    plot.subtitle = element_text(size = rel(1), hjust = 0.5),\n    plot.caption = element_text(size = rel(1.5), hjust = 0.5),\n    axis.text.y = element_blank(),\n    axis.text.x = element_text(size = rel(1.2)),\n    axis.ticks.y = element_blank(),\n    axis.line.y = element_blank(),\n    panel.grid.major.y = element_blank(),\n    panel.grid.major.x = element_line(linewidth = 0.3),\n    panel.grid.minor.x = element_blank(),\n    legend.position = \"none\"\n  )\n\np_dark &lt;- betting_plot\np_light &lt;- betting_plot\n\np_dark +\n  scale_color_manual(\n    values = c(\n      Model = brand_pluck(dark_brand_yml, \"color\", \"info\"),\n      Vegas = brand_pluck(dark_brand_yml, \"color\", \"danger\")\n    )\n  ) +\n  theme_brand_dark\n\np_light +\n  scale_color_manual(\n    values = c(\n      Model = darken(brand_pluck(light_brand_yml, \"color\", \"info\"), 0.2),\n      Vegas = darken(brand_pluck(light_brand_yml, \"color\", \"danger\"), 0.2)\n    )\n  ) +\n  theme_brand_light"
-  },
-  {
-    "objectID": "about/index.html",
-    "href": "about/index.html",
-    "title": "About Me",
-    "section": "",
-    "text": "I’m Tyler Pollard, a statistician with over 7 years of experience in statistical design and analysis, Bayesian statistics, predictive modeling, and interactive dashboards. My passion lies in transforming complex data into actionable insights - whether that means developing probabilistic models, optimizing decision-making, or building dynamic data visualization tools."
-  },
-  {
-    "objectID": "about/index.html#professional-background",
-    "href": "about/index.html#professional-background",
-    "title": "About Me",
-    "section": "Professional Background",
-    "text": "Professional Background\nOriginally from Baltimore, MD, I earned my B.S. in Mechanical Engineering from Clemson University, where I developed a strong analytical mindset before transitioning into statistics. I began my career at the U.S. Army Evaluation Center (AEC) as a statistician, where I led 25+ teams across survivability, vulnerability, effectiveness, and reliability assessments. My work included designing experiments, developing advanced statistical models, and building R Shiny dashboards to evaluate critical military defense systems.\n\nFor my contributions, I was honored with:\n🎖️ The Department of the Army Civilian Service Commendation Medal\n🎖️ AEC Employee of the Quarter Award\nWhile at AEC, I pursued my Master of Statistics at North Carolina State University, where I developed as a statistician with a strong foundation in statistical theory and methodology, focusing on Bayesian inference, multilevel modeling, time series forecasting, and data science. My graduate studies provided a solid theoretical framework that I’ve since expanded through hands-on experience - integrating advanced statistical techniques into real-world applications."
-  },
-  {
-    "objectID": "about/index.html#current-role",
-    "href": "about/index.html#current-role",
-    "title": "About Me",
-    "section": "Current Role",
-    "text": "Current Role\nNow living in Florida, I work as an Operations Research Analyst (ORSA) at U.S. Special Operations Command (USSOCOM), where I apply Bayesian modeling, predictive analytics, and data science methodologies to support decision-making in high-stakes environments. My work involves developing statistical models, optimizing operational strategies, and providing data-driven insights to enhance mission effectiveness.\nBeyond my professional work, I continuously seek opportunities to expand my expertise through independent research, software development, and writing. My in-depth analytical reports—many of which originated as graduate research that I’ve since significantly enhanced—are now featured as comprehensive Case Studies. For a look at my more technical work, including interactive apps, R packages, and system architecture, you can explore my Projects. I’ve also recently launched a Blog to share shorter insights, tutorials, and my ongoing deep dives into NFL analytics. Together, these collections reflect my ongoing commitment to leveraging data science in innovative, practical, and meaningful ways.\n\nView Case Studies View Projects"
-  },
-  {
-    "objectID": "about/index.html#beyond-the-numbers",
-    "href": "about/index.html#beyond-the-numbers",
-    "title": "About Me",
-    "section": "Beyond the Numbers",
-    "text": "Beyond the Numbers\nWhen I’m not working with data, you’ll probably find me in the gym, on the pickleball courts, on the golf course, or lying by the beach. I love anything that involves optimizing performance - whether it’s refining a model, dialing in my swing, or testing out the latest nutrition trends.\nI’m also a huge Baltimore Ravens, Orioles, and Clemson Tigers fan, and I’m always looking for ways to blend sports and analytics (even if it’s just to justify why my team should’ve gone for it on 4th down)."
-  },
-  {
-    "objectID": "about/index.html#lets-connect",
-    "href": "about/index.html#lets-connect",
-    "title": "About Me",
-    "section": "Let’s Connect",
-    "text": "Let’s Connect\nI’m always open to discussing data-driven challenges, Bayesian modeling, and collaborative opportunities. Feel free to connect with me on LinkedIn or explore my work on GitHub."
-  },
-  {
-    "objectID": "projects/apps/property-analysis-dashboard/index.html",
-    "href": "projects/apps/property-analysis-dashboard/index.html",
-    "title": "Property Analysis Dashboard",
-    "section": "",
-    "text": "Launch dashboard   \nThis interactive dashboard helps users evaluate potential short-term rental investments by estimating profitability based on customizable inputs. Built with R Shiny and bs4Dash, the app provides a structured framework to assess expected income, expenses, and overall return on investment.\n📌 Key highlights:\n\nAdjust key property and financial variables to estimate profitability.\nView detailed breakdowns of expected expenses and revenue.\nCompare different investment scenarios in real-time.\n\n🏠 Launch the app\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "projects/apps/nfl-analysis-app/index.html",
-    "href": "projects/apps/nfl-analysis-app/index.html",
-    "title": "NFL Analysis Dashboard [DEPRECATED]",
-    "section": "",
-    "text": "WarningDeprecated App\n\n\n\nThis app has been deprecated and replaced by the NFL EndZone Analytics App.\n\n\nThis dashboard is no longer being actively developed. Historical functionality remains available.\nLaunch dashboard   \nThis interactive dashboard explores NFL data from the 2006-2024 seasons, sourced from nflverse. It provides tools to analyze team performance, rankings, and betting insights.\n📌 Key Features:\n\nTeam rankings based on historical performance\n\nAccess near real-time data updates, refreshed daily at 2:00 AM\n\nView Bayesian model predictions for spreads, totals, and game outcomes (coming soon)\n\nAdjust parameters to see probabilities for different betting scenarios (coming soon)\n\n📟 Launch the app\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "projects/packages/nflendzoneData/index.html",
-    "href": "projects/packages/nflendzoneData/index.html",
-    "title": "nflendzoneData",
-    "section": "",
-    "text": "View repository source\nnflendzoneData is the distribution layer for the ecosystem. It stores versioned release assets and stable tag URLs that other repos consume."
-  },
-  {
-    "objectID": "projects/packages/nflendzoneData/index.html#what-it-owns",
-    "href": "projects/packages/nflendzoneData/index.html#what-it-owns",
-    "title": "nflendzoneData",
-    "section": "What It Owns",
-    "text": "What It Owns\n\nRelease tags that act as data APIs.\nSeason/week partitioned artifacts.\nTimestamp sidecars used for freshness checks."
-  },
-  {
-    "objectID": "projects/packages/nflendzoneData/index.html#typical-tag-groups",
-    "href": "projects/packages/nflendzoneData/index.html#typical-tag-groups",
-    "title": "nflendzoneData",
-    "section": "Typical Tag Groups",
-    "text": "Typical Tag Groups\n\nETL outputs: season_standings, weekly_standings, elo, srs, epa\nModeling inputs: team_features, game_features, team_model, game_model\nModeling outputs: team_strength_*, league_hfa_*, result_*, team_strength_negbinom_summary"
-  },
-  {
-    "objectID": "projects/packages/nflendzoneData/index.html#why-it-matters",
-    "href": "projects/packages/nflendzoneData/index.html#why-it-matters",
-    "title": "nflendzoneData",
-    "section": "Why It Matters",
-    "text": "Why It Matters\n\nDecouples compute workflows from consumers.\nProvides deterministic file naming for app/model loaders.\nEnables lightweight app deployment via summary artifacts."
-  },
-  {
-    "objectID": "projects/packages/nflendzoneData/index.html#related-pages",
-    "href": "projects/packages/nflendzoneData/index.html#related-pages",
-    "title": "nflendzoneData",
-    "section": "Related Pages",
-    "text": "Related Pages\n\nEcosystem architecture: NFL EndZone Ecosystem Architecture\nnflendzoneApp architecture: nflendzoneApp Architecture"
-  },
-  {
-    "objectID": "projects/packages/nflendzoneModel/index.html",
-    "href": "projects/packages/nflendzoneModel/index.html",
-    "title": "nflendzoneModel",
-    "section": "",
-    "text": "View repository source\nnflendzoneModel is the Bayesian inference engine used for weekly team-strength updates and game-level probability generation."
-  },
-  {
-    "objectID": "projects/packages/nflendzoneModel/index.html#core-workflow-functions",
-    "href": "projects/packages/nflendzoneModel/index.html#core-workflow-functions",
-    "title": "nflendzoneModel",
-    "section": "Core Workflow Functions",
-    "text": "Core Workflow Functions\n\nprepare_schedule_indices()\nprepare_stan_data()\nfit_team_strength_model()\nprepare_gq_data()\npredict_team_strength()\nextract_game_predictions()"
-  },
-  {
-    "objectID": "projects/packages/nflendzoneModel/index.html#stan-model-assets",
-    "href": "projects/packages/nflendzoneModel/index.html#stan-model-assets",
-    "title": "nflendzoneModel",
-    "section": "Stan Model Assets",
-    "text": "Stan Model Assets\n\nteam_strength_fit.stan\nteam_strength_gq.stan\nteam_strength_bivar_negbinom.stan\nteam_strength_recursive.stan"
-  },
-  {
-    "objectID": "projects/packages/nflendzoneModel/index.html#operational-role",
-    "href": "projects/packages/nflendzoneModel/index.html#operational-role",
-    "title": "nflendzoneModel",
-    "section": "Operational Role",
-    "text": "Operational Role\n\nConsumes model-ready data from pipeline outputs.\nFits Bayesian state-space models via cmdstanr.\nPublishes posterior summaries to nflendzoneData.\nSupports app-side probability reconstruction workflows."
-  },
-  {
-    "objectID": "projects/packages/nflendzoneModel/index.html#related-pages",
-    "href": "projects/packages/nflendzoneModel/index.html#related-pages",
-    "title": "nflendzoneModel",
-    "section": "Related Pages",
-    "text": "Related Pages\n\nJoint negbinom workflow note: Using nflendzoneModel Joint NegBinom Workflow\nEcosystem architecture: NFL EndZone Ecosystem Architecture"
-  },
-  {
-    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html",
-    "href": "projects/architecture/nflendzoneApp-architecture/index.html",
-    "title": "nflendzoneApp Architecture",
-    "section": "",
-    "text": "View repository source"
-  },
-  {
-    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#app-runtime-position",
-    "href": "projects/architecture/nflendzoneApp-architecture/index.html#app-runtime-position",
-    "title": "nflendzoneApp Architecture",
-    "section": "App Runtime Position",
-    "text": "App Runtime Position\n\n\n\n\n\nflowchart LR\n  A[nflreadr schedule and context] --&gt; B[nflendzoneApp startup data layer]\n  C[nflendzoneData summaries] --&gt; B\n  B --&gt; D[standings modules]\n  B --&gt; E[prediction modules]"
-  },
-  {
-    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#module-areas",
-    "href": "projects/architecture/nflendzoneApp-architecture/index.html#module-areas",
-    "title": "nflendzoneApp Architecture",
-    "section": "Module Areas",
-    "text": "Module Areas\n\n\n\n\n\n\n\nPath area\nPurpose\n\n\n\n\napp/main.R\npage composition and navigation\n\n\napp/logic/data/*\nstartup import and release data loading\n\n\napp/view/pages/standings/*\nstandings and playoff seed views\n\n\napp/view/pages/predictions/*\ngame prediction UI/server\n\n\napp/logic/predictions/games/*\nprobability, draw, and plotting helpers"
-  },
-  {
-    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#runtime-pattern",
-    "href": "projects/architecture/nflendzoneApp-architecture/index.html#runtime-pattern",
-    "title": "nflendzoneApp Architecture",
-    "section": "Runtime Pattern",
-    "text": "Runtime Pattern\n\nLoad schedule/team context from nflverse.\nPull release summaries from nflendzoneData.\nReconstruct stochastic state in memory.\nRender interactive probabilities with reactive controls."
-  },
-  {
-    "objectID": "projects/architecture/nflendzoneApp-architecture/index.html#related-links",
-    "href": "projects/architecture/nflendzoneApp-architecture/index.html#related-links",
-    "title": "nflendzoneApp Architecture",
-    "section": "Related Links",
-    "text": "Related Links\n\nEcosystem architecture: NFL EndZone Ecosystem Architecture\nWeekly report post: NFL EndZone Pipeline Weekly Report Playbook"
-  },
-  {
-    "objectID": "projects/index.html",
-    "href": "projects/index.html",
-    "title": "Projects",
-    "section": "",
-    "text": "This section contains evergreen project documentation. For dated technical notes and weekly updates, visit my blog."
-  },
-  {
-    "objectID": "projects/index.html#apps",
-    "href": "projects/index.html#apps",
-    "title": "Projects",
-    "section": "Apps",
-    "text": "Apps\n\n\n\n\n\n\n\n\n\n\nNFL EndZone Analytics App\n\n\n\nshiny\n\nbslib\n\nrhino\n\nnfl\n\nnflverse\n\nnflendzone\n\nR\n\nbayesian\n\n\n\nRhino/Shiny dashboard for NFL standings, playoff seeding, and Bayesian game probability analysis\n\n\n\n\n\nDecember 27, 2025\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nNFL Analysis Dashboard [DEPRECATED]\n\n\n\nshiny\n\nbs4Dash\n\nnfl\n\nnflverse\n\nR\n\n\n\nInteractive dashboard for exploring NFL data, ranking teams, and analyzing betting probabilities\n\n\n\n\n\nApril 26, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nProperty Analysis Dashboard\n\n\n\nshiny\n\nbs4Dash\n\nprediction\n\nreal estate\n\n\n\nShiny dashboard for analyzing the profitability of short-term rental investments\n\n\n\n\n\nFebruary 1, 2025\n\n\n\n\n\n\n\n\n\n\n\n\nHurricane Intensity App\n\n\n\nshiny\n\nbs4Dash\n\nprediction\n\nweather\n\n\n\nInteractive dashboard for exploring hurricane intensity data.\n\n\n\n\n\nAugust 25, 2024\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "projects/index.html#packages",
-    "href": "projects/index.html#packages",
-    "title": "Projects",
-    "section": "Packages",
-    "text": "Packages\n\n\n\n\n\n\n\n\n\n\nnflendzoneData\n\n\n\nnfl\n\nnflverse\n\ndata-engineering\n\nreleases\n\n\n\nRelease-asset repository used as the distribution layer between pipeline/model producers and app/analysis consumers.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nnflendzoneModel\n\n\n\nnfl\n\nnflverse\n\ncmdstanr\n\nbrms\n\nstan\n\nbayesian\n\nstate-space\n\n\n\nBayesian team-strength modeling package built on Stan/cmdstanr for the NFL EndZone ecosystem.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nnflendzonePipeline\n\n\n\nnfl\n\nnflverse\n\netl\n\ndata-engineering\n\npipeline\n\n\n\nProduction ETL and feature-engineering package for weekly NFL EndZone data products.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "projects/index.html#architecture",
-    "href": "projects/index.html#architecture",
-    "title": "Projects",
-    "section": "Architecture",
-    "text": "Architecture\n\n\n\n\n\n\n\n\n\n\nNFL EndZone Ecosystem Architecture\n\n\n\nnfl\n\nnflverse\n\ncmdstanr\n\nbrms\n\narchitecture\n\nshiny\n\n\n\nSystem-level map of nflendzonePipeline, nflendzoneData, nflendzoneModel, and nflendzoneApp.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\n\n\n\n\n\n\n\nnflendzoneApp Architecture\n\n\n\nshiny\n\nrhino\n\nnfl\n\nnflverse\n\nbayesian\n\n\n\nRhino/Shiny app architecture and runtime data-flow overview.\n\n\n\n\n\nFebruary 15, 2026\n\n\nTyler Pollard\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html",
-    "href": "projects/architecture/nfl-endzone-ecosystem/index.html",
-    "title": "NFL EndZone Ecosystem Architecture",
-    "section": "",
-    "text": "This page is the evergreen system map. Weekly and implementation updates live in Blog posts."
-  },
-  {
-    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#end-to-end-flow",
-    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#end-to-end-flow",
-    "title": "NFL EndZone Ecosystem Architecture",
-    "section": "End-to-End Flow",
-    "text": "End-to-End Flow\n\n\n\n\n\nflowchart LR\n  A[nflverse raw data] --&gt; B[nflendzonePipeline]\n  B --&gt; C[nflendzoneData release tags]\n  C --&gt; D[nflendzoneModel]\n  D --&gt; C\n  C --&gt; E[nflendzoneApp]"
-  },
-  {
-    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#repository-responsibilities",
-    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#repository-responsibilities",
-    "title": "NFL EndZone Ecosystem Architecture",
-    "section": "Repository Responsibilities",
-    "text": "Repository Responsibilities\n\n\n\n\n\n\n\n\nRepository\nPrimary responsibility\nMain handoff\n\n\n\n\nnflendzonePipeline\nETL, feature engineering, scheduled updates\npublishes versioned artifacts\n\n\nnflendzoneData\nrelease/tag warehouse\nserves stable API-like data URLs\n\n\nnflendzoneModel\nBayesian team-strength modeling\npublishes posterior summaries\n\n\nnflendzoneApp\ninteractive Shiny/Rhino application\nconsumes summaries for user-facing probabilities"
-  },
-  {
-    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#visual-signals-from-weekly-output",
-    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#visual-signals-from-weekly-output",
-    "title": "NFL EndZone Ecosystem Architecture",
-    "section": "Visual Signals From Weekly Output",
-    "text": "Visual Signals From Weekly Output"
-  },
-  {
-    "objectID": "projects/architecture/nfl-endzone-ecosystem/index.html#related-links",
-    "href": "projects/architecture/nfl-endzone-ecosystem/index.html#related-links",
-    "title": "NFL EndZone Ecosystem Architecture",
-    "section": "Related Links",
-    "text": "Related Links\n\nPipeline weekly post: NFL EndZone Pipeline Weekly Report Playbook\nJoint negbinom model post: Using nflendzoneModel Joint NegBinom Workflow\nApp architecture: nflendzoneApp Architecture"
-  },
-  {
-    "objectID": "projects/packages/nflendzonePipeline/index.html",
-    "href": "projects/packages/nflendzonePipeline/index.html",
-    "title": "nflendzonePipeline",
-    "section": "",
-    "text": "View repository source\nnflendzonePipeline is the compute/orchestration layer that turns raw nflverse data into production-ready release artifacts."
-  },
-  {
-    "objectID": "projects/packages/nflendzonePipeline/index.html#what-it-owns",
-    "href": "projects/packages/nflendzonePipeline/index.html#what-it-owns",
-    "title": "nflendzonePipeline",
-    "section": "What It Owns",
-    "text": "What It Owns\n\nWeekly and season-level data extraction.\nFeature engineering for team/game modeling tables.\nRelease publishing to nflendzoneData.\nScheduled automation for ETL and report refresh."
-  },
-  {
-    "objectID": "projects/packages/nflendzonePipeline/index.html#primary-entry-scripts",
-    "href": "projects/packages/nflendzonePipeline/index.html#primary-entry-scripts",
-    "title": "nflendzonePipeline",
-    "section": "Primary Entry Scripts",
-    "text": "Primary Entry Scripts\n\n\n\n\n\n\n\nScript\nPurpose\n\n\n\n\ndata-raw/update_all_data.R\nEnd-to-end ETL refresh and feature generation\n\n\ndata-raw/update_team_strength_model.R\nWeekly team-strength model update handoff\n\n\ndata-raw/update_historic_odds_data.R\nOdds/event snapshot update"
-  },
-  {
-    "objectID": "projects/packages/nflendzonePipeline/index.html#main-data-products",
-    "href": "projects/packages/nflendzonePipeline/index.html#main-data-products",
-    "title": "nflendzonePipeline",
-    "section": "Main Data Products",
-    "text": "Main Data Products\n\nCore stats: nfl_stats_week_*, nfl_stats_season_*\nFootball metrics: elo, srs, epa, scores, turnover, redzone\nModeling tables: team_features, game_features, team_model, game_model"
-  },
-  {
-    "objectID": "projects/packages/nflendzonePipeline/index.html#how-it-connects",
-    "href": "projects/packages/nflendzonePipeline/index.html#how-it-connects",
-    "title": "nflendzonePipeline",
-    "section": "How It Connects",
-    "text": "How It Connects\n\nPulls source data from nflverse.\nBuilds and validates derived features.\nPublishes tagged outputs to nflendzoneData.\nFeeds downstream app/model workflows."
-  },
-  {
-    "objectID": "projects/packages/nflendzonePipeline/index.html#related-pages",
-    "href": "projects/packages/nflendzonePipeline/index.html#related-pages",
-    "title": "nflendzonePipeline",
-    "section": "Related Pages",
-    "text": "Related Pages\n\nEcosystem architecture: NFL EndZone Ecosystem Architecture\nWeekly report playbook: NFL EndZone Pipeline Weekly Report Playbook"
-  },
-  {
-    "objectID": "projects/apps/nflendzoneApp/index.html",
-    "href": "projects/apps/nflendzoneApp/index.html",
-    "title": "NFL EndZone Analytics App",
-    "section": "",
-    "text": "This app is the next generation of my NFL analytics work and replaces the earlier NFL Analysis Dashboard.\n\nLaunch dashboard    View source code\nActively in development: standings and game prediction modules are live, with additional features planned.\nBuilt with Rhino, Shiny, and bslib, the app combines NFL schedule/team data from nflverse with weekly model outputs from the companion nflendzoneData release assets.\n📌 Key highlights:"
-  },
-  {
-    "objectID": "projects/apps/nflendzoneApp/index.html#technical-documentation",
-    "href": "projects/apps/nflendzoneApp/index.html#technical-documentation",
-    "title": "NFL EndZone Analytics App",
-    "section": "Technical Documentation",
-    "text": "Technical Documentation\nFor full technical internals and system-level integration details:\n\nApp architecture deep dive: nflendzoneApp Architecture\nEcosystem architecture (all four repos): NFL EndZone Ecosystem Architecture"
-  },
-  {
-    "objectID": "projects/apps/hurricane-intensity-app/index.html",
-    "href": "projects/apps/hurricane-intensity-app/index.html",
-    "title": "Hurricane Intensity App",
-    "section": "",
-    "text": "Launch app   \nThis interactive app allows users to explore key variables and trends in hurricane intensity data. Featuring dynamic visualizations, it helps uncover relationships between storm characteristics, environmental factors, and forecasted intensity.\n📌 Key highlights:\n\nVisualizing hurricane tracks and key predictors\n\nExamining relationships between variables and storm intensity\n\nExploring spatial and temporal trends in the data\n\nThe app is based on data from the Hurricane Intensity Prediction project.\n🌀 Launch the app\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "resume/index.html",
-    "href": "resume/index.html",
-    "title": "CV",
-    "section": "",
-    "text": "Download PDF\n\n  Your browser does not support embedded PDFs. Download the PDF.\n\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Tyler Pollard (DEV)",
-    "section": "",
-    "text": "Welcome to my portfolio! I’m a statistician who thrives at the intersection of data and decision-making. Whether I’m developing statistical models, creating interactive dashboards, or exploring new analytical techniques, I’m driven by curiosity and a passion for continuous improvement. This space showcases my journey—from mastering statistical methods to building impactful projects. Take a look around, and I hope you find something that sparks collaboration or inspires a new idea!\n\n\n Back to top"
-  },
-  {
-    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html",
-    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html",
-    "title": "Using nflendzoneModel Joint NegBinom Workflow",
-    "section": "",
-    "text": "View repository source\nThis draft is focused on one path: fitting team_strength_bivar_negbinom and producing the team_strength_negbinom_summary artifact consumed downstream."
-  },
-  {
-    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#end-to-end-flow",
-    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#end-to-end-flow",
-    "title": "Using nflendzoneModel Joint NegBinom Workflow",
-    "section": "End-To-End Flow",
-    "text": "End-To-End Flow\n\n\nShow code\nflowchart LR\n  A[nflverse schedule + results] --&gt; B[prepare_schedule_indices]\n  B --&gt; C[prepare_stan_data]\n  C --&gt; D[fit_team_strength_model model=team_strength_bivar_negbinom]\n  D --&gt; E[fit$summary and rvar extraction]\n  E --&gt; F[team_strength_negbinom_summary release]\n  F --&gt; G[nflendzoneApp probability reconstruction]\n\n\n\n\n\nflowchart LR\n  A[nflverse schedule + results] --&gt; B[prepare_schedule_indices]\n  B --&gt; C[prepare_stan_data]\n  C --&gt; D[fit_team_strength_model model=team_strength_bivar_negbinom]\n  D --&gt; E[fit$summary and rvar extraction]\n  E --&gt; F[team_strength_negbinom_summary release]\n  F --&gt; G[nflendzoneApp probability reconstruction]"
-  },
-  {
-    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#minimal-fit-pattern",
-    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#minimal-fit-pattern",
-    "title": "Using nflendzoneModel Joint NegBinom Workflow",
-    "section": "Minimal Fit Pattern",
-    "text": "Minimal Fit Pattern\nThis mirrors inst/examples/update_negbinom_team_strength.r.\n\n\nShow code\nfit_stan_data &lt;- prepare_stan_data(\n  game_data = training_data,\n  teams = teams,\n  verbose = TRUE\n)\n\nfit_bivar_negbinom &lt;- fit_team_strength_model(\n  stan_data = fit_stan_data,\n  model = \"team_strength_bivar_negbinom\",\n  seed = 52,\n  chains = 4,\n  parallel_chains = parallel::detectCores(),\n  iter_warmup = 1000,\n  iter_sampling = 1000,\n  adapt_delta = 0.95,\n  max_treedepth = 10\n)"
-  },
-  {
-    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#build-the-summary-artifact",
-    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#build-the-summary-artifact",
-    "title": "Using nflendzoneModel Joint NegBinom Workflow",
-    "section": "Build The Summary Artifact",
-    "text": "Build The Summary Artifact\n\n\nShow code\nweek_vars &lt;- c(\n  \"phi_home\",\n  \"phi_away\",\n  \"filtered_alpha_log\",\n  \"filtered_team_off_strength[team]\",\n  \"filtered_team_def_strength[team]\",\n  \"filtered_team_hfa[team]\",\n  \"filtered_league_hfa\",\n  \"predicted_alpha_log\",\n  \"predicted_team_off_strength[team]\",\n  \"predicted_team_def_strength[team]\",\n  \"predicted_team_hfa[team]\",\n  \"predicted_league_hfa\"\n)\n\nnb_sum &lt;- fit_bivar_negbinom$summary(\n  variables = stringr::str_extract(week_vars, \"^\\\\w+\")\n)"
-  },
-  {
-    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#publish-for-app-consumption",
-    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#publish-for-app-consumption",
-    "title": "Using nflendzoneModel Joint NegBinom Workflow",
-    "section": "Publish For App Consumption",
-    "text": "Publish For App Consumption\n\n\nShow code\npb_write(\n  x = nb_sum,\n  file = paste0(\"team_strength_negbinom_summary_\", filter_season, \".rds\"),\n  repo = github_data_repo,\n  tag = \"team_strength_negbinom_summary\"\n)"
-  },
-  {
-    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#why-this-model-path-matters",
-    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#why-this-model-path-matters",
-    "title": "Using nflendzoneModel Joint NegBinom Workflow",
-    "section": "Why This Model Path Matters",
-    "text": "Why This Model Path Matters\n\nJoint home/away count modeling is more natural for score-like outcomes than point-difference-only views.\nThe release summary can be compact while still enabling stochastic reconstruction in the app.\nThe same artifact supports weekly diagnostics, slate previews, and betting-probability calculations."
-  },
-  {
-    "objectID": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#practical-checks-before-shipping",
-    "href": "blog/posts/2026/2026-02-15-endzone-model-joint-negbinom/index.html#practical-checks-before-shipping",
-    "title": "Using nflendzoneModel Joint NegBinom Workflow",
-    "section": "Practical Checks Before Shipping",
-    "text": "Practical Checks Before Shipping\n\nValidate diagnostics (rhat, ESS, divergences) before publishing.\nEnsure season/week identifiers in the summary align with release timestamp metadata.\nCompare implied game-level probabilities against previous week to catch structural jumps.\n\n\nIf this post is useful, the evergreen system docs live in Projects Architecture and package docs live in Projects Packages."
   },
   {
     "objectID": "case-studies/hurricane-intensity/index.html",
