@@ -1,6 +1,6 @@
 # scripts/render-resume.R
 library(quarto)
-library(yaml)
+library(yaml12)
 
 get_script_dir <- function() {
   args <- commandArgs(trailingOnly = FALSE)
@@ -50,12 +50,12 @@ index_path <- file.path(resume_dir, "index.qmd")
 lines <- readLines(index_path, warn = FALSE)
 meta_end <- which(lines == "---")[2]
 
-meta <- yaml::yaml.load(paste(lines[2:(meta_end - 1)], collapse = "\n"))
+meta <- yaml12::parse_yaml(paste(lines[2:(meta_end - 1)], collapse = "\n"))
 meta$resume$pdf <- pdf_name
 meta$resume$date <- date
 meta$date <- date
 
-new_yaml <- c("---", strsplit(yaml::as.yaml(meta), "\n")[[1]], "---")
+new_yaml <- c("---", strsplit(yaml12::format_yaml(meta), "\n")[[1]], "---")
 writeLines(c(new_yaml, lines[(meta_end + 1):length(lines)]), index_path)
 
 invisible(list(pdf = file.path(resume_dir, pdf_path), date = date))

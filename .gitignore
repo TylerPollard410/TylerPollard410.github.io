@@ -17,3 +17,6 @@
 .ipynb_checkpoints/
 .venv/
 __pycache__/
+
+# Unpublished draft posts (freeze output)
+/_freeze/blog/posts/2026/2026-08-17-eight-ways-of-not-beating-a-prediction-market/

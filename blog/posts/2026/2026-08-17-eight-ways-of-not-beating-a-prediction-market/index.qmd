@@ -1,0 +1,974 @@
+---
+title: "Eight Ways of Not Beating a Prediction Market"
+description: "A per-second audit of Kalshi's 15-minute Bitcoin markets: eight diagnostics, twelve horizons, and a negative result I had to work fairly hard to believe."
+author: Tyler Pollard
+date: 2026-08-17
+date-modified: 2026-08-17
+draft: true
+categories:
+  - kalshi
+  - crypto
+  - time-series
+  - volatility
+  - market-efficiency
+  - xgboost
+  - r
+image: img/cover.png
+---
+
+Kalshi lists a Bitcoin contract that closes every fifteen minutes. It is a clean
+forecasting problem with a public scoreboard: the market publishes a probability, the
+world publishes an answer, and you can check yourself against both. I spent a while
+trying to beat it.
+
+I did not beat it. This post is the audit that convinced me, because the interesting part
+turned out not to be the answer but how much work it took to trust it. Twice along the way
+I had a result that looked like an edge, and both times the edge was a property of my own
+measurement rather than of Bitcoin.
+
+## What is actually being bet on
+
+Start with the contract, because the phrasing hides something.
+
+Settlement is **not** the last price. `settle_value` is the mean of the index over the 60
+whole seconds before close. And the strike is not a round number someone chose — it is
+*exactly the previous window's settle value*. So the question the market is really asking
+is:
+
+> Will the next 60-second mean land above the previous 60-second mean?
+
+Both sides are 60-second averages of the same series. The strike is fixed and known the
+instant the window opens, and the only random quantity is where the next average lands.
+This is why every market opens near a coin flip: it is a random walk asked whether it will
+end up above where it just was.
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 9,
+  fig.height = 5,
+  dpi = 150,
+  fig.align = "center"
+)
+suppressPackageStartupMessages({
+  library(arrow)
+  library(slider)
+  library(patchwork)
+  library(tidyverse)
+})
+theme_set(
+  theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(face = "bold", size = 13),
+      plot.subtitle = element_text(colour = "grey35", size = 10),
+      legend.position = "bottom"
+    )
+)
+pal <- c(
+  idx = "grey45",
+  settle = "#2C7FB8",
+  market = "#E6812A",
+  bad = "#B2182B"
+)
+```
+
+```{r}
+#| label: load
+#| code-summary: "Show data loading"
+
+# The tick data lives in a separate private repo and is far too large to duplicate,
+# so the path is configurable. Quarto's freeze caches results, so the rendered post
+# does not need the data present.
+data_root <- Sys.getenv("KALSHI_TP_BOT_DATA", "~/Desktop/kalshi-tp-bot/data")
+coin_dir <- path.expand(file.path(
+  data_root,
+  "raw_market_data",
+  "crypto",
+  "btc"
+))
+if (!dir.exists(coin_dir)) {
+  stop("Set KALSHI_TP_BOT_DATA. Looked in: ", coin_dir)
+}
+
+N_DAYS <- 30
+
+avail <- list.files(coin_dir, pattern = "_ticks_.*\\.parquet$")
+end_day <- max(
+  as.Date(str_extract(avail, "\\d{4}-\\d{2}-\\d{2}")),
+  na.rm = TRUE
+)
+all_days <- seq.Date(end_day - days(N_DAYS - 1), end_day, by = "day")
+
+window_files <- function(pattern) {
+  f <- list.files(coin_dir, pattern = pattern, full.names = TRUE)
+  d <- as.Date(str_extract(basename(f), "\\d{4}-\\d{2}-\\d{2}"))
+  f[!is.na(d) & d %in% all_days]
+}
+
+# The feed ticks ~5x/second; settlement is defined on whole-second prints, so keep
+# the first tick of each second.
+slice_to_seconds <- function(df) {
+  df |>
+    arrange(time) |>
+    mutate(time = floor_date(time, "second")) |>
+    distinct(time, .keep_all = TRUE)
+}
+
+brti_ms <- window_files("_ticks_.*\\.parquet$") |>
+  map(\(f) slice_to_seconds(read_parquet(f))) |>
+  list_rbind()
+
+markets_15min <- window_files("^settled_.*_markets_.*\\.parquet$") |>
+  map(read_parquet) |>
+  list_rbind() |>
+  arrange(close_time) |>
+  filter(horizon == "15min") |>
+  distinct(ticker, .keep_all = TRUE) |> # the feed carries a few dup tickers
+  mutate(
+    close_time = with_tz(close_time, "America/New_York"),
+    start_time = close_time - minutes(15),
+    weekday = wday(start_time, label = TRUE)
+  )
+
+book_15 <- window_files("^book_.*\\.parquet$") |>
+  map(read_parquet) |>
+  list_rbind()
+```
+
+## Getting the alignment right, and proving it
+
+Three details in assembling this decide whether anything downstream means anything.
+
+**Each second belongs to a market by time interval, not by row adjacency.** It is tempting
+to label rows by "which market closes next" using `lead()` and fill. That silently glues
+the weekly Wednesday 3–5am ET maintenance halt into single 9,000-second windows carrying a
+real ticker and strike. An interval join on `[start_time, close_time - 1s]` refuses to
+label those seconds at all, which is correct — and they get dropped.
+
+**Timestamps are ET throughout**, matching the market's own `close_time`, so that hour and
+weekday agree with each other.
+
+**The book join looks backward.** `closest(time >= book_time)` takes the last quote at or
+*before* each second. The direction matters enormously: reverse the inequality and every
+second without a trade silently borrows its "market price" from a trade that has not
+happened yet.
+
+```{r}
+#| label: assemble
+#| code-summary: "Show assembly"
+
+brti_15 <- brti_ms |>
+  slice_to_seconds() |>
+  mutate(
+    index = row_number(),
+    time = with_tz(time, "America/New_York"),
+    .before = 1
+  ) |>
+  left_join(
+    markets_15min |>
+      select(
+        ticker,
+        weekday,
+        start_time,
+        close_time,
+        floor_strike,
+        settle_value,
+        result
+      ) |>
+      mutate(lb = start_time, ub = close_time - seconds(1)),
+    by = join_by(between(time, lb, ub))
+  ) |>
+  distinct() |>
+  mutate(start = time == lb, end = time == ub) |>
+  left_join(
+    book_15 |> rename(mkt_ticker = ticker, book_time = time),
+    by = join_by(ticker == mkt_ticker, closest(time >= book_time))
+  ) |>
+  distinct(index, .keep_all = TRUE) |>
+  rename(yes_last = last_yes) |>
+  mutate(
+    spread = ifelse(is.na(yes_mid), 0, abs(yes_ask - yes_bid)),
+    yes_mid = coalesce(yes_mid, yes_last)
+  ) |>
+  filter(!is.na(ticker)) # drop the maintenance-halt orphans
+
+brti_15 <- brti_15 |>
+  mutate(
+    kalshi_value = slide_index_dbl(
+      value,
+      time,
+      mean,
+      .before = seconds(59),
+      .complete = FALSE
+    ),
+    time_left = as.numeric(difftime(close_time, time, units = "secs")) - 1,
+    d_log_value = log(value) - log(lag(value)),
+    d_log_value = if_else(start, NA_real_, d_log_value) # don't difference across a gap
+  ) |>
+  mutate(diff_floor_kalshi = kalshi_value - floor_strike)
+```
+
+Now the part that makes the rest trustworthy. At the final second of a window, my rolling
+60-second mean *is*, by construction, the quantity Kalshi settles on. If the tick slicing,
+the interval join, or the rolling window were misaligned even slightly, this is where it
+shows — and nowhere else. So it is an assertion, not a printout:
+
+```{r}
+#| label: settle-check
+#| code-fold: false
+settle_check <- brti_15 |>
+  filter(end) |>
+  summarise(
+    n_windows = n(),
+    mean_diff = mean(kalshi_value - settle_value, na.rm = TRUE),
+    max_abs_diff = max(abs(kalshi_value - settle_value), na.rm = TRUE)
+  )
+settle_check
+stopifnot(abs(settle_check$mean_diff) < 0.01)
+```
+
+```{r}
+#| label: window-stats
+#| include: false
+n_sec <- nrow(brti_15)
+n_mkt <- n_distinct(brti_15$ticker)
+```
+
+Reproducing an exchange's own settlement number to a mean error of
+`r sprintf("%.4f", settle_check$mean_diff)` USD across `r format(settle_check$n_windows, big.mark = ",")`
+windows is the licence to interpret everything below. The window is `r N_DAYS` days:
+**`r format(n_sec, big.mark = ",")` index-seconds across `r format(n_mkt, big.mark = ",")` markets.**
+
+## D1 · How the index moves
+
+Two questions at once: are the one-second increments predictable, and is their *size*
+predictable?
+
+```{r}
+#| label: d1
+#| fig-height: 4.5
+#| code-summary: "Show code"
+
+dl <- brti_15$d_log_value[!is.na(brti_15$d_log_value)]
+band <- qnorm(0.975) / sqrt(length(dl))
+acf_signed <- acf(dl, lag.max = 300, plot = FALSE)$acf[, 1, 1]
+acf_abs <- acf(abs(dl), lag.max = 300, plot = FALSE)$acf[, 1, 1]
+
+bind_rows(
+  tibble(lag = 1:300, acf = acf_signed[-1], series = "signed increment"),
+  tibble(lag = 1:300, acf = acf_abs[-1], series = "absolute increment")
+) |>
+  ggplot(aes(lag, acf)) +
+  geom_hline(
+    yintercept = c(-band, band),
+    linetype = "dotted",
+    colour = "grey40"
+  ) +
+  geom_hline(yintercept = 0) +
+  geom_col(fill = pal[["settle"]], width = 1) +
+  facet_wrap(~series, ncol = 2, scales = "free_y") +
+  labs(
+    title = "Autocorrelation of 1-second index increments",
+    subtitle = "Dotted = white-noise band. Direction is unpredictable; magnitude is very predictable.",
+    x = "lag (seconds)",
+    y = "ACF"
+  )
+```
+
+```{r}
+#| label: d1-table
+#| code-fold: false
+pacf_abs <- pacf(abs(dl), lag.max = 300, plot = FALSE)$acf[, 1, 1]
+tibble(lag = c(1, 2, 5, 10, 30, 60, 120, 300)) |>
+  mutate(
+    acf_absolute = round(acf_abs[lag + 1], 3),
+    pacf_absolute = round(pacf_abs[lag], 3)
+  )
+```
+
+Signed increments are near-white — the lag-1 autocorrelation is
+`r round(acf_signed[2], 4)`, which at n = `r format(length(dl), big.mark = ",")` is about
+`r round(acf_signed[2]/band)`× the white-noise band and so is real, but it is tiny.
+There is no direction to trade here.
+
+Magnitude is a different animal. The ACF of `|increment|` starts at
+`r round(acf_abs[2], 3)` and is still `r round(acf_abs[301], 3)` at lag 300 — **it never
+halves inside five minutes.** That is long-memory decay, and the partial autocorrelation
+confirms the shape: it collapses from `r round(pacf_abs[1], 3)` to
+`r round(pacf_abs[5], 3)` by lag 5 and to `r round(pacf_abs[300], 3)` by lag 300, meaning
+almost all of that persistence is one slow-moving level rather than a chain of short
+dependencies.
+
+The modelling consequence is the opposite of what "volatility clusters" usually implies.
+Because the curve is nearly flat from 10s to 300s, a **slowly-varying volatility level
+captures nearly all of it**. Updating a volatility state every second buys very little.
+
+## D2 · When it moves
+
+Volatility is not stationary across the day, and this is free conditioning information.
+
+```{r}
+#| label: d2
+#| fig-height: 4
+#| code-summary: "Show code"
+
+# realised vol scaled to a 15-minute window, in basis points
+by_hour <- brti_15 |>
+  filter(!is.na(d_log_value)) |>
+  mutate(et_hour = hour(time)) |>
+  summarise(bps = 1e4 * sqrt(900 * mean(d_log_value^2)), .by = et_hour) |>
+  arrange(et_hour)
+by_wday <- brti_15 |>
+  filter(!is.na(d_log_value)) |>
+  summarise(bps = 1e4 * sqrt(900 * mean(d_log_value^2)), .by = weekday) |>
+  arrange(weekday)
+
+p1 <- ggplot(by_hour, aes(et_hour, bps)) +
+  geom_col(fill = pal[["settle"]]) +
+  scale_x_continuous(breaks = seq(0, 23, 3)) +
+  labs(
+    title = "By hour (ET)",
+    subtitle = "Peaks on the US cash open",
+    x = "hour",
+    y = "vol per 15-min window (bps)"
+  )
+p2 <- ggplot(by_wday, aes(weekday, bps)) +
+  geom_col(fill = pal[["settle"]]) +
+  labs(
+    title = "By weekday",
+    subtitle = "Weekends are quiet",
+    x = NULL,
+    y = NULL
+  )
+p1 + p2
+```
+
+```{r}
+#| label: d2-range
+#| code-fold: false
+c(
+  quietest_hour = by_hour$et_hour[which.min(by_hour$bps)],
+  busiest_hour = by_hour$et_hour[which.max(by_hour$bps)],
+  hour_ratio = round(max(by_hour$bps) / min(by_hour$bps), 2),
+  weekday_ratio = round(max(by_wday$bps) / min(by_wday$bps), 2)
+)
+```
+
+A `r round(max(by_hour$bps)/min(by_hour$bps), 1)`× swing between the quietest and busiest
+hour, peaking on the US equity open, plus a clear weekend lull. Any volatility model that
+ignores time of day is leaving a factor of ~3 on the table before it fits a single
+parameter. Hold that thought — D8 comes back to it.
+
+## D3 · The curve that looks like a finding
+
+This is the central diagnostic: how much uncertainty is left about `settle_value` as the
+clock runs down, measured against the two anchors a live model could use — the raw tick,
+and the trailing 60-second mean.
+
+```{r}
+#| label: d3-curve
+#| code-summary: "Show code"
+
+settle_curve <- brti_15 |>
+  filter(!is.na(settle_value), time_left >= 0, time_left <= 899) |>
+  summarise(
+    sd_kalshi = sd(settle_value - kalshi_value, na.rm = TRUE),
+    sd_raw = sd(settle_value - value, na.rm = TRUE),
+    .by = time_left
+  ) |>
+  arrange(time_left)
+
+crossover <- settle_curve |>
+  filter(sd_kalshi < sd_raw) |>
+  slice_max(time_left, n = 1)
+
+settle_curve |>
+  pivot_longer(-time_left, names_to = "anchor", values_to = "sd") |>
+  mutate(
+    anchor = recode(
+      anchor,
+      sd_raw = "raw tick",
+      sd_kalshi = "trailing 60s mean"
+    )
+  ) |>
+  ggplot(aes(time_left, sd, colour = anchor)) +
+  geom_line(linewidth = 0.9) +
+  geom_vline(
+    xintercept = crossover$time_left,
+    linetype = "dashed",
+    colour = "grey45"
+  ) +
+  annotate(
+    "text",
+    x = crossover$time_left,
+    y = max(settle_curve$sd_raw) * 0.75,
+    label = paste0("anchors cross at ", crossover$time_left, "s   "),
+    hjust = 1,
+    size = 3.4
+  ) +
+  scale_x_reverse() +
+  scale_y_log10() +
+  scale_colour_manual(
+    values = c("raw tick" = pal[["idx"]], "trailing 60s mean" = pal[["settle"]])
+  ) +
+  labs(
+    title = "Uncertainty remaining about the settlement value",
+    subtitle = "Clock runs down left to right; log scale",
+    x = "seconds to close",
+    y = "sd of (settle − anchor), USD",
+    colour = NULL
+  )
+```
+
+The anchors cross at **`r crossover$time_left` seconds**. Before that the raw tick is the
+better predictor; after it the trailing mean wins, and by the final second it wins
+overwhelmingly. The reason is mechanical rather than statistical: the trailing mean is
+centred about 30 seconds in the past, so it is a stale estimate of *now* — but once its
+window starts overlapping the actual settlement window, it stops being an estimate at all
+and starts being a partial observation of the answer.
+
+Now the trap. Fit a power law to that curve and you get an exponent well above the 0.5 a
+random walk implies:
+
+```{r}
+#| label: d3-slope
+#| code-fold: false
+slope_fit <- lm(
+  log(sd_kalshi) ~ log(time_left),
+  data = settle_curve |> filter(time_left >= 120, time_left <= 899)
+)
+round(coef(slope_fit)[["log(time_left)"]], 3)
+```
+
+An exponent of `r round(coef(slope_fit)[["log(time_left)"]], 3)` reads as *super-diffusion*
+— variance growing faster than linearly in time, which would be a genuine exploitable
+departure from a random walk and would justify a trend state in the model.
+
+It is an artefact. The clean way to ask whether Bitcoin itself is super-diffusive is to
+measure the index directly, with no anchor and no settlement value to confound it:
+
+```{r}
+#| label: d3-structure
+#| code-summary: "Show code"
+
+cont <- brti_15 |> arrange(time) |> distinct(time, .keep_all = TRUE)
+lv <- log(cont$value)
+tt <- as.numeric(cont$time)
+
+structure_fn <- map_dfr(
+  c(1, 2, 4, 8, 15, 30, 60, 120, 240, 480, 900),
+  function(h) {
+    i <- seq_len(length(lv) - h)
+    ok <- (tt[i + h] - tt[i]) == h # only true h-second gaps
+    tibble(h = h, n = sum(ok), sd = sd((lv[i + h] - lv[i])[ok], na.rm = TRUE))
+  }
+)
+exp_all <- coef(lm(log(sd) ~ log(h), data = structure_fn))[[2]]
+exp_60 <- coef(lm(log(sd) ~ log(h), data = structure_fn |> filter(h >= 60)))[[
+  2
+]]
+
+ggplot(structure_fn, aes(h, sd)) +
+  geom_line(colour = pal[["settle"]]) +
+  geom_point(colour = pal[["settle"]]) +
+  geom_line(aes(y = sd[1] * sqrt(h)), linetype = "dashed", colour = "grey45") +
+  annotate(
+    "text",
+    x = 300,
+    y = structure_fn$sd[1] * sqrt(120),
+    colour = "grey35",
+    size = 3.4,
+    label = "dashed = exact random walk (slope ½)"
+  ) +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(
+    title = "Structure function of the index itself",
+    subtitle = "sd of the h-second move vs h — no anchor, nothing to confound it",
+    x = "h (seconds, log)",
+    y = "sd of log move (log)"
+  )
+```
+
+```{r}
+#| label: d3-exponents
+#| code-fold: false
+structure_fn |>
+  mutate(local_exponent = c(NA, diff(log(sd)) / diff(log(h)))) |>
+  select(h, n, local_exponent) |>
+  mutate(local_exponent = round(local_exponent, 3))
+```
+
+Globally the exponent is **`r round(exp_all, 4)`** (`r round(exp_60, 4)` for h ≥ 60), and
+the local exponent sits flat on ½ from about 8 seconds out to 900. Bitcoin here is a
+textbook random walk. The one deviation is at h = 2 and it is D1's tiny lag-1 momentum,
+dead within a few seconds.
+
+So where did 0.6 come from? From what `settle_value` **is**. It is the mean of the last 60
+seconds, not a point. At `time_left = t` those 60 seconds sit *h = t−59 … t* steps ahead,
+so `settle − value_t` is the average of 60 *overlapping* random-walk displacements. The
+variance of that average is not σ²t; it lags t by roughly the window half-width, which
+makes the fitted log-log slope exceed ½ and *decline* toward ½ as t grows. The whole
+shape, including the decline, is 60-second averaging applied to a random walk.
+
+This is the first of the two false edges, and it points the modelling in a simpler
+direction rather than a fancier one: **no trend state, no mean-reverting component.** A
+plain random-walk level plus the correct settlement-window arithmetic reproduces this
+curve. The effort belongs in the volatility level and in the density, not in extra state
+dimensions.
+
+## D4 · Is the market well calibrated?
+
+Before asking whether I can beat the price, it is worth asking whether the price is any
+good. Snapshots at fixed `time_left` so each market contributes one row per horizon.
+
+```{r}
+#| label: d4
+#| code-summary: "Show code"
+
+HORIZONS <- c(870, 720, 600, 480, 360, 240, 120, 90, 60, 30, 20, 10)
+
+snapshots <- brti_15 |>
+  filter(time_left %in% HORIZONS, !is.na(yes_mid), !is.na(result)) |>
+  mutate(y = as.integer(result == "yes"), p_market = yes_mid / 100)
+
+calib <- snapshots |>
+  filter(time_left %in% c(600, 240, 120, 60)) |>
+  mutate(
+    bucket = cut(
+      yes_mid,
+      c(-1, 1, 10, 25, 45, 55, 75, 90, 99, 101),
+      labels = c(
+        "0-1c",
+        "1-10c",
+        "10-25c",
+        "25-45c",
+        "45-55c",
+        "55-75c",
+        "75-90c",
+        "90-99c",
+        "99c+"
+      )
+    )
+  ) |>
+  summarise(
+    n = n(),
+    mean_price = mean(yes_mid),
+    realised = 100 * mean(y),
+    .by = c(time_left, bucket)
+  ) |>
+  mutate(gap_pp = realised - mean_price)
+
+ggplot(calib, aes(mean_price, realised)) +
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    linetype = "dashed",
+    colour = "grey55"
+  ) +
+  geom_point(aes(size = n), colour = pal[["market"]], alpha = 0.8) +
+  facet_wrap(~ paste0(time_left, "s to close"), nrow = 1) +
+  scale_size_continuous(range = c(1, 5), guide = "none") +
+  labs(
+    title = "Market calibration at four horizons",
+    subtitle = "Point size = number of markets; dashed = perfect calibration",
+    x = "market price (¢)",
+    y = "realised settle rate (%)"
+  )
+```
+
+```{r}
+#| label: d4-summary
+#| code-fold: false
+calib |>
+  summarise(
+    cells = n(),
+    median_abs_gap_pp = round(median(abs(gap_pp)), 2),
+    n_weighted_abs_gap_pp = round(weighted.mean(abs(gap_pp), n), 2),
+    pct_of_rows_within_3pp = round(100 * weighted.mean(abs(gap_pp) < 3, n), 1)
+  )
+```
+
+The median cell misses by about a percentage point, and
+`r round(100 * weighted.mean(abs(calib$gap_pp) < 3, calib$n), 0)`% of markets sit in cells
+within 3pp of the diagonal. The few larger misses are all small-n cells at short horizons,
+where almost everything has already resolved to the extremes. This price is honest across
+the whole range, including the cheap tails that are easiest to fool yourself about.
+
+## D6 · The headline test
+
+Now the real question. Build the most defensible simple model this data supports — a
+random walk, using D3's finding — and score it against the market at twelve horizons
+spanning the entire 900-second window.
+
+The model's state is one number: how many standard deviations of remaining move the index
+currently sits above the strike.
+
+```{r}
+#| label: d6
+#| code-summary: "Show the model and scoring"
+
+scored <- snapshots |>
+  mutate(
+    sd_remaining = settle_curve$sd_kalshi[match(
+      time_left,
+      settle_curve$time_left
+    )],
+    z = diff_floor_kalshi / sd_remaining,
+    p_model = pnorm(z)
+  ) |>
+  filter(is.finite(z))
+
+clamp <- function(p, eps = 1e-6) pmin(pmax(p, eps), 1 - eps)
+
+scorecard <- scored |>
+  mutate(
+    brier_mod = (clamp(p_model) - y)^2,
+    brier_mkt = (clamp(p_market) - y)^2,
+    ll_mod = -(y * log(clamp(p_model)) + (1 - y) * log(1 - clamp(p_model))),
+    ll_mkt = -(y * log(clamp(p_market)) + (1 - y) * log(1 - clamp(p_market)))
+  ) |>
+  summarise(
+    n = n(),
+    brier_model = mean(brier_mod),
+    brier_market = mean(brier_mkt),
+    brier_delta = mean(brier_mkt) - mean(brier_mod),
+    t_stat = t.test(ll_mkt - ll_mod)$statistic,
+    .by = time_left
+  ) |>
+  arrange(desc(time_left)) |>
+  mutate(market_better = brier_delta < 0)
+```
+
+```{r}
+#| label: d6-table
+#| code-fold: false
+scorecard |>
+  mutate(
+    across(c(brier_model, brier_market), \(x) round(x, 4)),
+    brier_delta = round(brier_delta, 4),
+    t_stat = round(t_stat, 1)
+  )
+```
+
+**The market wins at `r sum(scorecard$market_better)` of `r nrow(scorecard)` horizons.**
+Every t-statistic on the paired per-market log-loss difference is negative and large; each
+market contributes one row per horizon, so these are independent observations and the test
+is valid. This is not twelve coin flips landing the same way.
+
+```{r}
+#| label: d6-plot
+#| fig-height: 4
+#| code-summary: "Show code"
+ggplot(scorecard, aes(-log10(time_left), brier_delta)) +
+  geom_hline(yintercept = 0, colour = "grey40") +
+  geom_line(colour = pal[["bad"]]) +
+  geom_point(colour = pal[["bad"]], size = 2) +
+  scale_x_continuous(breaks = -log10(HORIZONS), labels = HORIZONS) +
+  labs(
+    title = "How badly the model loses, by horizon",
+    subtitle = "Brier delta (market − model). Below zero = the market is better. Log-spaced horizons.",
+    x = "seconds to close",
+    y = "Brier delta"
+  ) +
+  theme(axis.text.x = element_text(size = 8))
+```
+
+The shape matters as much as the sign. The gap is **non-monotone**: it peaks around 90–240
+seconds and shrinks at both ends. Both ends are degenerate, for opposite reasons. Early on,
+the strike is the previous window's settle, so the market opens as a near coin flip and
+there is almost nothing to know yet. Late, nearly everything has resolved below 10¢ or
+above 90¢ and both sides agree.
+
+So the market beats the model *hardest in exactly the band where real information is being
+priced* — which is also the band a live strategy would want to trade. That makes the
+negative result stronger, not weaker.
+
+One more thing worth stating plainly, because it looks like a flaw and is actually the
+opposite. `sd_remaining` is read off the settle curve, which was computed from the realised
+outcomes of these same markets. A live model could not do that — it would have to estimate
+that variance from past markets and carry the estimation error. **So this is a random walk
+handed the empirically optimal per-horizon variance in hindsight, and it still loses at
+every horizon.** Taking the advantage away can only make it worse.
+
+## D7 · The market does lag — and it still does not pay
+
+One mechanism could survive all of the above. The index updates about five times a second;
+the contract price only moves when a human or a bot notices. That absorption delay is a
+real thing, and it is invisible at any timescale you would look at on a chart.
+
+Does the index move over `[t−k, t]` predict the mid move over `[t, t+k]`?
+
+```{r}
+#| label: d7
+#| code-summary: "Show code"
+lag_tbl <- map_dfr(c(1, 2, 3, 5, 10, 20), function(k) {
+  g <- brti_15 |>
+    arrange(ticker, time) |>
+    group_by(ticker) |>
+    mutate(
+      idx_back = log(value) - log(lag(value, k)),
+      mid_fwd = lead(yes_mid, k) - yes_mid,
+      idx_fwd = log(lead(value, k)) - log(value)
+    ) |>
+    ungroup() |>
+    filter(is.finite(idx_back), is.finite(mid_fwd), is.finite(idx_fwd))
+  tibble(
+    k = k,
+    index_to_mid = cor(g$idx_back, g$mid_fwd),
+    index_to_index = cor(g$idx_back, g$idx_fwd)
+  )
+})
+lag_tbl |> mutate(across(-k, \(x) round(x, 4)))
+```
+
+There is a real lag, it peaks at 2–3 seconds, and it is gone by 10. And the second column
+is the control that makes it believable: if `yes_mid` simply tracked the index, the index's
+*own* momentum would manufacture this entire table. It does not — index-to-index momentum
+is a one-second effect, dead by k = 2, while index-to-mid is still at its peak there. Two
+different phenomena that happen to be similar in size.
+
+That is a genuine inefficiency. It is also worthless to a taker:
+
+```{r}
+#| label: d7-economics
+#| code-summary: "Show code"
+brti_15 |>
+  arrange(ticker, time) |>
+  group_by(ticker) |>
+  mutate(
+    idx_bp = 1e4 * (log(value) - log(lag(value, 3))),
+    mid_fwd = lead(yes_mid, 3) - yes_mid
+  ) |>
+  ungroup() |>
+  filter(is.finite(idx_bp), is.finite(mid_fwd)) |>
+  mutate(
+    bin = cut(
+      idx_bp,
+      c(-Inf, -6, -3, -1, 1, 3, 6, Inf),
+      labels = c("< -6bp", "-6..-3", "-3..-1", "-1..1", "1..3", "3..6", "> 6bp")
+    )
+  ) |>
+  summarise(
+    n = n(),
+    mean_mid_move_c = round(mean(mid_fwd), 3),
+    sd_c = round(sd(mid_fwd), 2),
+    .by = bin
+  ) |>
+  arrange(bin)
+```
+
+Two problems. The expected move is about ±0.2¢ against a spread of roughly 1¢ and noise of
+2.7–3.9¢ — you pay a cent to capture a fifth of one. And **the sign inverts in both tails**:
+the largest index moves are followed by mid moves in the *opposite* direction. It is
+momentum in the middle and reversal in the extremes, which is not a stable signal.
+
+The one configuration where a 3-second lag pays is market making — posting limit orders to
+earn the spread rather than pay it, and pulling quotes on the index tick to avoid adverse
+selection. That needs a real order book, which this reconstruction is not.
+
+## D8 · Letting a machine look for what I could not specify
+
+Every diagnostic so far tests a hypothesis I was able to write down. Correlation is
+structurally blind to shapes — a parabolic top rises and falls symmetrically, so its net
+linear autocorrelation is near zero even if the shape is perfectly real.
+
+So: hand a gradient-boosted tree a multi-scale encoding of the recent path, and start it
+**at the market's own price** via `base_margin`. That offset is what makes the test fair.
+The model begins where the market is and can only score by adding information the market
+lacks. A model that finds nothing should score exactly zero.
+
+```{r}
+#| label: d8
+#| code-summary: "Show the feature build and fit"
+suppressPackageStartupMessages(library(xgboost))
+
+lags <- c(1, 5, 15, 30, 60, 120, 300, 600, 1200, 1800, 3600)
+d8 <- brti_15 |> arrange(time)
+for (L in lags) {
+  d8[[paste0("r_", L)]] <- log(d8$value) - log(lag(d8$value, L))
+}
+rng <- map(seq(0, 300, by = 30), \(k) lag(d8$value, k))
+d8$rng_hi <- do.call(pmax, c(rng, list(na.rm = TRUE)))
+d8$rng_lo <- do.call(pmin, c(rng, list(na.rm = TRUE)))
+
+d8 <- d8 |>
+  mutate(
+    chan_pos = (value - rng_lo) / pmax(rng_hi - rng_lo, 1e-9),
+    curve_60 = r_30 - r_60 / 2, # <0 = decelerating: the -x² top
+    rv_300 = 1e4 * abs(r_300),
+    moh = minute(time),
+    hod = hour(time),
+    dow = as.integer(weekday)
+  ) |>
+  filter(time_left %in% HORIZONS, !is.na(yes_mid), !is.na(result))
+
+feats <- c(
+  paste0("r_", lags),
+  "chan_pos",
+  "curve_60",
+  "rv_300",
+  "moh",
+  "hod",
+  "dow",
+  "diff_floor_kalshi",
+  "time_left",
+  "volume"
+)
+d8 <- d8 |>
+  mutate(
+    y = as.integer(result == "yes"),
+    p_market = yes_mid / 100,
+    day = as.Date(time)
+  ) |>
+  filter(if_all(all_of(feats), is.finite))
+
+# THREE-way split by day. Early-stopping on the evaluation set manufactures edge.
+days <- sort(unique(d8$day))
+n1 <- floor(length(days) * .6)
+n2 <- floor(length(days) * .8)
+part <- \(d) as.matrix(d[feats])
+margin <- \(d) qlogis(pmin(pmax(d$yes_mid / 100, 1e-4), 1 - 1e-4))
+tr <- d8 |> filter(day <= days[n1])
+va <- d8 |> filter(day > days[n1], day <= days[n2])
+te <- d8 |> filter(day > days[n2])
+
+mk <- function(d) {
+  m <- xgb.DMatrix(part(d), label = d$y)
+  setinfo(m, "base_margin", margin(d))
+  m
+}
+set.seed(1)
+fit <- xgb.train(
+  list(
+    objective = "binary:logistic",
+    eval_metric = "logloss",
+    max_depth = 4,
+    eta = 0.05,
+    subsample = 0.8,
+    colsample_bytree = 0.8
+  ),
+  mk(tr),
+  nrounds = 400,
+  watchlist = list(valid = mk(va)),
+  early_stopping_rounds = 30,
+  verbose = 0
+)
+te$p_model <- predict(fit, mk(te))
+```
+
+```{r}
+#| label: d8-result
+#| code-fold: false
+ll <- function(p, y) -mean(y * log(clamp(p)) + (1 - y) * log(1 - clamp(p)))
+tt_d8 <- t.test(
+  -(te$y * log(clamp(te$p_market)) + (1 - te$y) * log(1 - clamp(te$p_market))) -
+    -(te$y * log(clamp(te$p_model)) + (1 - te$y) * log(1 - clamp(te$p_model)))
+)
+tibble(
+  test_rows = nrow(te),
+  logloss_market = round(ll(te$p_market, te$y), 5),
+  logloss_model = round(ll(te$p_model, te$y), 5),
+  difference = round(ll(te$p_market, te$y) - ll(te$p_model, te$y), 5),
+  t_stat = round(tt_d8$statistic, 2),
+  p_value = round(tt_d8$p.value, 3)
+)
+```
+
+The model does not beat the market. It comes out very slightly **worse**, and that sign is
+the tell. Because it starts from `base_margin = logit(yes_mid)`, a model that found nothing
+would score exactly zero — not slightly negative. Landing a hair below zero is the
+signature of mild overfitting: it learned structure in the training weeks that did not
+survive into the test week. Whichever way you read it, the thing it did not do is add
+information the market lacked.
+
+The most interesting part is what it reached for:
+
+```{r}
+#| label: d8-importance
+#| fig-height: 4
+#| code-summary: "Show code"
+xgb.importance(model = fit) |>
+  head(10) |>
+  mutate(Feature = fct_reorder(Feature, Gain)) |>
+  ggplot(aes(Gain, Feature)) +
+  geom_col(fill = pal[["settle"]]) +
+  labs(
+    title = "What the model leaned on",
+    subtitle = "Ranked by gain",
+    x = "gain",
+    y = NULL
+  )
+```
+
+The long-horizon trend features and the time-of-day/day-of-week terms rank at the top. The
+learner went straight for the multi-hour trend and for D2's volatility seasonality — the
+two things a human would reach for, and both genuinely real. **They are already in the
+price.** D2 showed the seasonality is real; D8 shows knowing it adds nothing, because the
+market knows it too.
+
+## What I take away
+
+The headline is that a prediction market with fifteen-minute contracts on Bitcoin is
+efficient with respect to everything I could measure from the index alone. That is a
+negative result, and negative results are worth publishing when the measurement is good
+enough to distinguish "no edge" from "I did not look hard enough."
+
+What makes me believe this one:
+
+- The model was **handed a hindsight advantage** and still lost at 12 of 12 horizons.
+- It lost **hardest in the band where information is actually being priced**, not averaged
+  away across uninformative horizons.
+- The one real inefficiency I found — a 3-second absorption lag — is genuine, cleanly
+  separated from a confound, and **economically dead** at a fifth of a cent against a
+  one-cent spread.
+- A learner given free rein and the market's own price as a starting point found **no
+  edge** — if anything a small negative — while ranking exactly the features the hypothesis
+  predicted.
+
+The methodological lesson is the one I will actually carry forward, and it happened twice.
+The settlement curve's exponent of 0.6 was real, reproducible, robust to the fitting
+window — and meant nothing about Bitcoin, because it was a property of averaging rather
+than of the process. The instinct to fit a power law and read a story into the exponent is
+exactly the instinct that needed checking against a measurement with nothing to confound
+it.
+
+The honest boundary on all of this: the benchmark is a book reconstructed from executed
+trades, not a true order book, and the endgame is where that reconstruction is thinnest.
+The result survives at the horizon where the book is *best* — 870 seconds, where only a
+small minority of rows are degenerate — which is the check that matters most. But
+execution-side questions, and market making in particular, need real order book data before
+they can be asked at all. That is the next measurement, and it is a different one.
+
+::: {.callout-note collapse="true"}
+## Reproducing this
+
+Index and market data come from a private research repo and are not redistributed here.
+The analysis reads from `KALSHI_TP_BOT_DATA`:
+
+```bash
+# in ~/.Renviron
+KALSHI_TP_BOT_DATA=~/Desktop/kalshi-tp-bot/data
+```
+
+Quarto's `freeze: auto` caches executed results, so the post rebuilds from cache without
+the data present. Window: `r N_DAYS` days, `r format(n_sec, big.mark = ",")` index-seconds,
+`r format(n_mkt, big.mark = ",")` markets.
+:::
+
+```{r}
+#| label: cover
+#| include: false
+cover <- ggplot(scorecard, aes(-log10(time_left), brier_delta)) +
+  geom_hline(yintercept = 0, colour = "grey50") +
+  geom_line(colour = pal[["bad"]], linewidth = 1.3) +
+  geom_point(colour = pal[["bad"]], size = 2) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_size = 11)
+ggsave("img/cover.png", cover, width = 6, height = 3.6, dpi = 150, bg = "white")
+```
+
+{{< include ../../../_footer.qmd >}}

@@ -5,7 +5,7 @@ author:
   firstname: Tyler
   lastname: Pollard
   address: Parrish, FL, 34219
-  position: Statistician · Data Scientist · Operations Research Analyst
+  position: Statistician · Data Analyst · Data Scientist
   contacts:
     - icon: fa envelope
       text: tylerpollard410@gmail.com
@@ -63,7 +63,7 @@ brand:
 
 # Professional Summary
 
-Statistician with 8+ years of experience in predictive modeling, advanced statistical analysis, forecasting, and decision support. Experienced applying probabilistic models to sports and financial event-market data, including NFL outcomes, spreads, and Kalshi market prices to estimate implied probabilities, evaluate uncertainty, and identify actionable signals. Skilled in R with practical Python experience, developing scalable analytical workflows that combine technical rigor, innovation, and data-driven decision-making.
+Statistician with 8+ years of experience in predictive modeling, advanced statistical analysis, statistical inference, forecasting, and data-driven decision support. Experienced developing probabilistic models to predict outcomes, quantify uncertainty, and identify actionable signals, with independent applications in sports analytics and financial market modeling. Advanced proficiency in R with practical Python experience, building reproducible analytical workflows and automated reporting solutions that translate complex data into actionable insights.
 
 # Skills
 
@@ -86,7 +86,7 @@ Workflow Automation, ETL, Cloud Deployment, CI/CD, Decision Support Systems, Rep
 
 ```{=typst}
 #resume-entry(
-  title: [Operations Research Analyst],
+  title: [Senior Data Analyst],
   location: [Tampa, FL],
   date: [April 2024 - Current],
   description: [U.S. Special Operations Command],
@@ -97,13 +97,13 @@ Workflow Automation, ETL, Cloud Deployment, CI/CD, Decision Support Systems, Rep
 - Designed and implemented a stance detection framework combining large language models with Bayesian hierarchical modeling. Scaled analysis from 43 text items to tens of thousands, achieving a 32% improvement in prediction accuracy while quantifying uncertainty for more informed decision-making.
 - Conducted survival analysis on social media time-to-event data using semi-parametric joint models with time-varying predictors. Identified critical time thresholds that shaped strategic adjustments in planning and execution.
 - Programmed and deployed R Shiny applications on the Posit Connect cloud platform, enabling over 50 assessment team members to perform standardized statistical analyses. Improved workflows for data visualization and reporting.
-- Promoted to lead a 6-person assessments team, overseeing the development of standardized evaluation frameworks and innovative solutions to assess Military Information Support Operations across 11 combatant commands.
+- Promoted to lead a 6-person assessments team, overseeing the development of standardized evaluation frameworks and innovative solutions to assess Military Information Support Operations across 11 cross-functional commands.
 ]
 ```
 
 ```{=typst}
 #resume-entry(
-  title: [Mathematical Statistician],
+  title: [Statistician],
   location: [Aberdeen Proving Ground, MD],
   date: [September 2018 - April 2024],
   description: [U.S. Army Evaluation Center],
